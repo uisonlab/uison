@@ -1,0 +1,13 @@
+// Events and messages as JSON (Task 11.5, docs/screens/events.md): Enter as a raw event, removing
+// "Buy bread" (id 1) by an action message, the filter by a data message: Completed shows "Write Task2.md",
+// All shows it, "Build the element library" and "Buy milk".
+[
+  ["tap", "draft/1/0"], ["type", "Buy milk"],
+  ["event", {"type":"key","code":"enter"}],
+  ["action", {"action":"remove","key":"del-1"}],
+  ["action", {"data":{"filter":"done"}}],
+  ["capture", "01_completed", 600],
+  ["action", {"data":{"filter":"all"}}],
+  ["capture", "02_all", 600],
+  ["done"]
+]

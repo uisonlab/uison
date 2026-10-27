@@ -1,0 +1,9 @@
+// Browser in a window: follow a link to a site over HTTP (loads in the background), then back.
+[
+  ["wait", 300],
+  ["tap", "a3.0"], ["wait", 5000],
+  ["capture", "01_cern", 300],
+  ["tap", "back"], ["wait", 500],
+  ["capture", "02_back", 300],
+  ["done"]
+]

@@ -1,0 +1,32 @@
+// Custom components: params are the parameters with default values, body is the tree,
+// inside it parameters are $name. The screen uses them like built-in ones: { Stat: { title: … } }.
+{
+  Stat: {
+    params: { title: "", value: 0, icon: "star", color: "$theme.primary" },
+    body: {
+      Box: {
+        flex: 1, padding: 14, radius: "$theme.radius", fill: "$theme.card", stroke: "$theme.divider",
+        child: { Column: { gap: 6, children: [
+          { Row: { gap: 6, cross: "center", children: [
+            { Icon: { name: "$icon", size: 16, color: "$color" } },
+            { Text: { text: "$title", size: 12, color: "$theme.muted" } },
+          ] } },
+          { Text: { text: "$value", size: 26, bold: true } },
+        ] } },
+      },
+    },
+  },
+
+  // The button keys are built from a parameter ("inc-{$label}"): each Counter has its own buttons,
+  // while the handler is one; it tells which was pressed by the key.
+  Counter: {
+    params: { label: "" },
+    body: {
+      Row: { gap: 8, cross: "center", children: [
+        { Text: { text: "$label", flex: 1 } },
+        { IconButton: { icon: "minus", size: "sm", key: "dec-{$label}", on: { click: "dec" } } },
+        { IconButton: { icon: "plus", size: "sm", key: "inc-{$label}", on: { click: "inc" } } },
+      ] },
+    },
+  },
+}

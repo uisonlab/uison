@@ -1,0 +1,8 @@
+[package]
+name = "uison-derive"
+version.workspace = true
+edition.workspace = true
+description = "#[derive(Data)] for uison: struct <-> data model (IntoJson + FromJson), no dependencies"
+
+[lib]
+proc-macro = true

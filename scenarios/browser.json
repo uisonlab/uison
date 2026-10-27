@@ -1,0 +1,13 @@
+// Browser: start page → CSS showcase (link) → article → back; JSON view.
+[
+  ["wait", 1500],
+  ["capture", "01_home", 1500],
+  ["tap", "a0.0"], ["wait", 1500],
+  ["capture", "02_css", 1500],
+  ["tap", "back"], ["wait", 1500],
+  ["tap", "a1.0"], ["wait", 1500],
+  ["capture", "03_article", 1500],
+  ["tap", "mode/0/json"], ["wait", 1500],
+  ["capture", "04_json", 1500],
+  ["done"]
+]

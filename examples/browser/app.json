@@ -1,0 +1,78 @@
+// A tiny browser: an address bar and the page view. The page itself is JSON produced
+// from HTML + CSS (convert.rs); the code inserts it into the `page` node.
+{
+  size: [1100, 800],
+  data: {
+    address: "",
+    mode: "page",
+    status: "",
+    canBack: false,
+    canForward: false,
+    loading: false,
+    json: [],
+    source: [],
+    form: {},
+  },
+  root: {
+    Column: {
+      w: "fill", h: "fill",
+      children: [
+        {
+          Row: {
+            padding: [6, 10], gap: 4, cross: "center",
+            children: [
+              { IconButton: { key: "back", icon: "arrowLeft", disabled: "!@canBack", tooltip: "Back", on: { click: "back" } } },
+              { IconButton: { key: "forward", icon: "arrowRight", disabled: "!@canForward", tooltip: "Forward", on: { click: "forward" } } },
+              { IconButton: { key: "home", icon: "home", tooltip: "Home", on: { click: "home" } } },
+              { TextField: { key: "address", value: "@address", placeholder: "Address or about:home", flex: 1, margin: [0, 6], on: { submit: "go" } } },
+              {
+                Tabs: {
+                  key: "mode", value: "@mode", w: 210, visible: { gt: ["@env.width", 640] },
+                  tabs: [{ value: "page", label: "Page" }, { value: "json", label: "JSON" }, { value: "html", label: "HTML" }],
+                },
+              },
+            ],
+          },
+        },
+        // Narrow screen: tabs go to a second row, the address gets the full width.
+        {
+          Tabs: {
+            key: "modeNarrow", value: "@mode", margin: [0, 10, 6, 10], visible: { not: { gt: ["@env.width", 640] } },
+            tabs: [{ value: "page", label: "Page" }, { value: "json", label: "JSON" }, { value: "html", label: "HTML" }],
+          },
+        },
+        { Divider: {} },
+        {
+          Box: {
+            key: "pagebg", flex: 1, w: "fill", fill: "#FFFFFF", visible: { eq: ["@mode", "page"] },
+            child: { Scroll: { key: "scroll0", w: "fill", h: "fill", child: { Column: { key: "page", w: "fill", cross: "stretch", children: [] } } } },
+          },
+        },
+        {
+          Box: {
+            flex: 1, w: "fill", fill: "$theme.surface", visible: { eq: ["@mode", "json"] },
+            child: {
+              List: {
+                key: "jsonList", w: "fill", h: "fill", items: "@json", itemHeight: 17,
+                item: { Text: { text: "@item", font: "monospace", size: 12, wrap: false, margin: [0, 12] } },
+              },
+            },
+          },
+        },
+        {
+          Box: {
+            flex: 1, w: "fill", fill: "$theme.surface", visible: { eq: ["@mode", "html"] },
+            child: {
+              List: {
+                key: "sourceList", w: "fill", h: "fill", items: "@source", itemHeight: 17,
+                item: { Text: { text: "@item", font: "monospace", size: 12, wrap: false, margin: [0, 12] } },
+              },
+            },
+          },
+        },
+        { Divider: {} },
+        { Text: { text: "@status", size: 11, color: "$theme.muted", maxLines: 1, margin: [4, 12] } },
+      ],
+    },
+  },
+}

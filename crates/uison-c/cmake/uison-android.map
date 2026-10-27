@@ -1,0 +1,6 @@
+/* libmain.so on Android: only the Java entry points are exported; uison_* functions are hidden,
+   and the linker drops the unused ones (-26 KB on arm64). */
+{
+  global: JNI_OnLoad; Java_*;
+  local: *;
+};

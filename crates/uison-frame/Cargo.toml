@@ -1,0 +1,8 @@
+[package]
+name = "uison-frame"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison-json.workspace = true
+uison-core.workspace = true

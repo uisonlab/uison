@@ -1,0 +1,2 @@
+// Hit area map of the first screen (to pick ids for scenarios).
+[["wait", 300], ["hitmap"], ["done"]]

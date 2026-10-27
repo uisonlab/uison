@@ -1,0 +1,21 @@
+[package]
+name = "uison-c"
+version.workspace = true
+edition.workspace = true
+description = "C ABI for uison: static (libuison.a, uison.lib) and dynamic (libuison.dylib/.so, uison.dll) library"
+
+[lib]
+# File names for C/C++: libuison.a, libuison.dylib, uison.lib, uison.dll.
+name = "uison"
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+# The umbrella crate is also called uison — renamed so it doesn't clash with the library name.
+# Without gui-subsystem: the /ENTRY:mainCRTStartup directive would break uison.dll, and the C/C++
+# program picks its subsystem (console or window) itself.
+fw = { package = "uison", path = "../uison", default-features = false }
+
+# UISON_RELOAD for screens from files (uison_ui_load) — in the release library too, but only on desktop
+# (+18 KB): there screen files are edited while the program runs; phones and the browser don't need it.
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+uison-ui = { workspace = true, features = ["reload"] }

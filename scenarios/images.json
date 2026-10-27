@@ -1,0 +1,2 @@
+// Images: photos in avatars, cover / contain / fill (gallery; Studio has photos in contacts and mail).
+[["wait", 2000], ["capture", "01_images", 300], ["done"]]

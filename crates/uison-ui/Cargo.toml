@@ -1,0 +1,14 @@
+[package]
+name = "uison-ui"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison-json.workspace = true
+uison-core.workspace = true
+uison-frame.workspace = true
+
+[features]
+# Live reload (UISON_RELOAD) in release builds too — for the C/C++ library (uison-c): C programs keep
+# their screen files next to them, and libuison is only built as release. Rust programs have it in debug anyway.
+reload = []

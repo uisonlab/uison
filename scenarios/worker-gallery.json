@@ -1,0 +1,2 @@
+// Gallery: worker thread with progress (Handle::post), the loop wake-up on every platform.
+[["swipe", "page", -500, 200], ["wait", 1200], ["tap", "load"], ["wait", 600], ["capture", "01_progress", 100], ["wait", 1500], ["capture", "02_done", 300], ["done"]]

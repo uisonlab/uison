@@ -1,0 +1,12 @@
+// On-screen keyboard: tap a field → keyboard, type, Return, tap outside → keyboard hides.
+[
+  ["tap", "draft/1/0"], ["wait", 800],
+  ["capture", "01_keyboard", 1000],
+  ["type", "Buy milk"], ["wait", 200],
+  ["capture", "02_typed", 1000],
+  ["type", "\n"], ["wait", 400],
+  ["capture", "03_added", 1000],
+  ["tap", "root"], ["wait", 800],
+  ["capture", "04_hidden", 1000],
+  ["done"]
+]

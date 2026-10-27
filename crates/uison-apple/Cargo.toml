@@ -1,0 +1,11 @@
+[package]
+name = "uison-apple"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison-core.workspace = true
+uison-frame.workspace = true
+
+[dev-dependencies]
+uison-json.workspace = true

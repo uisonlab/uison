@@ -1,0 +1,154 @@
+// Icons: outlines on a 24×24 grid made of lines, circles and triangles.
+// A shape without fill/stroke inside a Vector is drawn as an outline in the icon color.
+{
+  Icon: {
+    params: { name: "", size: 16, color: "$theme.text", weight: 1.75 },
+    body: {
+      Vector: {
+        view: 24, w: "$size", h: "$size", color: "$color", weight: "$weight",
+        children: {
+          switch: "$name",
+          cases: {
+            check: [
+              { Line: { from: [5, 12.5], to: [10, 17.5] } },
+              { Line: { from: [10, 17.5], to: [19, 7] } },
+            ],
+            close: [
+              { Line: { from: [6, 6], to: [18, 18] } },
+              { Line: { from: [18, 6], to: [6, 18] } },
+            ],
+            plus: [
+              { Line: { from: [12, 5], to: [12, 19] } },
+              { Line: { from: [5, 12], to: [19, 12] } },
+            ],
+            minus: [{ Line: { from: [5, 12], to: [19, 12] } }],
+            chevronDown: [
+              { Line: { from: [6, 9], to: [12, 15] } },
+              { Line: { from: [12, 15], to: [18, 9] } },
+            ],
+            chevronUp: [
+              { Line: { from: [6, 15], to: [12, 9] } },
+              { Line: { from: [12, 9], to: [18, 15] } },
+            ],
+            chevronLeft: [
+              { Line: { from: [15, 6], to: [9, 12] } },
+              { Line: { from: [9, 12], to: [15, 18] } },
+            ],
+            chevronRight: [
+              { Line: { from: [9, 6], to: [15, 12] } },
+              { Line: { from: [15, 12], to: [9, 18] } },
+            ],
+            arrowLeft: [
+              { Line: { from: [19, 12], to: [5, 12] } },
+              { Line: { from: [11, 6], to: [5, 12] } },
+              { Line: { from: [5, 12], to: [11, 18] } },
+            ],
+            arrowRight: [
+              { Line: { from: [5, 12], to: [19, 12] } },
+              { Line: { from: [13, 6], to: [19, 12] } },
+              { Line: { from: [19, 12], to: [13, 18] } },
+            ],
+            arrowUp: [
+              { Line: { from: [12, 19], to: [12, 5] } },
+              { Line: { from: [6, 11], to: [12, 5] } },
+              { Line: { from: [12, 5], to: [18, 11] } },
+            ],
+            arrowDown: [
+              { Line: { from: [12, 5], to: [12, 19] } },
+              { Line: { from: [6, 13], to: [12, 19] } },
+              { Line: { from: [12, 19], to: [18, 13] } },
+            ],
+            search: [
+              { Circle: { at: [10.5, 10.5], r: 6.5 } },
+              { Line: { from: [15.5, 15.5], to: [20, 20] } },
+            ],
+            menu: [
+              { Line: { from: [4, 6.5], to: [20, 6.5] } },
+              { Line: { from: [4, 12], to: [20, 12] } },
+              { Line: { from: [4, 17.5], to: [20, 17.5] } },
+            ],
+            more: [
+              { Circle: { at: [5.5, 12], r: 1.7, fill: "$color" } },
+              { Circle: { at: [12, 12], r: 1.7, fill: "$color" } },
+              { Circle: { at: [18.5, 12], r: 1.7, fill: "$color" } },
+            ],
+            info: [
+              { Circle: { at: [12, 12], r: 9 } },
+              { Line: { from: [12, 11], to: [12, 16.5] } },
+              { Circle: { at: [12, 7.7], r: 1.15, fill: "$color" } },
+            ],
+            warning: [
+              { Tri: { points: [12, 3.5, 21.5, 20, 2.5, 20] } },
+              { Line: { from: [12, 9.5], to: [12, 14] } },
+              { Circle: { at: [12, 16.9], r: 1.1, fill: "$color" } },
+            ],
+            star: [
+              { Line: { from: [12, 2.8], to: [14.4, 9] } },
+              { Line: { from: [14.4, 9], to: [21, 9.2] } },
+              { Line: { from: [21, 9.2], to: [15.8, 13.3] } },
+              { Line: { from: [15.8, 13.3], to: [17.6, 19.8] } },
+              { Line: { from: [17.6, 19.8], to: [12, 16] } },
+              { Line: { from: [12, 16], to: [6.4, 19.8] } },
+              { Line: { from: [6.4, 19.8], to: [8.2, 13.3] } },
+              { Line: { from: [8.2, 13.3], to: [3, 9.2] } },
+              { Line: { from: [3, 9.2], to: [9.6, 9] } },
+              { Line: { from: [9.6, 9], to: [12, 2.8] } },
+            ],
+            trash: [
+              { Line: { from: [4, 6.5], to: [20, 6.5] } },
+              { Rect: { at: [9, 3.5], w: 6, h: 3, radius: 1 } },
+              { Rect: { at: [6, 6.5], w: 12, h: 14, radius: 2 } },
+              { Line: { from: [10, 10.5], to: [10, 16.5] } },
+              { Line: { from: [14, 10.5], to: [14, 16.5] } },
+            ],
+            edit: [
+              { Line: { from: [5.5, 15.5], to: [15.5, 5.5] } },
+              { Line: { from: [8.5, 18.5], to: [18.5, 8.5] } },
+              { Line: { from: [15.5, 5.5], to: [18.5, 8.5] } },
+              { Line: { from: [5.5, 15.5], to: [4.5, 19.5] } },
+              { Line: { from: [4.5, 19.5], to: [8.5, 18.5] } },
+            ],
+            settings: [
+              { Circle: { at: [12, 12], r: 3 } },
+              { Circle: { at: [12, 12], r: 7 } },
+              { Line: { from: [12, 2.5], to: [12, 5] } },
+              { Line: { from: [12, 19], to: [12, 21.5] } },
+              { Line: { from: [2.5, 12], to: [5, 12] } },
+              { Line: { from: [19, 12], to: [21.5, 12] } },
+              { Line: { from: [5.3, 5.3], to: [7.05, 7.05] } },
+              { Line: { from: [16.95, 16.95], to: [18.7, 18.7] } },
+              { Line: { from: [18.7, 5.3], to: [16.95, 7.05] } },
+              { Line: { from: [7.05, 16.95], to: [5.3, 18.7] } },
+            ],
+            home: [
+              { Line: { from: [3, 11.5], to: [12, 4] } },
+              { Line: { from: [12, 4], to: [21, 11.5] } },
+              { Line: { from: [5.5, 10], to: [5.5, 20] } },
+              { Line: { from: [5.5, 20], to: [18.5, 20] } },
+              { Line: { from: [18.5, 20], to: [18.5, 10] } },
+              { Line: { from: [10, 20], to: [10, 14.5] } },
+              { Line: { from: [10, 14.5], to: [14, 14.5] } },
+              { Line: { from: [14, 14.5], to: [14, 20] } },
+            ],
+            mail: [
+              { Rect: { at: [3, 5.5], w: 18, h: 13, radius: 2 } },
+              { Line: { from: [3.8, 7], to: [12, 13] } },
+              { Line: { from: [12, 13], to: [20.2, 7] } },
+            ],
+            calendar: [
+              { Rect: { at: [3.5, 5], w: 17, h: 15.5, radius: 2 } },
+              { Line: { from: [3.5, 10], to: [20.5, 10] } },
+              { Line: { from: [8, 3], to: [8, 7] } },
+              { Line: { from: [16, 3], to: [16, 7] } },
+            ],
+            user: [
+              { Circle: { at: [12, 8], r: 4 } },
+              { Rect: { at: [4.5, 14.5], w: 15, h: 8, radius: 4 } },
+            ],
+          },
+          default: [],
+        },
+      },
+    },
+  },
+}

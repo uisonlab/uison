@@ -1,0 +1,15 @@
+// uison-player with disk-usage --console on any folder (Linux, Windows): the program's screen in the player,
+// hover, select, "Zoom in", then the JSON tab. Ids of the program's areas have the player's prefix r/.
+[
+  ["wait", 3000],
+  ["capture", "01_view", 1000],
+  ["hover", "r/row-2", 700],
+  ["capture", "02_row_hover", 1000],
+  ["click", "r/row-1", 1], ["wait", 400],
+  ["tap", "r/zoomSel"], ["wait", 900],
+  ["capture", "03_zoomed", 1000],
+  ["tap", "tabs/0/json"], ["wait", 600],
+  ["tap", "frames"], ["wait", 400],
+  ["capture", "04_json", 1000],
+  ["done"]
+]

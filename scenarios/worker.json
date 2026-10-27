@@ -1,0 +1,2 @@
+// Worker thread with progress (examples-cpp/worker-cpp): post from another thread updates the frame.
+[["tap", "start"], ["wait", 600], ["capture", "01_progress", 100], ["wait", 1200], ["capture", "02_done", 300], ["done"]]

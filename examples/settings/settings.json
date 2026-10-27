@@ -1,0 +1,145 @@
+// Settings screen: long, scrolling; dependent elements (disabled from data).
+{
+  size: [560, 680],
+  data: {
+    s: {
+      notifications: true, sounds: false, badges: true,
+      volume: 60,
+      theme: "light", language: "en",
+      autosave: true, interval: "10",
+    },
+    user: { name: "Anna Peterson", email: "anna@example.com" },
+  },
+  root: {
+    Scroll: {
+      w: "fill", h: "fill",
+      child: {
+        Column: {
+          margin: 24, gap: 18, cross: "stretch",
+          children: [
+            {
+              Row: {
+                gap: 14, cross: "center",
+                children: [
+                  { Avatar: { name: "@user.name", size: 48 } },
+                  {
+                    Column: {
+                      flex: 1, gap: 2,
+                      children: [
+                        { Text: { text: "@user.name", size: 17, bold: true } },
+                        { Text: { text: "@user.email", color: "$theme.muted" } },
+                      ],
+                    },
+                  },
+                  { Button: { text: "Profile", variant: "secondary", size: "sm", icon: "user" } },
+                ],
+              },
+            },
+            {
+              Card: {
+                title: "Notifications",
+                children: [
+                  { Switch: { label: "Show notifications", checked: "@s.notifications" } },
+                  { Switch: { label: "Notification sound", checked: "@s.sounds", disabled: "!@s.notifications" } },
+                  { Switch: { label: "Badge counters", checked: "@s.badges", disabled: "!@s.notifications" } },
+                ],
+              },
+            },
+            {
+              Card: {
+                title: "Volume",
+                children: [
+                  {
+                    Row: {
+                      gap: 12, cross: "center",
+                      children: [
+                        { Icon: { name: "minus", color: "$theme.muted" } },
+                        { Slider: { value: "@s.volume", min: 0, max: 100, step: 5, flex: 1 } },
+                        { Icon: { name: "plus", color: "$theme.muted" } },
+                        { Text: { text: "{@s.volume}%", w: 40, align: "right", color: "$theme.label" } },
+                      ],
+                    },
+                  },
+                  { ProgressBar: { value: { ratio: "@s.volume", min: 0, max: 100 }, color: "$theme.success" } },
+                ],
+              },
+            },
+            {
+              Card: {
+                title: "Appearance",
+                children: [
+                  { Tabs: { value: "@s.theme", tabs: [{ value: "light", label: "Light" }, { value: "dark", label: "Dark" }], on: { change: "theme" } } },
+                  {
+                    Select: {
+                      label: "Language", value: "@s.language",
+                      // Language names in their own language.
+                      options: [
+                        { value: "ru", label: "Русский" },
+                        { value: "uk", label: "Українська" },
+                        { value: "en", label: "English" },
+                        { value: "de", label: "Deutsch" },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              Card: {
+                title: "Autosave",
+                children: [
+                  { Checkbox: { label: "Save automatically", checked: "@s.autosave" } },
+                  {
+                    RadioGroup: {
+                      value: "@s.interval", disabled: "!@s.autosave",
+                      options: [
+                        { value: "1", label: "Every minute" },
+                        { value: "10", label: "Every 10 minutes" },
+                        { value: "60", label: "Every hour" },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              Card: {
+                title: "Account", gap: 0, padding: [16, 8],
+                children: [
+                  {
+                    ListTile: {
+                      title: "Change password", leading: { Icon: { name: "edit", size: 18, color: "$theme.label" } },
+                      trailing: { Icon: { name: "chevronRight", size: 14, color: "$theme.muted" } }, on: { click: "password" },
+                    },
+                  },
+                  {
+                    ListTile: {
+                      title: "Mail", subtitle: "@user.email", leading: { Icon: { name: "mail", size: 18, color: "$theme.label" } },
+                      trailing: { Badge: { text: "3", color: "$theme.primary" } }, on: { click: "mail" },
+                    },
+                  },
+                  {
+                    ListTile: {
+                      title: "Sign out", leading: { Icon: { name: "arrowLeft", size: 18, color: "$theme.danger" } }, on: { click: "logout" },
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              Row: {
+                gap: 8,
+                children: [
+                  { Spacer: {} },
+                  { Button: { text: "Reset", variant: "secondary", on: { click: "reset" } } },
+                  { Button: { text: "Save", icon: "check", on: { click: "save" } } },
+                ],
+              },
+            },
+            { Text: { text: "@status", visible: "@status", align: "right", size: 12, color: "$theme.success" } },
+          ],
+        },
+      },
+    },
+  },
+}

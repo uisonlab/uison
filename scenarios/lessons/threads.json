@@ -1,0 +1,1 @@
+[["tap", "start"], ["wait", 2600], ["capture", "lesson", 300], ["done"]]

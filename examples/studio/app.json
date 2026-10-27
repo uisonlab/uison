@@ -1,0 +1,60 @@
+// uison Studio shell: sidebar (on a phone, tabs at the bottom, phone.json),
+// current section, modal dialog, notification.
+// The app's sections and components are in components.json, data and logic in lib.rs.
+{
+  size: [1220, 780],
+  // The shells handle the safe area (notch, status bar, home indicator) themselves:
+  // the background extends under the system bars.
+  safeArea: false,
+  root: {
+    Stack: {
+      w: "fill", h: "fill",
+      children: [
+        {
+          switch: { lt: ["@env.width", 700] },
+          cases: { true: { PhoneShell: {} } },
+          default: {
+            Row: {
+              w: "fill", h: "fill",
+              padding: ["@env.safe.top", "@env.safe.right", "@env.safe.bottom", "@env.safe.left"],
+              children: [
+                { Sidebar: {} },
+                {
+                  Box: {
+                    flex: 1, h: "fill", fill: "$theme.card", stroke: "$theme.divider", radius: 12, margin: [8, 8, 8, 0], clip: true,
+                    child: {
+                      switch: "@nav",
+                      cases: {
+                        inbox: { InboxScreen: { w: "fill", h: "fill" } },
+                        tasks: { TasksScreen: { w: "fill", h: "fill" } },
+                        contacts: { ContactsScreen: { w: "fill", h: "fill" } },
+                        stats: { StatsScreen: { w: "fill", h: "fill" } },
+                        form: { FormScreen: { w: "fill", h: "fill" } },
+                        settings: { SettingsScreen: { w: "fill", h: "fill" } },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        // Modal dialog: the dimmed backdrop catches the mouse; a click outside or Escape closes it.
+        {
+          Box: {
+            overlay: true, visible: "@modal.open", w: "fill", h: "fill", fill: "#0000004D", align: "center",
+            interactive: true, cursor: "arrow",
+            child: { NewTaskDialog: {} },
+          },
+        },
+        // Notification at the bottom (on a phone, above the tabs); hides itself on a timer.
+        {
+          Toast: {
+            overlay: true, visible: "@toast.text", place: "bottom",
+            margin: { switch: { lt: ["@env.width", 700] }, cases: { true: [0, 0, 100, 0] }, default: [0, 0, 28, 0] },
+          },
+        },
+      ],
+    },
+  },
+}

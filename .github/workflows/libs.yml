@@ -1,0 +1,258 @@
+# C/C++ libraries for all platforms: static and dynamic (where available) + headers,
+# CMake and pkg-config — packages dist/uison-<platform> (tools/c-dist.sh, tools/c-dist.ps1) as artifacts.
+# Every package is checked: headless ABI and uison.hpp tests where they can run,
+# otherwise building a lesson program from the package.
+# Releases: push to main — nightly prerelease (recreated), tag v* — release of that version.
+name: libs
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: libs-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  # Artifacts take storage space (limited for a private repository): one week.
+  RETENTION: 7
+
+jobs:
+  # Rust tests: uison-json, uison-frame, uison-ui, uison-c, uison-gen (the widgets header is up to date).
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable --no-self-update && rustup component add clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --workspace --exclude uison-apple
+      - run: cargo clippy --workspace --exclude uison-apple -- -D warnings
+
+  # macOS (Apple silicon) and iOS on one runner: macOS minutes cost more.
+  apple:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable --no-self-update && rustup target add aarch64-apple-ios aarch64-apple-ios-sim
+      - uses: Swatinem/rust-cache@v2
+      - name: macOS arm64 (libuison.a, libuison.dylib)
+        run: UISON_MACOS_ARCHS=aarch64 tools/c-dist.sh macos
+      - name: iOS (uison.xcframework)
+        run: tools/c-dist.sh ios
+      - name: check macOS package (abi-test, kit-test, cpp-test, cpp-test-shared; assembly lessons link)
+        run: |
+          for lang in c cpp asm; do
+            cmake -S examples-$lang -B out/$lang -DCMAKE_BUILD_TYPE=Release -DUISON_PACKAGE=$PWD/dist/uison-macos
+            cmake --build out/$lang -j 4
+          done
+          out/c/abi-test && out/c/kit-test && out/c/kit-test-c11 && out/cpp/cpp-test && out/cpp/cpp-test-shared
+      - name: check iOS package (lessons 1 C, 2 C++ for the simulator)
+        run: |
+          mkdir -p out; D=dist/uison-ios; SDK=$(xcrun --sdk iphonesimulator --show-sdk-path)
+          LIBS="-framework UIKit -framework QuartzCore -framework CoreGraphics -framework CoreText -framework ImageIO -framework CoreFoundation -framework Foundation -lobjc"
+          clang -target arm64-apple-ios17.0-simulator -isysroot $SDK examples-c/lessons/01-hello/main.c \
+            -I$D/include $D/uison.xcframework/ios-arm64-simulator/libuison.a $LIBS -Wl,-dead_strip -o out/hello-ios
+          clang++ -std=c++20 -target arm64-apple-ios17.0-simulator -isysroot $SDK examples-cpp/lessons/02-data/main.cpp \
+            -I$D/include $D/uison.xcframework/ios-arm64-simulator/libuison.a $LIBS -Wl,-dead_strip -o out/builder-ios
+          ls -l out/hello-ios out/builder-ios
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uison-macos-arm64
+          path: dist/uison-macos
+          retention-days: ${{ env.RETENTION }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uison-ios
+          path: dist/uison-ios
+          retention-days: ${{ env.RETENTION }}
+
+  # Android: arm64-v8a, armeabi-v7a, x86_64, x86 — the runner's NDK.
+  android:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >-
+          rustup update stable --no-self-update &&
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+      - uses: Swatinem/rust-cache@v2
+      - name: Android (4 ABI)
+        run: ANDROID_NDK_HOME=$ANDROID_NDK_LATEST_HOME tools/c-dist.sh android
+      - name: check package (libmain.so of lessons 1 C, 9 C++ for every ABI)
+        run: |
+          D=dist/uison-android; CC=$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin
+          MAP=$D/lib/cmake/uison/uison-android.map
+          for abi in arm64-v8a:aarch64-linux-android29 armeabi-v7a:armv7a-linux-androideabi29 x86_64:x86_64-linux-android29 x86:i686-linux-android29; do
+            a=${abi%%:*}; cc=$CC/${abi#*:}-clang
+            $cc -shared -fPIC examples-c/lessons/01-hello/main.c -I$D/include $D/lib/$a/libuison.a \
+              -llog -landroid -ldl -lm -Wl,--gc-sections,--version-script=$MAP -s -o /tmp/hello-$a.so
+            $cc++ -std=c++20 -shared -fPIC examples-cpp/lessons/02-data/main.cpp -I$D/include $D/lib/$a/libuison.a \
+              -llog -landroid -ldl -lm -static-libstdc++ -Wl,--gc-sections,--version-script=$MAP -s -o /tmp/builder-$a.so
+            $CC/llvm-nm -D --defined-only /tmp/hello-$a.so | grep -q JNI_OnLoad
+            ls -l /tmp/hello-$a.so /tmp/builder-$a.so
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uison-android
+          path: dist/uison-android
+          retention-days: ${{ env.RETENTION }}
+
+  # Linux x86_64 and aarch64 (cross-compiled): on ubuntu-22.04 — the library needs only glibc 2.35.
+  linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq gcc-aarch64-linux-gnu nasm
+      - run: rustup update stable --no-self-update && rustup target add x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu
+      - uses: Swatinem/rust-cache@v2
+      - name: Linux x86_64, aarch64
+        run: tools/c-dist.sh linux
+      - name: check x86_64 package (abi-test, kit-test, cpp-test, cpp-test-shared; GCC 11; assembly lessons link)
+        run: |
+          # Tests only: lessons build slowly with GCC 11 on the runner's two cores (macOS and Windows build them).
+          cmake -S examples-c -B out/c -DCMAKE_BUILD_TYPE=Release -DUISON_PACKAGE=$PWD/dist/uison-linux-x86_64
+          cmake --build out/c -j 4 --target abi-test kit-test kit-test-c11
+          cmake -S examples-cpp -B out/cpp -DCMAKE_BUILD_TYPE=Release -DUISON_PACKAGE=$PWD/dist/uison-linux-x86_64
+          cmake --build out/cpp -j 4 --target cpp-test cpp-test-shared
+          out/c/abi-test && out/c/kit-test && out/c/kit-test-c11 && out/cpp/cpp-test && out/cpp/cpp-test-shared
+          # Assembly lessons (NASM, elf64): they link as position-independent programs.
+          cmake -S examples-asm -B out/asm -DCMAKE_BUILD_TYPE=Release -DUISON_PACKAGE=$PWD/dist/uison-linux-x86_64
+          cmake --build out/asm -j 4
+      - name: check aarch64 package (link lesson 1, assembly lessons 1 and 9)
+        run: |
+          D=dist/uison-linux-aarch64
+          LIBS="-lgcc_s -lutil -lrt -lpthread -lm -ldl -Wl,--gc-sections -s"
+          aarch64-linux-gnu-gcc examples-c/lessons/01-hello/main.c -I$D/include $D/lib/libuison.a $LIBS -o /tmp/hello-aarch64
+          for l in 01-hello 09-frame; do
+            aarch64-linux-gnu-gcc examples-asm/lessons/$l/arm64.S $D/lib/libuison.a $LIBS -o /tmp/asm-$l-aarch64
+          done
+          ls -l /tmp/hello-aarch64 /tmp/asm-*-aarch64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uison-linux-x86_64
+          path: dist/uison-linux-x86_64
+          retention-days: ${{ env.RETENTION }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uison-linux-aarch64
+          path: dist/uison-linux-aarch64
+          retention-days: ${{ env.RETENTION }}
+
+  # Windows x64 and ARM64 (cross-compiled on x64): uison.lib (for /MT and /MD), uison.dll + uison.dll.lib.
+  windows:
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64, arm64]
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable --no-self-update && rustup target add x86_64-pc-windows-msvc aarch64-pc-windows-msvc
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.arch }}
+      - name: NASM (examples-asm in the x64 check)
+        if: matrix.arch == 'x64'
+        run: choco install nasm -y --no-progress
+      - name: package (x64 — and tests without windows from the package, MSVC)
+        shell: pwsh
+        run: |
+          if ('${{ matrix.arch }}' -eq 'x64') { tools\c-dist.ps1 -Arch x64 -Test -NoLessons } else { tools\c-dist.ps1 -Arch arm64 }
+      - name: lessons with windows (experimental on CI)
+        if: matrix.arch == 'x64'
+        continue-on-error: true
+        shell: pwsh
+        run: tools\c-dist.ps1 -Arch x64 -Test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uison-windows-${{ matrix.arch }}
+          path: dist/uison-windows-${{ matrix.arch }}
+          retention-days: ${{ env.RETENTION }}
+
+  # WASM: libuison.a for Emscripten — emcc/em++ links the C/C++ program (all of uison's JS is inside
+  # the library as EM_JS strings); checks: a single em++ command, examples via emcmake from the package, ABI tests in node.
+  wasm:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable --no-self-update && rustup target add wasm32-unknown-emscripten
+      - uses: Swatinem/rust-cache@v2
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 5.0.7
+          actions-cache-folder: emsdk-cache
+      - name: WASM (libuison.a)
+        run: tools/c-dist.sh wasm
+      - name: check package (em++, emcmake, ABI tests in node)
+        run: |
+          D=$PWD/dist/uison-wasm
+          em++ -std=c++20 -Oz -fwasm-exceptions -I"$D/include" examples-cpp/lessons/01-hello/main.cpp "$D/lib/libuison.a" \
+            --shell-file "$D/web/shell.html" -o /tmp/hello.html
+          ls -l /tmp/hello.*
+          for l in c cpp; do
+            emcmake cmake -S examples-$l -B out/wasm/$l -DCMAKE_BUILD_TYPE=Release -DUISON_PACKAGE="$D"
+            cmake --build out/wasm/$l -j 4
+          done
+          (cd examples-c/abi-test && node ../../out/wasm/c/abi-test.js && node ../../out/wasm/c/kit-test.js)
+          (cd examples-cpp/cpp-test && node ../../out/wasm/cpp/cpp-test.js)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uison-wasm
+          path: dist/uison-wasm
+          retention-days: ${{ env.RETENTION }}
+
+  # Release: all packages as archives (Windows — zip, the rest — tar.gz) + SHA256SUMS.txt.
+  release:
+    if: github.event_name == 'push'
+    needs: [test, apple, android, linux, windows, wasm]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: pkgs
+      - name: archives
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then ver=$GITHUB_REF_NAME; else ver=nightly; fi
+          echo "VER=$ver" >> "$GITHUB_ENV"
+          mkdir out
+          cd pkgs
+          for d in */; do
+            d=${d%/}; name=$d-$ver
+            mv "$d" "$name"
+            if [[ $d == uison-windows-* ]]; then zip -qr "../out/$name.zip" "$name"; else tar czf "../out/$name.tar.gz" "$name"; fi
+          done
+          cd ../out && sha256sum -- * > SHA256SUMS.txt && ls -l
+      - name: notes
+        run: |
+          cat > notes.md <<EOF
+          The uison library for C and C++: headers (\`uison.h\`, \`uison.hpp\`, \`uison_widgets.hpp\`), static and dynamic library, CMake files (\`find_package(uison)\`) and pkg-config.
+
+          | archive | static | dynamic |
+          |---|---|---|
+          | uison-macos-arm64 | \`lib/libuison.a\` | \`lib/libuison.dylib\` |
+          | uison-ios | \`uison.xcframework\` (device + simulator) | — |
+          | uison-android | \`lib/<ABI>/libuison.a\` (arm64-v8a, armeabi-v7a, x86_64, x86) | \`lib/<ABI>/libuison.so\` |
+          | uison-linux-x86_64, uison-linux-aarch64 | \`lib/libuison.a\` | \`lib/libuison.so\` (glibc ≥ 2.35) |
+          | uison-windows-x64, uison-windows-arm64 | \`lib/uison.lib\` (/MT and /MD) | \`bin/uison.dll\` + \`lib/uison.dll.lib\` |
+          | uison-wasm | \`lib/libuison.a\` (wasm32, C) + \`web/\` | — |
+
+          Commit: ${GITHUB_SHA}. Quick start and lessons: \`docs/c\` in the repository.
+          EOF
+      - name: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [ "$VER" = nightly ]; then
+            # The nightly prerelease is always the latest main: the old one is deleted with its tag.
+            gh release delete nightly --cleanup-tag --yes || true
+            gh release create nightly out/* --prerelease --target "$GITHUB_SHA" \
+              --title "nightly (${GITHUB_SHA::7})" --notes-file notes.md
+          else
+            gh release create "$VER" out/* --title "$VER" --notes-file notes.md
+          fi

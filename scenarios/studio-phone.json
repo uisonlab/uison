@@ -1,0 +1,20 @@
+// Studio on a phone: tabs, a message and "back", tasks, contacts, analytics, form, settings.
+[
+  ["capture", "01_inbox", 700],
+  ["tap", "inboxList/2"], ["wait", 300],
+  ["capture", "02_message", 700],
+  ["tap", "root/0/0/0/0/0/0"], ["wait", 300],
+  ["tap", "root/0/0/2/1"], ["wait", 300],
+  ["capture", "03_tasks", 700],
+  ["swipe", "phoneTasks", -500, 300], ["wait", 1200],
+  ["capture", "04_tasks_scrolled", 700],
+  ["tap", "root/0/0/2/2"], ["wait", 300],
+  ["capture", "05_contacts", 700],
+  ["tap", "root/0/0/2/3"], ["wait", 300],
+  ["capture", "06_stats", 700],
+  ["tap", "root/0/0/2/4"], ["wait", 300],
+  ["capture", "07_form", 700],
+  ["tap", "root/0/0/2/5"], ["wait", 300],
+  ["capture", "08_settings", 700],
+  ["done"]
+]

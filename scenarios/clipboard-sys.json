@@ -1,0 +1,10 @@
+// System clipboard on Linux and Windows: text is put in from outside before launch, the app pastes it
+// (⌘V/Ctrl+V is a real paste through the clipboard), selects all, copies and waits for it to be read from outside.
+// Cyrillic text on purpose: checks UTF-8 through the system clipboard in both directions.
+//   tools/linux.sh gallery clipboard-sys.json -c sway -b 'wl-copy "снаружи"' -a '02_copied|wl-paste'
+[
+  ["wait", 500],
+  ["tap", "name/1/0"], ["cmd", "v"], ["wait", 300], ["capture", "01_pasted", 300],
+  ["type", " и из uison"], ["cmd", "a"], ["cmd", "c"], ["capture", "02_copied", 3000],
+  ["done"]
+]

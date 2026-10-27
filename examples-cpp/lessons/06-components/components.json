@@ -1,0 +1,36 @@
+// Custom components: params are the parameters with default values (a comment on a parameter ends up
+// in the widget's hints), body is the tree, inside it parameters are $name.
+{
+  Stat: {
+    params: {
+      title: "", // caption
+      value: 0, // the number, large
+      icon: "star", // an icon from the Icon set
+      color: "$theme.primary", // icon color
+    },
+    body: {
+      Box: {
+        flex: 1, padding: 14, radius: "$theme.radius", fill: "$theme.card", stroke: "$theme.divider",
+        child: { Column: { gap: 6, children: [
+          { Row: { gap: 6, cross: "center", children: [
+            { Icon: { name: "$icon", size: 16, color: "$color" } },
+            { Text: { text: "$title", size: 12, color: "$theme.muted" } },
+          ] } },
+          { Text: { text: "{$value}", size: 26, bold: true } },
+        ] } },
+      },
+    },
+  },
+
+  // Button keys come from a parameter: each Counter has its own buttons, one handler (it tells the button by key).
+  Counter: {
+    params: { label: "" },
+    body: {
+      Row: { gap: 8, cross: "center", children: [
+        { Text: { text: "$label", flex: 1 } },
+        { IconButton: { icon: "minus", size: "sm", key: "dec-{$label}", on: { click: "dec" } } },
+        { IconButton: { icon: "plus", size: "sm", key: "inc-{$label}", on: { click: "inc" } } },
+      ] },
+    },
+  },
+}

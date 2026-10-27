@@ -1,0 +1,2 @@
+// Images on a phone: scroll the gallery to the photos and take a screenshot.
+[["wait", 500], ["swipe", "page", -500, 200], ["wait", 1200], ["swipe", "page", -300, 200], ["wait", 1200], ["capture", "01_images", 300], ["done"]]

@@ -1,0 +1,81 @@
+// The stage 1 form, assembled from library elements.
+// Compare with examples/demo: there the same form is drawn with primitives by hand.
+{
+  size: [480, 640],
+  data: {
+    form: { name: "", email: "", country: null, agree: true, plan: "pro", sent: 0 },
+    errors: { name: "", email: "" },
+  },
+  root: {
+    Scroll: {
+      w: "fill", h: "fill",
+      child: {
+        Center: {
+          h: "hug",
+          child: {
+            Box: {
+              w: 432, margin: [24, 0], padding: 24,
+              radius: "$theme.radiusLg", fill: "$theme.card", stroke: "$theme.divider",
+              child: {
+                Column: {
+                  gap: 16, cross: "stretch",
+                  children: [
+                    {
+                      Column: {
+                        gap: 4,
+                        children: [
+                          { Text: { text: "Sign up", size: 22, bold: true } },
+                          { Text: { text: "Fill in the form to continue", color: "$theme.muted" } },
+                        ],
+                      },
+                    },
+                    { TextField: { key: "name", label: "Name", value: "@form.name", placeholder: "John Smith", error: "@errors.name" } },
+                    {
+                      TextField: {
+                        key: "email", label: "Email", value: "@form.email", placeholder: "john@example.com",
+                        error: "@errors.email", on: { submit: "submit" },
+                      },
+                    },
+                    {
+                      Select: {
+                        label: "Country", value: "@form.country", placeholder: "Choose a country",
+                        options: [
+                          { value: "ua", label: "Ukraine" },
+                          { value: "pl", label: "Poland" },
+                          { value: "de", label: "Germany" },
+                          { value: "es", label: "Spain" },
+                        ],
+                      },
+                    },
+                    { Divider: {} },
+                    { Checkbox: { label: "I agree to the terms", checked: "@form.agree" } },
+                    {
+                      Section: {
+                        title: "PLAN",
+                        children: [
+                          {
+                            RadioGroup: {
+                              direction: "row", value: "@form.plan",
+                              options: [{ value: "basic", label: "Basic" }, { value: "pro", label: "Pro" }],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      Button: {
+                        size: "lg", disabled: "!@form.agree", on: { click: "submit" },
+                        text: { switch: { not: "@form.sent" }, cases: { true: "Submit" }, default: "Sent: {@form.sent}" },
+                      },
+                    },
+                    { Text: { text: "Have an account? Sign in", align: "center", size: 12, color: "$theme.muted" } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}

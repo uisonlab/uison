@@ -1,0 +1,56 @@
+# Build
+target/
+out/
+*.apk
+*.aab
+*.so
+*.wasm
+*.dSYM/
+*.pdb
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.dylib
+*.exe
+__pycache__/
+
+# Screenshots and debug output (screenshots for the docs live in docs/)
+*.png
+!docs/**/*.png
+# Example images (include_bytes!) are needed for the build
+!examples/**/images/*.png
+# App icons (include_bytes!, packages)
+!examples/**/assets/*.png
+*.log
+hitmap*.txt
+
+# Signing and keys: never in git
+*.keystore
+*.jks
+*.mobileprovision
+*.p12
+*.cer
+*.pfx
+
+# OS and editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*~
+
+# Claude Code: settings and internal notes (not in git)
+.claude/
+/CLAUDE.md
+/Task*.md
+/dist
+
+# Private notes (not in git)
+/private/
+
+# Visual Studio (Open Folder) keeps its state next to the project
+.vs/

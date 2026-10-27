@@ -1,0 +1,10 @@
+// Long press by finger: list row menu, word + text field menu (iOS, Android, UISON_TOUCH=1).
+[
+  ["swipe", "page", -500, 200], ["wait", 1200], ["swipe", "page", -500, 200], ["wait", 1200],
+  ["hold", "anna"], ["capture", "01_hold_menu", 600],
+  ["tap", "~menu/0"], ["wait", 300],
+  ["tap", "name/1/0"], ["type", "Hello world"], ["wait", 300],
+  ["hold", "name/1/0"], ["capture", "02_hold_field", 600],
+  ["tap", "~menu/1"], ["capture", "03_copied", 600],
+  ["done"]
+]

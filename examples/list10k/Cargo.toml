@@ -1,0 +1,7 @@
+[package]
+name = "list10k"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison.workspace = true

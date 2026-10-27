@@ -1,0 +1,7 @@
+// Fling measurement: fast swipes over the mail list (UISON_STATS=1 prints frame intervals).
+[
+  ["wait", 500],
+  ["swipe", "inboxList", -250, 80], ["wait", 2500],
+  ["swipe", "inboxList", -250, 80], ["wait", 2500],
+  ["done"]
+]

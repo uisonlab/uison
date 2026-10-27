@@ -1,0 +1,290 @@
+// uison Studio on a phone (window narrower than 700): sections as tabs at the bottom,
+// a message opens over the list, tasks and contacts as a single feed.
+// The other sections are shared with the desktop version: their rows stack by themselves (stackBelow).
+{
+  // The safe area is handled by hand (safeArea: false in app.json):
+  // the background goes under the status bar, the tab bar under the home indicator.
+  PhoneShell: {
+    body: {
+      Box: {
+        w: "fill", h: "fill", fill: "$theme.card",
+        padding: ["@env.safe.top", "@env.safe.right", "@env.safe.bottom", "@env.safe.left"],
+        child: {
+      Column: {
+        w: "fill", h: "fill", cross: "stretch",
+        children: [
+          {
+            Box: {
+              flex: 1, w: "fill", fill: "$theme.card", clip: true,
+              child: {
+                switch: "@nav",
+                cases: {
+                  inbox: { PhoneInbox: { w: "fill", h: "fill" } },
+                  tasks: { PhoneTasks: { w: "fill", h: "fill" } },
+                  contacts: { PhoneContacts: { w: "fill", h: "fill" } },
+                  stats: { StatsScreen: { w: "fill", h: "fill" } },
+                  form: { FormScreen: { w: "fill", h: "fill" } },
+                  settings: { SettingsScreen: { w: "fill", h: "fill" } },
+                },
+              },
+            },
+          },
+          // While the keyboard is open the tabs aren't needed: the space goes to the content.
+          { Divider: { visible: { not: "@env.keyboard" } } },
+          {
+            Row: {
+              visible: { not: "@env.keyboard" }, h: 52, padding: [4, 4, 0, 4],
+              children: [
+                { PhoneTab: { id: "inbox", icon: "mail", label: "@t.inbox", badge: "@inbox.unread" } },
+                { PhoneTab: { id: "tasks", icon: "check", label: "@t.tasks", badge: "@board.open" } },
+                { PhoneTab: { id: "contacts", icon: "user", label: "@t.contacts" } },
+                { PhoneTab: { id: "stats", icon: "star", label: "@t.stats" } },
+                { PhoneTab: { id: "form", icon: "edit", label: "@t.form" } },
+                { PhoneTab: { id: "settings", icon: "settings", label: "@t.settings" } },
+              ],
+            },
+          },
+        ],
+      },
+        },
+      },
+    },
+  },
+
+  PhoneTab: {
+    params: { id: "", icon: "", label: "", badge: null },
+    interactive: true,
+    body: {
+      Box: {
+        flex: 1, h: "fill", align: "top", padding: [4, 0, 0, 0],
+        select: { path: "@nav", value: "$id" },
+        child: {
+          Column: {
+            gap: 3, cross: "center",
+            children: [
+              {
+                // Icon in the center, the count above and to the right of it (doesn't cover the icon).
+                Stack: {
+                  w: 64, h: 24,
+                  children: [
+                    {
+                      Icon: {
+                        name: "$icon", size: 22, weight: 1.8, pos: [21, 1],
+                        color: { switch: { eq: ["@nav", "$id"] }, cases: { true: "$theme.primary" }, default: { state: { normal: "$theme.muted", pressed: "$theme.text" } } },
+                      },
+                    },
+                    { Badge: { text: "$badge", visible: "$badge", color: "$theme.danger", pos: [36, -4] } },
+                  ],
+                },
+              },
+              {
+                Text: {
+                  text: "$label", size: 10, maxLines: 1, bold: { eq: ["@nav", "$id"] },
+                  color: { switch: { eq: ["@nav", "$id"] }, cases: { true: "$theme.primary" }, default: "$theme.muted" },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  // Phone screen header: "back" (if any), title, actions on the right.
+  PhoneHeader: {
+    params: { title: "", subtitle: null, back: null, actions: [] },
+    body: {
+      Row: {
+        w: "fill", padding: [10, 12, 10, 16], gap: 8, cross: "center",
+        children: [
+          { IconButton: { icon: "chevronLeft", visible: "$back", on: { click: "$back" } } },
+          {
+            Column: {
+              flex: 1, gap: 1,
+              children: [
+                { Text: { text: "$title", size: 22, bold: true, maxLines: 1 } },
+                { Text: { text: "$subtitle", visible: "$subtitle", size: 12, color: "$theme.muted", maxLines: 1 } },
+              ],
+            },
+          },
+          { Row: { gap: 4, cross: "center", children: "$actions" } },
+        ],
+      },
+    },
+  },
+
+  // ---------------------------------------------------------------- inbox
+
+  PhoneInbox: {
+    body: {
+      switch: { not: "@inbox.current" },
+      cases: {
+        true: {
+          Column: {
+            cross: "stretch",
+            children: [
+              {
+                PhoneHeader: {
+                  title: "@t.inbox", subtitle: "{@inbox.unread} {@t.unreadOf} {@inbox.total}",
+                  actions: [{ IconButton: { icon: "edit", on: { click: "compose" } } }],
+                },
+              },
+              { Box: { padding: [0, 16, 8, 16], child: { TextField: { key: "search", value: "@inbox.q", placeholder: "@t.searchMail", w: "fill" } } } },
+              {
+                Box: {
+                  padding: [0, 16, 10, 16],
+                  child: {
+                    Tabs: {
+                      w: "fill", value: "@inbox.filter",
+                      tabs: [{ value: "all", label: "@t.all" }, { value: "unread", label: "@t.unread" }, { value: "important", label: "@t.important" }],
+                    },
+                  },
+                },
+              },
+              { Divider: {} },
+              {
+                Stack: {
+                  flex: 1,
+                  children: [
+                    {
+                      List: {
+                        key: "inboxList", w: "fill", h: "fill", items: "@inbox.view", as: "m", itemHeight: "@ui.rowH", itemKey: "@m.idx",
+                        item: { InboxRow: { m: "@m" } },
+                      },
+                    },
+                    { Center: { visible: "!@inbox.view", child: { Text: { text: "@t.nothingFound", color: "$theme.muted" } } } },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+        false: {
+          Column: {
+            cross: "stretch",
+            children: [
+              { PhoneHeader: { title: "@t.inbox", back: "closeMessage" } },
+              { Divider: {} },
+              { MessageView: { flex: 1 } },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  // ---------------------------------------------------------------- tasks
+
+  PhoneTasks: {
+    body: {
+      Column: {
+        cross: "stretch",
+        children: [
+          {
+            PhoneHeader: {
+              title: "@t.tasks", subtitle: "{@board.done} {@t.doneOf} {@board.total}",
+              actions: [{ IconButton: { icon: "plus", variant: "primary", on: { click: "openModal" } } }],
+            },
+          },
+          { Box: { padding: [0, 16, 10, 16], child: { ProgressBar: { value: "@board.progress", w: "fill", color: "$theme.success" } } } },
+          {
+            Scroll: {
+              flex: 1, key: "phoneTasks",
+              child: {
+                Column: {
+                  padding: [4, 16, 20, 16], gap: 18, cross: "stretch",
+                  children: {
+                    For: {
+                      each: "@board.columns", as: "col", key: "@col.id",
+                      do: {
+                        Column: {
+                          gap: 8, cross: "stretch",
+                          children: [
+                            {
+                              Row: {
+                                gap: 8, cross: "center", padding: [2, 4],
+                                children: [
+                                  { Box: { w: 8, h: 8, radius: 4, fill: "@col.color" } },
+                                  { Text: { text: "@col.title", bold: true, flex: 1 } },
+                                  { Badge: { text: "{@col.count}", color: "$theme.muted" } },
+                                ],
+                              },
+                            },
+                            { For: { each: "@col.items", as: "task", key: "@task.id", do: { TaskCard: { task: "@task", first: "@col.first", last: "@col.last" } } } },
+                            { Center: { h: 44, visible: { not: "@col.items" }, child: { Text: { text: "@t.empty", size: 12, color: "$theme.muted" } } } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  // ---------------------------------------------------------------- contacts
+
+  PhoneContacts: {
+    body: {
+      Column: {
+        cross: "stretch",
+        children: [
+          { PhoneHeader: { title: "@t.contacts", subtitle: "{@contacts.online} {@t.onlineOf} {@contacts.total}" } },
+          { Box: { padding: [0, 16, 8, 16], child: { TextField: { value: "@contacts.q", placeholder: "@t.searchPeople", w: "fill" } } } },
+          {
+            Box: {
+              padding: [0, 16, 10, 16],
+              child: { Tabs: { w: "fill", value: "@contacts.filter", tabs: [{ value: "all", label: "@t.all" }, { value: "online", label: "@t.online" }] } },
+            },
+          },
+          { Divider: {} },
+          {
+            Scroll: {
+              flex: 1, key: "phoneContacts",
+              child: {
+                Column: {
+                  cross: "stretch",
+                  children: { For: { each: "@contacts.view", as: "c", key: "@c.id", do: { PhoneContactRow: { c: "@c" } } } },
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  PhoneContactRow: {
+    params: { c: null },
+    body: {
+      Row: {
+        padding: [10, 16], gap: 12, cross: "center",
+        children: [
+          {
+            Stack: {
+              w: 44, h: 44,
+              children: [
+                { Avatar: { name: "$c.name", src: "$c.photo", size: 44 } },
+                { Box: { place: "bottomRight", w: 13, h: 13, radius: 7, fill: "$theme.success", stroke: "$theme.card", width: 2.5, visible: "$c.online" } },
+              ],
+            },
+          },
+          {
+            Column: {
+              flex: 1, gap: 2,
+              children: [
+                { Text: { text: "$c.name", bold: true, maxLines: 1 } },
+                { Text: { text: "{$c.role} · {$c.city}", size: 12, color: "$theme.muted", maxLines: 1 } },
+              ],
+            },
+          },
+          { IconButton: { icon: "mail", key: "write-{$c.id}", on: { click: "writeTo" } } },
+        ],
+      },
+    },
+  },
+}

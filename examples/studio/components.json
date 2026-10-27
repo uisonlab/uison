@@ -1,0 +1,984 @@
+// Components and sections of uison Studio. Templates only: lib.rs prepares the data (derive).
+{
+  // ================================================================ shell
+
+  Sidebar: {
+    body: {
+      Column: {
+        w: 228, h: "fill", padding: [18, 12, 14, 12], gap: 2, cross: "stretch",
+        children: [
+          {
+            Row: {
+              gap: 10, cross: "center", margin: [0, 0, 18, 6],
+              children: [
+                { Box: { w: 30, h: 30, radius: 8, fill: "$theme.primary", align: "center", child: { Icon: { name: "star", size: 18, color: "#FFFFFF", weight: 2 } } } },
+                {
+                  Column: {
+                    children: [
+                      { Text: { text: "uison Studio", bold: true, size: 15 } },
+                      { Text: { text: "@t.tagline", size: 11, color: "$theme.muted" } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          { NavItem: { id: "inbox", icon: "mail", label: "@t.inbox", badge: "@inbox.unread", hint: "{@env.mod}1" } },
+          { NavItem: { id: "tasks", icon: "check", label: "@t.tasks", badge: "@board.open", hint: "{@env.mod}2" } },
+          { NavItem: { id: "contacts", icon: "user", label: "@t.contacts", hint: "{@env.mod}3" } },
+          { NavItem: { id: "stats", icon: "star", label: "@t.stats", hint: "{@env.mod}4" } },
+          { NavItem: { id: "form", icon: "edit", label: "@t.form", hint: "{@env.mod}5" } },
+          { Spacer: {} },
+          { NavItem: { id: "settings", icon: "settings", label: "@t.settings", hint: "{@env.mod}6" } },
+          { Divider: { margin: [8, 0] } },
+          {
+            Row: {
+              gap: 10, cross: "center", padding: [4, 6],
+              children: [
+                { Avatar: { name: "@me.name", size: 28 } },
+                {
+                  Column: {
+                    flex: 1,
+                    children: [
+                      { Text: { text: "@me.name", size: 12, bold: true, maxLines: 1 } },
+                      { Text: { text: "@me.email", size: 11, color: "$theme.muted", maxLines: 1 } },
+                    ],
+                  },
+                },
+                { IconButton: { icon: { switch: "@settings.theme", cases: { dark: "star" }, default: "settings" }, size: "sm", tooltip: "@t.tipTheme", on: { click: "toggleTheme" } } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  NavItem: {
+    params: { id: "", icon: "", label: "", badge: null, hint: "" },
+    interactive: true,
+    body: {
+      Box: {
+        h: 32, padding: [0, 10], radius: "$theme.radius", align: "left",
+        select: { path: "@nav", value: "$id" },
+        fill: { switch: { eq: ["@nav", "$id"] }, cases: { true: "$theme.selection" }, default: { state: { normal: null, hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } } },
+        child: {
+          Row: {
+            w: "fill", gap: 10, cross: "center",
+            children: [
+              { Icon: { name: "$icon", size: 16, weight: 1.9, color: { switch: { eq: ["@nav", "$id"] }, cases: { true: "$theme.primary" }, default: "$theme.label" } } },
+              {
+                Text: {
+                  text: "$label", flex: 1, maxLines: 1, bold: { eq: ["@nav", "$id"] },
+                  color: { switch: { eq: ["@nav", "$id"] }, cases: { true: "$theme.primary" }, default: "$theme.text" },
+                },
+              },
+              { Badge: { text: "$badge", visible: "$badge", color: "$theme.primary" } },
+              { Text: { text: "$hint", size: 11, color: "$theme.muted", visible: { not: "$badge" } } },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  // Section header: title, caption, and an actions slot on the right.
+  // On a narrow screen the actions move below the title and wrap.
+  ScreenHeader: {
+    params: { title: "", subtitle: null, actions: [] },
+    body: {
+      Row: {
+        w: "fill", padding: { switch: { lt: ["@env.width", 700] }, cases: { true: [12, 16, 10, 16] }, default: [18, 22, 14, 22] },
+        gap: 10, cross: "center", stackBelow: 560,
+        children: [
+          {
+            Column: {
+              gap: 2,
+              children: [
+                { Text: { text: "$title", size: 20, bold: true } },
+                { Text: { text: "$subtitle", visible: "$subtitle", size: 12, color: "$theme.muted" } },
+              ],
+            },
+          },
+          { Spacer: {} },
+          { Wrap: { gap: 10, runGap: 8, cross: "center", children: "$actions" } },
+        ],
+      },
+    },
+  },
+
+  Toast: {
+    body: {
+      Box: {
+        padding: [10, 12, 10, 16], radius: 10, fill: "$theme.text",
+        child: {
+          Row: {
+            gap: 12, cross: "center",
+            children: [
+              { Icon: { name: "check", size: 16, weight: 2.2, color: "$theme.success" } },
+              { Text: { text: "@toast.text", color: "$theme.card" } },
+              {
+                Box: {
+                  visible: "@toast.undo", padding: [3, 10], radius: 6, interactive: true, on: { click: "undo" },
+                  fill: { state: { normal: "#FFFFFF1F", hover: "#FFFFFF33" } },
+                  child: { Text: { text: "@t.undo", bold: true, color: "$theme.card", size: 12 } },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  // ================================================================ inbox
+
+  InboxScreen: {
+    body: {
+      Column: {
+        cross: "stretch",
+        children: [
+          {
+            ScreenHeader: {
+              title: "@t.inbox", subtitle: "{@inbox.unread} {@t.unreadOf} {@inbox.total}",
+              actions: [
+                { TextField: { key: "search", value: "@inbox.q", placeholder: "@t.searchMail", w: 240 } },
+                { IconButton: { icon: "edit", variant: "secondary", tooltip: "@t.tipCompose", on: { click: "compose" } } },
+              ],
+            },
+          },
+          {
+            Box: {
+              padding: [0, 22, 12, 22],
+              child: {
+                Tabs: {
+                  w: 360, value: "@inbox.filter",
+                  tabs: [{ value: "all", label: "@t.all" }, { value: "unread", label: "@t.unread" }, { value: "important", label: "@t.important" }],
+                },
+              },
+            },
+          },
+          { Divider: {} },
+          {
+            Row: {
+              flex: 1, cross: "stretch",
+              children: [
+                {
+                  Stack: {
+                    w: 380,
+                    children: [
+                      {
+                        List: {
+                          key: "inboxList", w: "fill", h: "fill", items: "@inbox.view", as: "m", itemHeight: "@ui.rowH", itemKey: "@m.idx",
+                          item: { InboxRow: { m: "@m" } },
+                        },
+                      },
+                      {
+                        Center: {
+                          visible: "!@inbox.view",
+                          child: { Text: { text: "@t.nothingFound", color: "$theme.muted" } },
+                        },
+                      },
+                    ],
+                  },
+                },
+                { Divider: { vertical: true } },
+                { MessageView: { flex: 1 } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  InboxRow: {
+    params: { m: null },
+    interactive: true,
+    body: {
+      Box: {
+        padding: [0, 14, 0, 10], align: "left",
+        select: { path: "@inbox.sel", value: "$m.idx" },
+        on: { click: "openMessage" },
+        contextMenu: [
+          { label: "@t.menuReply", action: "rowReply" },
+          { label: "@t.menuForward", action: "rowForward" },
+          { label: "@t.menuStar", action: "rowStar" },
+          "-",
+          { label: "@t.menuDelete", action: "rowDelete" },
+        ],
+        fill: { switch: { eq: ["$m.idx", "@inbox.sel"] }, cases: { true: "$theme.selection" }, default: { state: { normal: null, hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } } },
+        child: {
+          Row: {
+            w: "fill", gap: 10, cross: "center",
+            children: [
+              { Box: { w: 8, h: 8, radius: 4, fill: { switch: "$m.unread", cases: { true: "$theme.primary" } } } },
+              { Avatar: { name: "$m.from", src: "$m.photo", size: { switch: "@settings.compact", cases: { true: 28 }, default: 36 } } },
+              {
+                Column: {
+                  flex: 1, gap: 1,
+                  children: [
+                    {
+                      Row: {
+                        w: "fill", gap: 6, cross: "center",
+                        children: [
+                          { Text: { text: "$m.from", flex: 1, maxLines: 1, bold: "$m.unread" } },
+                          { Icon: { name: "star", size: 12, weight: 2, color: "$theme.warning", visible: "$m.important" } },
+                          { Text: { text: "$m.time", size: 11, color: "$theme.muted" } },
+                        ],
+                      },
+                    },
+                    { Text: { text: "$m.subject", size: 12, maxLines: 1, bold: "$m.unread", color: "$theme.label" } },
+                    { Text: { text: "$m.preview", size: 12, maxLines: 1, color: "$theme.muted", visible: { switch: "@settings.compact", cases: { true: false }, default: "@settings.preview" } } },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  MessageView: {
+    body: {
+      Stack: {
+        h: "fill",
+        children: [
+          {
+            Column: {
+              w: "fill", h: "fill", cross: "stretch", visible: "@inbox.current",
+              children: [
+                {
+                  Row: {
+                    padding: [16, 22], gap: 12, cross: "center",
+                    children: [
+                      { Avatar: { name: "@inbox.current.from", src: "@inbox.current.photo", size: 40 } },
+                      {
+                        Column: {
+                          flex: 1, gap: 2,
+                          children: [
+                            { Text: { text: "@inbox.current.from", bold: true, size: 14 } },
+                            { Text: { text: "@inbox.current.email", size: 12, color: "$theme.muted" } },
+                          ],
+                        },
+                      },
+                      { Text: { text: "@inbox.current.time", size: 12, color: "$theme.muted" } },
+                      { IconButton: { icon: "star", tooltip: "@t.tipStar", on: { click: "star" }, color: { switch: "@inbox.current.important", cases: { true: "$theme.warning" }, default: "$theme.label" } } },
+                      { IconButton: { icon: "trash", tooltip: "@t.tipDelete", on: { click: "deleteMessage" } } },
+                    ],
+                  },
+                },
+                { Divider: {} },
+                {
+                  Scroll: {
+                    flex: 1, key: "thread",
+                    child: {
+                      Column: {
+                        padding: [18, 22], gap: 14, cross: "stretch",
+                        children: [
+                          { Text: { text: "@inbox.current.subject", size: 19, bold: true } },
+                          { Text: { text: "@inbox.current.body", lineHeight: 1.45, color: "$theme.label" } },
+                          {
+                            For: {
+                              each: "@inbox.current.thread", as: "r",
+                              do: {
+                                Row: {
+                                  main: "end",
+                                  children: [
+                                    {
+                                      Column: {
+                                        maxW: 420, gap: 3, cross: "end",
+                                        children: [
+                                          { Box: { padding: [8, 12], radius: 14, fill: "$theme.primary", child: { Text: { text: "@r.text", color: "#FFFFFF" } } } },
+                                          { Text: { text: "@r.time", size: 10, color: "$theme.muted" } },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+                { Divider: {} },
+                {
+                  Row: {
+                    padding: [12, 22], gap: 8, cross: "center",
+                    children: [
+                      { TextField: { key: "reply", value: "@inbox.reply", placeholder: "@t.reply", flex: 1, on: { submit: "reply" } } },
+                      { Button: { text: "@t.send", icon: "arrowRight", disabled: "!@inbox.reply", on: { click: "reply" } } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            Center: {
+              visible: "!@inbox.current",
+              child: {
+                Column: {
+                  gap: 8, cross: "center",
+                  children: [
+                    { Icon: { name: "mail", size: 44, weight: 1.2, color: "$theme.border" } },
+                    { Text: { text: "@t.pickMessage", color: "$theme.muted" } },
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  // ================================================================ tasks
+
+  TasksScreen: {
+    body: {
+      Column: {
+        cross: "stretch",
+        children: [
+          {
+            ScreenHeader: {
+              title: "@t.tasks", subtitle: "{@board.done} {@t.doneOf} {@board.total}",
+              actions: [
+                { ProgressBar: { value: "@board.progress", w: 160, color: "$theme.success" } },
+                { Text: { text: "{@board.percent}%", size: 12, color: "$theme.muted", w: 36 } },
+                { Button: { text: "@t.newTask", icon: "plus", on: { click: "openModal" } } },
+              ],
+            },
+          },
+          {
+            Row: {
+              flex: 1, gap: 14, padding: [4, 22, 22, 22], cross: "stretch",
+              children: { For: { each: "@board.columns", as: "col", key: "@col.id", do: { KanbanColumn: { col: "@col" } } } },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  KanbanColumn: {
+    params: { col: null },
+    body: {
+      Box: {
+        flex: 1, radius: "$theme.radiusLg", fill: "$theme.background", padding: 10,
+        child: {
+          Column: {
+            w: "fill", h: "fill", gap: 10, cross: "stretch",
+            children: [
+              {
+                Row: {
+                  gap: 8, cross: "center", padding: [2, 4],
+                  children: [
+                    { Box: { w: 8, h: 8, radius: 4, fill: "$col.color" } },
+                    { Text: { text: "$col.title", bold: true, flex: 1 } },
+                    { Badge: { text: "{$col.count}", color: "$theme.muted" } },
+                  ],
+                },
+              },
+              {
+                Scroll: {
+                  flex: 1,
+                  child: {
+                    Column: {
+                      gap: 8, cross: "stretch",
+                      children: [
+                        { For: { each: "$col.items", as: "task", key: "@task.id", do: { TaskCard: { task: "@task", first: "$col.first", last: "$col.last" } } } },
+                        { Center: { h: 60, visible: { not: "$col.items" }, child: { Text: { text: "@t.empty", size: 12, color: "$theme.muted" } } } },
+                      ],
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  TaskCard: {
+    params: { task: null, first: false, last: false },
+    body: {
+      Box: {
+        fill: "$theme.card", stroke: "$theme.divider", radius: 10, padding: 12,
+        child: {
+          Column: {
+            gap: 8, cross: "stretch",
+            children: [
+              {
+                Row: {
+                  gap: 6, cross: "center",
+                  children: [
+                    {
+                      Badge: {
+                        text: { switch: "$task.prio", cases: { high: "@t.high", mid: "@t.mid" }, default: "@t.low" },
+                        color: { switch: "$task.prio", cases: { high: "$theme.danger", mid: "$theme.warning" }, default: "$theme.success" },
+                      },
+                    },
+                    { Spacer: {} },
+                    { Icon: { name: "calendar", size: 12, color: "$theme.muted" } },
+                    { Text: { text: "$task.due", size: 11, color: "$theme.muted" } },
+                  ],
+                },
+              },
+              { Text: { text: "$task.title", maxLines: 2 } },
+              {
+                Row: {
+                  gap: 4, cross: "center",
+                  children: [
+                    { Avatar: { name: "$task.assignee", size: 24 } },
+                    { Text: { text: "$task.assignee", size: 11, color: "$theme.muted", flex: 1, maxLines: 1 } },
+                    { IconButton: { icon: "chevronLeft", size: "sm", key: "left-{$task.id}", visible: { not: "$first" }, on: { click: "moveLeft" } } },
+                    { IconButton: { icon: "chevronRight", size: "sm", key: "right-{$task.id}", visible: { not: "$last" }, on: { click: "moveRight" } } },
+                    { IconButton: { icon: "trash", size: "sm", key: "del-{$task.id}", on: { click: "deleteTask" } } },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  NewTaskDialog: {
+    body: {
+      Box: {
+        w: 440, padding: 22, radius: "$theme.radiusLg", fill: "$theme.card", stroke: "$theme.border",
+        dismiss: "@modal.open",
+        child: {
+          Column: {
+            gap: 14, cross: "stretch",
+            children: [
+              {
+                Row: {
+                  cross: "center",
+                  children: [
+                    { Text: { text: "@t.newTask", size: 17, bold: true, flex: 1 } },
+                    { IconButton: { icon: "close", size: "sm", on: { click: "closeModal" } } },
+                  ],
+                },
+              },
+              { TextField: { key: "modalTitle", label: "@t.title", value: "@modal.title", placeholder: "@t.whatToDo", error: "@modal.error", on: { submit: "createTask" } } },
+              {
+                Row: {
+                  gap: 12,
+                  children: [
+                    {
+                      Select: {
+                        flex: 1, label: "@t.priority", value: "@modal.prio",
+                        options: [{ value: "high", label: "@t.high" }, { value: "mid", label: "@t.mid" }, { value: "low", label: "@t.low" }],
+                      },
+                    },
+                    { Select: { flex: 1, label: "@t.assignee", value: "@modal.assignee", options: "@people" } },
+                  ],
+                },
+              },
+              {
+                Section: {
+                  title: "@t.column",
+                  children: [
+                    {
+                      RadioGroup: {
+                        direction: "row", value: "@modal.status",
+                        options: [{ value: "todo", label: "@t.todo" }, { value: "doing", label: "@t.doing" }, { value: "done", label: "@t.doneCol" }],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                Row: {
+                  gap: 8, margin: [6, 0, 0, 0],
+                  children: [
+                    { Text: { text: "Esc to close, Enter to create", size: 11, color: "$theme.muted", flex: 1 } },
+                    { Button: { text: "@t.cancel", variant: "secondary", on: { click: "closeModal" } } },
+                    { Button: { text: "@t.create", on: { click: "createTask" } } },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  // ================================================================ contacts
+
+  ContactsScreen: {
+    body: {
+      Column: {
+        cross: "stretch",
+        children: [
+          {
+            ScreenHeader: {
+              title: "@t.contacts", subtitle: "{@contacts.online} {@t.onlineOf} {@contacts.total}",
+              actions: [
+                { Tabs: { w: 200, value: "@contacts.filter", tabs: [{ value: "all", label: "@t.all" }, { value: "online", label: "@t.online" }] } },
+                { TextField: { value: "@contacts.q", placeholder: "@t.searchPeople", w: 220 } },
+              ],
+            },
+          },
+          {
+            Scroll: {
+              flex: 1,
+              child: {
+                Wrap: {
+                  padding: [6, 22, 22, 22], gap: 12,
+                  children: { For: { each: "@contacts.view", as: "c", key: "@c.id", do: { ContactCard: { c: "@c" } } } },
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  ContactCard: {
+    params: { c: null },
+    body: {
+      Box: {
+        w: 214, padding: [18, 14, 14, 14], radius: "$theme.radiusLg", fill: "$theme.card", stroke: "$theme.divider",
+        child: {
+          Column: {
+            gap: 6, cross: "center",
+            children: [
+              {
+                Stack: {
+                  w: 60, h: 60,
+                  children: [
+                    { Avatar: { name: "$c.name", src: "$c.photo", size: 60 } },
+                    { Box: { place: "bottomRight", w: 16, h: 16, radius: 8, fill: "$theme.success", stroke: "$theme.card", width: 3, visible: "$c.online" } },
+                  ],
+                },
+              },
+              { Text: { text: "$c.name", bold: true, margin: [4, 0, 0, 0] } },
+              { Text: { text: "$c.role", size: 12, color: "$theme.label" } },
+              {
+                Row: {
+                  gap: 4, cross: "center",
+                  children: [
+                    { Icon: { name: "home", size: 11, color: "$theme.muted" } },
+                    { Text: { text: "$c.city", size: 11, color: "$theme.muted" } },
+                  ],
+                },
+              },
+              {
+                Row: {
+                  gap: 6, margin: [6, 0, 0, 0],
+                  children: [
+                    { Button: { text: "@t.write", icon: "mail", size: "sm", variant: "secondary", key: "write-{$c.id}", on: { click: "writeTo" } } },
+                    { IconButton: { icon: "more", size: "sm", key: "more-{$c.id}", on: { click: "contactMore" } } },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  // ================================================================ analytics
+
+  StatsScreen: {
+    body: {
+      Column: {
+        cross: "stretch",
+        children: [
+          {
+            ScreenHeader: {
+              title: "@t.stats", subtitle: "@t.statsHint",
+              actions: [
+                { Tabs: { w: 260, value: "@stats.period", on: { change: "refresh" }, tabs: [{ value: "week", label: "@t.week" }, { value: "month", label: "@t.month" }, { value: "year", label: "@t.year" }] } },
+                { Button: { text: "@t.refresh", variant: "secondary", icon: "arrowDown", on: { click: "refresh" } } },
+              ],
+            },
+          },
+          {
+            Scroll: {
+              flex: 1,
+              child: {
+                Column: {
+                  padding: [4, 22, 22, 22], gap: 16, cross: "stretch",
+                  children: [
+                    { Row: { gap: 14, stackBelow: 560, children: { For: { each: "@stats.kpis", as: "k", key: "@k.id", do: { Kpi: { k: "@k" } } } } } },
+                    {
+                      Row: {
+                        gap: 14, cross: "stretch", stackBelow: 560,
+                        children: [
+                          { Card: { flex: 4, title: "@t.revenue", children: [{ BarChart: {} }] } },
+                          { Card: { flex: 5, title: "@t.users", children: [{ LineChart: {} }] } },
+                        ],
+                      },
+                    },
+                    {
+                      Row: {
+                        gap: 14, cross: "stretch", stackBelow: 560,
+                        children: [
+                          {
+                            Card: {
+                              flex: 4, title: "@t.byStatus",
+                              children: {
+                                For: {
+                                  each: "@board.columns", as: "col", key: "@col.id",
+                                  do: {
+                                    Column: {
+                                      gap: 6,
+                                      children: [
+                                        {
+                                          Row: {
+                                            children: [
+                                              { Text: { text: "@col.title", size: 12, flex: 1 } },
+                                              { Text: { text: "{@col.count}", size: 12, color: "$theme.muted" } },
+                                            ],
+                                          },
+                                        },
+                                        { ProgressBar: { value: "@col.share", color: "@col.color" } },
+                                      ],
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                          {
+                            Card: {
+                              flex: 5, title: "@t.events", gap: 2, padding: [16, 8],
+                              children: {
+                                For: {
+                                  each: "@stats.events", as: "e",
+                                  do: {
+                                    ListTile: {
+                                      title: "@e.text", subtitle: "@e.time",
+                                      leading: { Box: { w: 30, h: 30, radius: 15, fill: "$theme.selection", align: "center", child: { Icon: { name: "@e.icon", size: 15, color: "$theme.primary" } } } },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  Kpi: {
+    params: { k: null },
+    body: {
+      Box: {
+        flex: 1, padding: 16, radius: "$theme.radiusLg", fill: "$theme.card", stroke: "$theme.divider",
+        child: {
+          Column: {
+            gap: 6,
+            children: [
+              {
+                Row: {
+                  gap: 6, cross: "center",
+                  children: [
+                    { Icon: { name: "$k.icon", size: 14, color: "$theme.muted" } },
+                    { Text: { text: "$k.label", size: 12, color: "$theme.muted" } },
+                  ],
+                },
+              },
+              { Text: { text: "$k.value", size: 24, bold: true } },
+              {
+                Row: {
+                  gap: 6, cross: "center",
+                  children: [
+                    {
+                      Badge: {
+                        text: "$k.delta",
+                        color: { switch: "$k.up", cases: { true: "$theme.success" }, default: "$theme.danger" },
+                      },
+                    },
+                    { Text: { text: "@t.vsPrev", size: 11, color: "$theme.muted" } },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  // Bars: each height comes from data (lib.rs animates the values frame by frame).
+  BarChart: {
+    body: {
+      Row: {
+        h: 190, gap: 6, cross: "end",
+        children: {
+          For: {
+            each: "@stats.bars", as: "b", key: "@b.label",
+            do: {
+              Column: {
+                flex: 1, gap: 4, cross: "center",
+                children: [
+                  { Text: { text: "@b.text", size: 9, color: "$theme.muted" } },
+                  { Box: { w: "fill", h: "@b.h", radius: 4, fill: { switch: "@b.hi", cases: { true: "$theme.primary" }, default: "$theme.selection" } } },
+                  { Text: { text: "@b.label", size: 10, color: "$theme.muted" } },
+                ],
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  // Lines and points in chart coordinates (computed by derive in lib.rs).
+  LineChart: {
+    body: {
+      Stack: {
+        w: 480, h: 190,
+        children: [
+          { For: { each: "@stats.grid", as: "g", do: { Line: { from: [0, "@g.y"], to: [480, "@g.y"], color: "$theme.divider" } } } },
+          { For: { each: "@stats.grid", as: "g", do: { Text: { text: "@g.label", size: 9, color: "$theme.muted", pos: [0, "@g.ty"] } } } },
+          { For: { each: "@stats.segs", as: "s", do: { Line: { from: ["@s.x1", "@s.y1"], to: ["@s.x2", "@s.y2"], width: 2.5, color: "$theme.primary", cap: "round" } } } },
+          { For: { each: "@stats.points", as: "p", do: { Circle: { r: 4, fill: "$theme.card", stroke: "$theme.primary", width: 2, pos: ["@p.x", "@p.y"] } } } },
+        ],
+      },
+    },
+  },
+
+  // ================================================================ form
+
+  FormScreen: {
+    body: {
+      Column: {
+        cross: "stretch",
+        children: [
+          { ScreenHeader: { title: "@t.form", subtitle: "@t.formHint" } },
+          {
+            Scroll: {
+              flex: 1,
+              child: {
+                Row: {
+                  padding: [4, 22, 22, 22], gap: 16, cross: "start", stackBelow: 560,
+                  children: [
+                    {
+                      Card: {
+                        flex: 1, title: "@t.account",
+                        children: [
+                          { TextField: { key: "fName", label: "@t.name", value: "@form.name", placeholder: "John Smith", error: "@form.errors.name" } },
+                          { TextField: { key: "fEmail", label: "Email", value: "@form.email", keyboard: "email", placeholder: "john@example.com", error: "@form.errors.email" } },
+                          { TextField: { key: "fPass", label: "@t.password", value: "@form.password", password: true, placeholder: "••••••••", error: "@form.errors.password" } },
+                          {
+                            Row: {
+                              gap: 8, cross: "center",
+                              children: [
+                                { Text: { text: "@t.strength", size: 12, color: "$theme.muted" } },
+                                { ProgressBar: { value: "@form.strength", flex: 1, color: { switch: "@form.strengthLevel", cases: { "0": "$theme.danger", "1": "$theme.warning" }, default: "$theme.success" } } },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      Card: {
+                        flex: 1, title: "@t.preferences",
+                        children: [
+                          {
+                            Select: {
+                              label: "@t.country", value: "@form.country", placeholder: "@t.choose",
+                              options: [
+                                { value: "ua", label: "Ukraine" }, { value: "pl", label: "Poland" },
+                                { value: "de", label: "Germany" }, { value: "es", label: "Spain" }, { value: "fr", label: "France" },
+                              ],
+                            },
+                          },
+                          {
+                            Column: {
+                              gap: 6,
+                              children: [
+                                { Text: { text: "@t.age", size: 12, color: "$theme.label" } },
+                                {
+                                  Row: {
+                                    gap: 10, cross: "center",
+                                    children: [
+                                      { Slider: { value: "@form.age", min: 16, max: 80, step: 1, flex: 1 } },
+                                      { Text: { text: "{@form.age}", w: 28, align: "right" } },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            Section: {
+                              title: "@t.plan",
+                              children: [
+                                {
+                                  RadioGroup: {
+                                    value: "@form.plan",
+                                    options: [{ value: "free", label: "@t.planFree" }, { value: "pro", label: "@t.planPro" }, { value: "team", label: "@t.planTeam" }],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          { Switch: { label: "@t.newsletter", checked: "@form.newsletter" } },
+                          { Checkbox: { label: "@t.terms", checked: "@form.terms" } },
+                          {
+                            Row: {
+                              gap: 8,
+                              children: [
+                                { Spacer: {} },
+                                { Button: { text: "@t.clear", variant: "secondary", on: { click: "clearForm" } } },
+                                { Button: { text: "@t.submit", disabled: "!@form.terms", on: { click: "submitForm" } } },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  // ================================================================ settings
+
+  SettingsScreen: {
+    body: {
+      Column: {
+        cross: "stretch",
+        children: [
+          { ScreenHeader: { title: "@t.settings", subtitle: "@t.settingsHint" } },
+          {
+            Scroll: {
+              flex: 1,
+              child: {
+                Row: {
+                  padding: [4, 22, 22, 22], gap: 16, cross: "start", stackBelow: 560,
+                  children: [
+                    {
+                      Column: {
+                        flex: 1, gap: 16, cross: "stretch",
+                        children: [
+                          {
+                            Card: {
+                              title: "@t.appearance",
+                              children: [
+                                { Tabs: { value: "@settings.theme", on: { change: "theme" }, tabs: [{ value: "system", label: "@t.system" }, { value: "light", label: "@t.light" }, { value: "dark", label: "@t.dark" }] } },
+                                { Text: { text: "@t.accent", size: 12, color: "$theme.label" } },
+                                { Row: { gap: 10, children: { For: { each: "@accents", as: "a", key: "@a.id", do: { Swatch: { a: "@a" } } } } } },
+                                { Text: { text: "{@t.fontSize}: {@settings.fontSize}", size: 12, color: "$theme.label" } },
+                                { Slider: { value: "@settings.fontSize", min: 11, max: 16, step: 1, on: { change: "fontSize" } } },
+                              ],
+                            },
+                          },
+                          {
+                            Card: {
+                              title: "@t.mailList",
+                              children: [
+                                { Switch: { label: "@t.compact", checked: "@settings.compact" } },
+                                { Switch: { label: "@t.preview", checked: "@settings.preview", disabled: "@settings.compact" } },
+                              ],
+                            },
+                          },
+                          {
+                            Card: {
+                              title: "@t.language",
+                              children: [
+                                { Select: { value: "@settings.lang", options: [{ value: "ru", label: "Русский" }, { value: "en", label: "English" }] } },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      Column: {
+                        flex: 1, gap: 16, cross: "stretch",
+                        children: [
+                          {
+                            Card: {
+                              title: "@t.shortcuts", gap: 8,
+                              children: { For: { each: "@shortcuts", as: "s", do: { ShortcutRow: { keys: "@s.keys", text: "@s.text" } } } },
+                            },
+                          },
+                          {
+                            Card: {
+                              title: "@t.about",
+                              children: [
+                                { Text: { text: "@t.aboutText", lineHeight: 1.4, color: "$theme.label" } },
+                                {
+                                  Row: {
+                                    gap: 8,
+                                    children: [
+                                      { Button: { text: "@t.showToast", variant: "secondary", on: { click: "demoToast" } } },
+                                      { Button: { text: "@t.reset", variant: "text", on: { click: "resetSettings" } } },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  Swatch: {
+    params: { a: null },
+    interactive: true,
+    body: {
+      Box: {
+        w: 28, h: 28, radius: 999, align: "center", fill: "$a.color",
+        select: { path: "@settings.accent", value: "$a.id" },
+        on: { change: "accent" },
+        stroke: { switch: { eq: ["@settings.accent", "$a.id"] }, cases: { true: "$theme.text" }, default: { state: { normal: null, hover: "$theme.borderHover" } } },
+        width: 2,
+        child: { Icon: { name: "check", size: 14, weight: 2.4, color: "#FFFFFF", visible: { eq: ["@settings.accent", "$a.id"] } } },
+      },
+    },
+  },
+
+  ShortcutRow: {
+    params: { keys: "", text: "" },
+    body: {
+      Row: {
+        gap: 10, cross: "center",
+        children: [
+          { Box: { minW: 44, padding: [3, 8], radius: 6, fill: "$theme.background", stroke: "$theme.border", align: "center", child: { Text: { text: "$keys", size: 12, bold: true, color: "$theme.label" } } } },
+          { Text: { text: "$text", size: 13 } },
+        ],
+      },
+    },
+  },
+}

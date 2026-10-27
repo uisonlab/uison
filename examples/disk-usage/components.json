@@ -1,0 +1,336 @@
+// Parts of the Disk Usage screen. The code (lib.rs) prepares the data: rows hold already formatted numbers and colors,
+// `t.*` holds the texts in the interface language (i18n.rs).
+{
+  // Folder and file icons are outlines on a 24×24 grid, like the library's Icon.
+  Glyph: {
+    params: { name: "file", size: 15, color: "$theme.text" },
+    body: {
+      Vector: {
+        view: 24, w: "$size", h: "$size", color: "$color", weight: 1.6,
+        children: {
+          switch: "$name",
+          cases: {
+            folder: [
+              { Line: { from: [3, 6], to: [3, 19] } },
+              { Line: { from: [3, 19], to: [21, 19] } },
+              { Line: { from: [21, 19], to: [21, 9] } },
+              { Line: { from: [21, 9], to: [11.5, 9] } },
+              { Line: { from: [11.5, 9], to: [9.5, 6] } },
+              { Line: { from: [9.5, 6], to: [3, 6] } },
+            ],
+          },
+          default: [
+            { Line: { from: [6, 3], to: [6, 21] } },
+            { Line: { from: [6, 21], to: [18, 21] } },
+            { Line: { from: [18, 21], to: [18, 8] } },
+            { Line: { from: [18, 8], to: [13, 3] } },
+            { Line: { from: [13, 3], to: [6, 3] } },
+            { Line: { from: [13, 3], to: [13, 8] } },
+            { Line: { from: [13, 8], to: [18, 8] } },
+          ],
+        },
+      },
+    },
+  },
+
+  Toolbar: {
+    body: {
+      Box: {
+        padding: [8, 10], fill: "$theme.card",
+        child: { Row: { w: "fill", gap: 8, cross: "center", children: [
+          { Button: { key: "open", text: "@t.open", variant: "secondary", size: "sm", on: { click: "open" }, tooltip: "@t.openTip", visible: "!@console" } },
+          { Button: { key: "rescan", text: "@t.rescan", variant: "secondary", size: "sm", disabled: "!@canRescan", on: { click: "rescan" }, tooltip: "@t.rescanTip" } },
+          { IconButton: { key: "up", icon: "arrowUp", size: "sm", disabled: "!@canUp", on: { click: "up" }, tooltip: "@t.upTip" } },
+          { Box: { w: 1, h: 20, fill: "$theme.divider", visible: "@crumbs" } },
+          {
+            Box: { flex: 1, clip: true, align: "left", child: { Row: {
+              gap: 2, cross: "center",
+              children: {
+                For: {
+                  each: "@crumbs", as: "c",
+                  do: {
+                    Row: {
+                      gap: 2, cross: "center",
+                      children: [
+                        { Text: { text: "›", color: "$theme.muted", visible: "@c.sep" } },
+                        {
+                          Box: {
+                            key: "crumb-{@c.id}", padding: [3, 5], radius: 4, on: { click: "crumb" },
+                            fill: { state: { normal: null, hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } },
+                            child: { Text: { text: "@c.name", bold: "@c.last" } },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            } } },
+          },
+          { LangSwitch: {} },
+          { IconButton: { key: "info", icon: "info", size: "sm", on: { click: "about" }, tooltip: "@t.about" } },
+        ] } },
+      },
+    },
+  },
+
+  // Interface language: two options in one plate, as tall as the small buttons; a click runs "lang".
+  LangSwitch: {
+    body: {
+      Box: {
+        padding: 2, radius: "$theme.radiusSm", fill: "$theme.surface", stroke: "$theme.border",
+        child: { Row: { gap: 2, children: [{ LangOption: { code: "en", label: "EN" } }, { LangOption: { code: "ru", label: "RU" } }] } },
+      },
+    },
+  },
+
+  LangOption: {
+    params: { code: "", label: "" },
+    body: {
+      Box: {
+        key: "lang-{$code}", padding: [2, 8], radius: 4, on: { click: "lang" },
+        fill: { switch: { eq: ["@lang", "$code"] }, cases: { true: "$theme.surfacePressed" }, default: { state: { normal: null, hover: "$theme.surfaceHover" } } },
+        child: {
+          Text: {
+            text: "$label", size: 12, bold: { eq: ["@lang", "$code"] },
+            color: { switch: { eq: ["@lang", "$code"] }, cases: { true: "$theme.text" }, default: "$theme.muted" },
+          },
+        },
+      },
+    },
+  },
+
+  StatusBar: {
+    body: {
+      Box: {
+        padding: [6, 12], fill: "$theme.card",
+        child: { Row: { w: "fill", gap: 12, cross: "center", children: [
+          { Text: { text: "@message", size: 12, visible: "@message", maxLines: 1 } },
+          { Text: { text: "@status", size: 12, color: "$theme.muted", maxLines: 1, flex: 1 } },
+          { Text: { text: "@t.hints", size: 12, color: "$theme.muted", visible: "@status" } },
+        ] } },
+      },
+    },
+  },
+
+  StartScreen: {
+    body: {
+      Column: {
+        padding: [120, 20, 20, 20], gap: 6, cross: "center",
+        children: [
+          { Text: { text: "Disk Usage", size: 32, bold: true } },
+          { Text: { text: "@t.tagline", color: "$theme.muted" } },
+          { Text: { text: "@message", color: "$theme.warning", visible: "@message", margin: [12, 0, 0, 0] } },
+          { Button: { key: "choose", text: "@t.choose", size: "lg", minW: 220, margin: [24, 0, 10, 0], on: { click: "open" }, visible: "!@console" } },
+          { Text: { text: "@t.orScan", color: "$theme.muted", margin: [0, 0, 4, 0] } },
+          {
+            For: {
+              each: "@quick", as: "q",
+              do: { Button: { key: "quick-{@q.i}", text: "@q.path", variant: "secondary", minW: 220, on: { click: "quick" } } },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  ScanScreen: {
+    body: {
+      Column: {
+        padding: [150, 24, 24, 24], gap: 6, cross: "center",
+        children: [
+          { Canvas: { key: "spinner", draw: "spinner", w: 40, h: 40, margin: [0, 0, 12, 0] } },
+          { Text: { text: "@scan.title", size: 20 } },
+          { Text: { text: "@scan.counts", size: 16 } },
+          { Text: { text: "@scan.current", size: 14, color: "$theme.muted", maxLines: 1, w: 600, margin: [4, 0, 0, 0] } },
+          { Text: { text: "@scan.stall", color: "$theme.warning", visible: "@scan.stall", maxW: 640, align: "center" } },
+          { Button: { key: "cancel", text: "@t.cancel", variant: "secondary", size: "lg", minW: 160, margin: [16, 0, 0, 0], on: { click: "cancel" } } },
+        ],
+      },
+    },
+  },
+
+  ViewScreen: {
+    body: {
+      Row: {
+        cross: "stretch",
+        children: [
+          { DetailsPanel: { w: 380 } },
+          { Box: { w: 1, fill: "$theme.divider" } },
+          {
+            Canvas: {
+              key: "chart", draw: "chart", flex: 1, h: "fill", cursor: "arrow",
+              on: { click: "chartClick", hover: "chartHover" }, contextMenu: "@menu",
+            },
+          },
+          { Box: { w: 1, fill: "$theme.divider", visible: "@queue.count" } },
+          { QueuePanel: { w: 320, visible: "@queue.count" } },
+        ],
+      },
+    },
+  },
+
+  DetailsPanel: {
+    body: {
+      Column: {
+        padding: [12, 10, 4, 12], gap: 6, cross: "stretch",
+        children: [
+          {
+            Row: {
+              gap: 8, cross: "center",
+              children: [
+                { Box: { w: 14, h: 14, radius: 3, fill: "@sel.color" } },
+                { Text: { text: "@sel.name", size: 18, bold: true, flex: 1 } },
+              ],
+            },
+          },
+          {
+            Wrap: {
+              gap: 8, cross: "center",
+              children: [
+                { Text: { text: "@sel.size", size: 22, bold: true } },
+                { Text: { text: "@sel.facts", size: 14, color: "$theme.muted" } },
+              ],
+            },
+          },
+          { Text: { text: "@sel.path", size: 13, color: "$theme.muted" } },
+          {
+            Row: {
+              gap: 6, margin: [4, 0, 0, 0],
+              children: [
+                { Button: { key: "zoomSel", text: "@t.zoomIn", variant: "secondary", size: "sm", visible: "@sel.canZoom", on: { click: "zoomSel" } } },
+                { Button: { key: "revealSel", text: "@t.reveal", variant: "secondary", size: "sm", on: { click: "revealSel" }, tooltip: "@t.showIn" } },
+                {
+                  Button: {
+                    key: "queueSel", text: "@t.trash", variant: "secondary", size: "sm", visible: "@sel.canQueue", disabled: "@sel.covered",
+                    on: { click: "queueSel" }, tooltip: "@sel.queueTip",
+                  },
+                },
+                { Button: { key: "unqueueSel", text: "@t.unqueue", variant: "secondary", size: "sm", visible: "@sel.queued", on: { click: "unqueueSel" } } },
+              ],
+            },
+          },
+          { Box: { h: 1, fill: "$theme.divider", margin: [6, 0, 2, 0] } },
+          { Text: { text: "@emptyText", color: "$theme.muted", visible: "@emptyText" } },
+          {
+            List: {
+              key: "rows", items: "@rows", as: "r", itemHeight: 24, flex: 1,
+              item: {
+                Stack: {
+                  key: "row-{@r.id}", on: { click: "row", hover: "rowHover" }, contextMenu: "@menu", cursor: "arrow",
+                  children: [
+                    { Box: { w: "fill", h: "fill", radius: 4, fill: { state: { normal: "@r.bg", hover: "$theme.card" } } } },
+                    // Size bar behind the text, relative to the largest sibling.
+                    { Box: { pos: [0, 3], w: "@r.frac", h: 18, radius: 3, fill: "@r.tint" } },
+                    { Box: { pos: [0, 3], w: 4, h: 18, radius: 2, fill: "@r.color" } },
+                    {
+                      Row: {
+                        w: "fill", h: "fill", padding: [0, 8, 0, 12], gap: 7, cross: "center",
+                        children: [
+                          { Glyph: { name: "@r.icon", color: "@r.fg" } },
+                          { Text: { text: "@r.name", size: 14, color: "@r.fg", maxLines: 1, flex: 1 } },
+                          { Text: { text: "@r.size", size: 14, align: "right", w: 70 } },
+                          { Text: { text: "@r.pct", size: 14, color: "$theme.muted", align: "right", w: 46 } },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  QueuePanel: {
+    body: {
+      Column: {
+        padding: [12, 12, 4, 10], gap: 6, cross: "stretch",
+        children: [
+          { Text: { text: "@t.queueTitle", size: 18, bold: true } },
+          {
+            Row: {
+              gap: 8, cross: "center",
+              children: [
+                { Text: { text: "@queue.size", size: 22, bold: true } },
+                { Text: { text: "@queue.label", size: 14, color: "$theme.muted" } },
+              ],
+            },
+          },
+          {
+            Row: {
+              gap: 6, margin: [4, 0, 0, 0],
+              children: [
+                { Button: { key: "trashAll", text: "@t.trashAll", variant: "danger", size: "sm", on: { click: "trashQueued" }, tooltip: "@t.trashAllTip" } },
+                { Button: { key: "clearQueue", text: "@t.clearQueue", variant: "secondary", size: "sm", on: { click: "clearQueue" }, tooltip: "@t.clearQueueTip" } },
+              ],
+            },
+          },
+          { Box: { h: 1, fill: "$theme.divider", margin: [6, 0, 2, 0] } },
+          {
+            Scroll: {
+              key: "queueScroll", flex: 1,
+              child: {
+                Column: {
+                  gap: 2, cross: "stretch",
+                  children: {
+                    For: {
+                      each: "@queue.items", as: "q",
+                      do: {
+                        Box: {
+                          key: "q-{@q.id}", padding: [4, 6], radius: 4, on: { click: "locate", hover: "queueHover" }, contextMenu: "@menu",
+                          cursor: "arrow", fill: { state: { normal: "@q.bg", hover: "$theme.card" } },
+                          child: {
+                            Column: {
+                              gap: 2, cross: "stretch",
+                              children: [
+                                {
+                                  Row: {
+                                    gap: 7, cross: "center",
+                                    children: [
+                                      { Glyph: { name: "@q.icon" } },
+                                      { Text: { text: "@q.name", size: 14, maxLines: 1, flex: 1 } },
+                                      { Text: { text: "@q.size", size: 14 } },
+                                      { IconButton: { key: "unq-{@q.id}", icon: "close", size: "sm", on: { click: "unqueue" }, tooltip: "@t.unqueueTip" } },
+                                    ],
+                                  },
+                                },
+                                { Text: { text: "@q.folder", size: 13, color: "$theme.muted" } },
+                              ],
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  AboutDialog: {
+    body: {
+      Box: {
+        w: 360, padding: 20, radius: 10, fill: "$theme.card", stroke: "$theme.border",
+        child: {
+          Column: {
+            gap: 6, cross: "center",
+            children: [
+              { Text: { text: "Disk Usage", size: 22, bold: true } },
+              { Text: { text: "@t.aboutLine", color: "$theme.muted" } },
+              { Text: { text: "@t.aboutText", align: "center", margin: [8, 0, 0, 0] } },
+              { Link: { text: "github.com/MarketKernel/disk-usage", href: "https://github.com/MarketKernel/disk-usage", margin: [8, 0, 0, 0] } },
+              { Button: { key: "closeAbout", text: "@t.close", variant: "secondary", margin: [10, 0, 0, 0], on: { click: "closeAbout" } } },
+            ],
+          },
+        },
+      },
+    },
+  },
+}

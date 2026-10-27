@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>uison browser</title>
+<style>
+  body { margin: 0; font-family: system-ui, sans-serif; color: #1d2433; background: #f4f6fb; }
+  .hero { background: linear-gradient(135deg, #3b5bdb, #7048e8); color: white; padding: 48px 32px 40px; }
+  .hero h1 { margin: 0 0 8px; font-size: 40px; letter-spacing: -1px; }
+  .hero p { margin: 0; font-size: 18px; color: #dbe4ff; max-width: 640px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 32px 48px; }
+  .pipeline { display: flex; gap: 8px; align-items: center; margin: 8px 0 24px; flex-wrap: wrap; }
+  .step { background: white; border: 1px solid #d0d7e8; border-radius: 8px; padding: 6px 12px; font-weight: 600; }
+  .arrow { color: #8c96ad; }
+  h2 { font-size: 22px; margin: 28px 0 12px; }
+  .cards { display: flex; gap: 16px; flex-wrap: wrap; }
+  .card { background: white; border: 1px solid #e1e6f0; border-radius: 12px; padding: 16px 18px; width: 240px; }
+  .card:hover { background: #eef2ff; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: #5c667a; font-size: 14px; line-height: 1.45; }
+  a { color: #3b5bdb; text-decoration: none; }
+  a:hover { text-decoration: underline; color: #1c3fbf; }
+  code { background: #e7ebf5; border-radius: 4px; padding: 1px 4px; }
+  .note { color: #5c667a; font-size: 14px; }
+  ul.sites li { margin: 6px 0; }
+</style>
+</head>
+<body>
+  <div class="hero">
+    <h1>uison browser</h1>
+    <p>A tiny browser with no dependencies: HTML and CSS are read by its own parsers and turned into uison screen JSON — the same JSON people write by hand for apps.</p>
+  </div>
+  <div class="wrap">
+    <div class="pipeline">
+      <span class="step">HTML</span><span class="arrow">→</span>
+      <span class="step">DOM</span><span class="arrow">→</span>
+      <span class="step">CSS cascade</span><span class="arrow">→</span>
+      <span class="step">uison JSON</span><span class="arrow">→</span>
+      <span class="step">frame of primitives</span>
+    </div>
+    <p>Switch the view to <b>JSON</b> at the top right to see what this page turned into: blocks became <code>Column</code> and <code>Box</code>, paragraphs became <code>Flow</code> of <code>Text</code> runs, links became text with a <code>nav</code> action.</p>
+
+    <h2>Built-in pages</h2>
+    <div class="cards">
+      <div class="card"><h3><a href="about:css">CSS showcase</a></h3><p>Colors, borders, rounded corners, flex, lists, tables, <code>:hover</code>, text with mixed styles.</p></div>
+      <div class="card"><h3><a href="about:article">A long article</a></h3><p>The history of the web on one page: headings, quotes, code, a table. For speed measurements.</p></div>
+      <div class="card"><h3><a href="about:retro">Like it's 1996</a></h3><p>Old-school markup: <code>&lt;font&gt;</code>, <code>bgcolor</code>, layout tables, <code>&lt;center&gt;</code>.</p></div>
+    </div>
+
+    <h2>Real websites</h2>
+    <p class="note">HTTPS goes through the system's own TLS (CoreFoundation on macOS and iOS, OpenSSL on Linux, WinHTTP on Windows): not a single dependency. External CSS isn't loaded yet, so sites look "unstyled", like in 1995. You can type an address yourself too.</p>
+    <ul class="sites">
+      <li><a href="http://info.cern.ch/hypertext/WWW/TheProject.html">info.cern.ch</a> — the very first website (1991)</li>
+      <li><a href="https://text.npr.org/">text.npr.org</a> — NPR news as plain text</li>
+      <li><a href="https://lite.cnn.com/">lite.cnn.com</a> — the lightweight version of CNN</li>
+      <li><a href="https://news.ycombinator.com/">Hacker News</a> — table-based layout</li>
+      <li><a href="https://en.wikipedia.org/wiki/World_Wide_Web">Wikipedia: World Wide Web</a> — a big page</li>
+      <li><a href="http://68k.news/">68k.news</a> — news in simple HTML for vintage computers</li>
+      <li><a href="http://wiby.me/">wiby.me</a> — a search engine for the "old web"</li>
+      <li><a href="https://danluu.com/">danluu.com</a> — a programming blog with almost no CSS</li>
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,280 @@
+// Standard library gallery: the whole screen in complex JSON.
+// Logic (theme, email check, buttons) is in lib.rs.
+{
+  size: [940, 760],
+  data: {
+    theme: "system",
+    agree: true,
+    notify: false,
+    plan: "pro",
+    country: null,
+    volume: 40,
+    name: "",
+    email: "anna@example",
+    emailError: "",
+    clicks: 0,
+    progress: 0.65,
+  },
+  root: {
+    Scroll: {
+      key: "page", w: "fill", h: "fill",
+      child: {
+        Column: {
+          gap: 16, cross: "stretch",
+          // On a phone the margins are smaller and rows stack into a column (stackBelow).
+          margin: { switch: { lt: ["@env.width", 600] }, cases: { true: 16 }, default: 24 },
+          children: [
+            {
+              Row: {
+                cross: "center", gap: 12, stackBelow: 600,
+                children: [
+                  {
+                    Column: {
+                      gap: 2,
+                      children: [
+                        { Text: { text: "Element gallery", size: 22, bold: true } },
+                        { Text: { text: "Everything on this screen is built from rectangles, lines, circles, triangles and text", color: "$theme.muted" } },
+                      ],
+                    },
+                  },
+                  { Spacer: {} },
+                  {
+                    Tabs: {
+                      w: 280, value: "@theme", on: { change: "theme" },
+                      tabs: [{ value: "system", label: "Auto" }, { value: "light", label: "Light" }, { value: "dark", label: "Dark" }],
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              Row: {
+                gap: 16,
+                cross: "start", stackBelow: 640,
+                children: [
+                  {
+                    Column: {
+                      flex: 1, gap: 16, cross: "stretch",
+                      children: [
+                        {
+                          Card: {
+                            title: "Buttons",
+                            children: [
+                              {
+                                Wrap: {
+                                  gap: 8,
+                                  children: [
+                                    { Button: { text: "Primary", on: { click: "count" } } },
+                                    { Button: { text: "Add", variant: "secondary", icon: "plus", on: { click: "count" } } },
+                                    { Button: { text: "Outline", variant: "outline" } },
+                                    { Button: { text: "Text", variant: "text" } },
+                                    { Button: { text: "Delete", variant: "danger", icon: "trash" } },
+                                    { Button: { text: "Disabled", disabled: true } },
+                                  ],
+                                },
+                              },
+                              {
+                                Wrap: {
+                                  gap: 8, cross: "center",
+                                  children: [
+                                    { Button: { text: "Small", size: "sm", variant: "secondary" } },
+                                    { Button: { text: "Large", size: "lg", icon: "arrowRight" } },
+                                    { IconButton: { icon: "search" } },
+                                    { IconButton: { icon: "settings", variant: "secondary" } },
+                                    { IconButton: { icon: "plus", variant: "primary", on: { click: "count" } } },
+                                  ],
+                                },
+                              },
+                              { Text: { text: "Clicks: {@clicks}", color: "$theme.muted", size: 12 } },
+                            ],
+                          },
+                        },
+                        {
+                          Card: {
+                            title: "Choice",
+                            children: [
+                              { Checkbox: { label: "I agree to the terms", checked: "@agree" } },
+                              { Switch: { label: "Notifications", checked: "@notify" } },
+                              {
+                                RadioGroup: {
+                                  direction: "row", value: "@plan",
+                                  options: [{ value: "basic", label: "Basic" }, { value: "pro", label: "Pro" }, { value: "team", label: "Team" }],
+                                },
+                              },
+                              {
+                                Row: {
+                                  gap: 12, cross: "center",
+                                  children: [
+                                    { Icon: { name: "minus", color: "$theme.muted" } },
+                                    { Slider: { value: "@volume", min: 0, max: 100, step: 1, flex: 1 } },
+                                    { Icon: { name: "plus", color: "$theme.muted" } },
+                                    { Text: { text: "{@volume}%", w: 40, align: "right", color: "$theme.label" } },
+                                  ],
+                                },
+                              },
+                              {
+                                Select: {
+                                  label: "Country", value: "@country", placeholder: "Choose a country",
+                                  options: [
+                                    { value: "ua", label: "Ukraine" },
+                                    { value: "pl", label: "Poland" },
+                                    { value: "de", label: "Germany" },
+                                    { value: "es", label: "Spain" },
+                                  ],
+                                },
+                              },
+                              { Checkbox: { label: "Disabled option", checked: "@agree", disabled: true } },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    Column: {
+                      flex: 1, gap: 16, cross: "stretch",
+                      children: [
+                        {
+                          Card: {
+                            title: "Input",
+                            children: [
+                              { TextField: { key: "name", label: "Name", value: "@name", placeholder: "John Smith" } },
+                              { TextField: { key: "email", label: "Email", value: "@email", placeholder: "you@example.com", error: "@emailError" } },
+                              // Link, tooltips, context menu (right button, long press, Shift+F10).
+                              {
+                                Row: {
+                                  gap: 4, cross: "center",
+                                  children: [
+                                    { Link: { key: "docs", text: "Source on GitHub", href: "https://github.com/MarketKernel/uison" } },
+                                    { Spacer: { flex: 1 } },
+                                    { IconButton: { key: "copyLink", icon: "edit", tooltip: "Copy link", on: { click: "copyLink" } } },
+                                    { IconButton: { key: "star", icon: "star", tooltip: "Add to favorites: a longer tooltip that wraps by words when it does not fit on one line", on: { click: "count" } } },
+                                    {
+                                      IconButton: {
+                                        key: "more", icon: "more", tooltip: "More",
+                                        contextMenu: [
+                                          { label: "Open", action: "menuOpen", shortcut: "@env.mod" },
+                                          { label: "Copy link", action: "copyLink" },
+                                          "-",
+                                          { label: "Delete", action: "menuDelete" },
+                                          { label: "Unavailable", action: "none", disabled: true },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          Card: {
+                            title: "Display",
+                            children: [
+                              {
+                                Row: {
+                                  gap: 10, cross: "center",
+                                  children: [
+                                    { ProgressBar: { value: "@progress", flex: 1 } },
+                                    { Text: { text: "{@progressPct}%", size: 12, color: "$theme.muted" } },
+                                    // Worker thread: progress through Handle::post (in the browser, 100% at once).
+                                    { IconButton: { key: "load", icon: "arrowDown", size: "sm", tooltip: "Load in a worker thread", disabled: "@loading", on: { click: "load" } } },
+                                  ],
+                                },
+                              },
+                              {
+                                Wrap: {
+                                  gap: 6, cross: "center",
+                                  children: [
+                                    { Badge: { text: "3" } },
+                                    { Badge: { text: "New", color: "$theme.primary" } },
+                                    { Badge: { text: "Done", color: "$theme.success" } },
+                                    { Avatar: { name: "Anna Peterson", size: 24 } },
+                                    { Avatar: { name: "Ben Irving", size: 28 } },
+                                    { Avatar: { name: "Clara Smith" } },
+                                    { Avatar: { name: "David Owens", size: 40 } },
+                                  ],
+                                },
+                              },
+                              // Images: photos in avatars; cover / contain / fill and rounding.
+                              {
+                                Row: {
+                                  gap: 8, cross: "center",
+                                  children: [
+                                    { Avatar: { name: "Anna Peterson", src: "mem:anna", size: 40 } },
+                                    { Avatar: { name: "Ben Irving", src: "mem:boris", size: 40 } },
+                                    { Avatar: { name: "Clara Smith", src: "mem:vera", size: 40 } },
+                                    { Image: { key: "pic-cover", src: "mem:landscape", w: 72, h: 48, radius: 8 } },
+                                    { Box: { fill: "$theme.track", radius: 8, child: { Image: { src: "mem:landscape", w: 48, h: 48, fit: "contain" } } } },
+                                    { Image: { src: "mem:landscape", w: 48, h: 48, fit: "fill", radius: 24 } },
+                                  ],
+                                },
+                              },
+                              { Divider: {} },
+                              {
+                                Column: {
+                                  cross: "stretch",
+                                  children: [
+                                    {
+                                      ListTile: {
+                                        key: "anna",
+                                        title: "Anna Peterson", subtitle: "Sent over the mockups, take a look when you have time",
+                                        leading: { Avatar: { name: "Anna Peterson" } },
+                                        trailing: { Badge: { text: "2" } },
+                                        on: { click: "count" },
+                                        contextMenu: [
+                                          { label: "Reply", action: "menuOpen" },
+                                          { label: "Forward", action: "menuOpen" },
+                                          "-",
+                                          { label: "Delete", action: "menuDelete" },
+                                        ],
+                                      },
+                                    },
+                                    {
+                                      ListTile: {
+                                        title: "Settings", subtitle: "Theme, notifications, language", selected: true,
+                                        leading: { Icon: { name: "settings", size: 20, color: "$theme.primary" } },
+                                        trailing: { Icon: { name: "chevronRight", size: 14, color: "$theme.muted" } },
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          Card: {
+                            title: "Icons",
+                            children: [
+                              {
+                                Wrap: {
+                                  gap: 14,
+                                  children: {
+                                    For: {
+                                      each: [
+                                        "check", "close", "plus", "minus", "chevronDown", "chevronUp", "chevronLeft", "chevronRight",
+                                        "arrowLeft", "arrowRight", "arrowUp", "arrowDown", "search", "menu", "more", "info",
+                                        "warning", "star", "trash", "edit", "settings", "home", "mail", "calendar", "user",
+                                      ],
+                                      as: "name",
+                                      do: { Icon: { name: "@name", size: 20, color: "$theme.label" } },
+                                    },
+                                  },
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+}

@@ -1,0 +1,11 @@
+// Touches on a phone: a slow swipe (no fling), a fast one (with fling), a tap on a message.
+[
+  ["capture", "01_start", 800],
+  ["swipe", "inboxList", -200, 600], ["wait", 300],
+  ["capture", "02_slow_swipe", 800],
+  ["swipe", "inboxList", -150, 80], ["wait", 1500],
+  ["capture", "03_fling", 800],
+  ["tap", "inboxList/14"], ["wait", 300],
+  ["capture", "04_tap", 800],
+  ["done"]
+]

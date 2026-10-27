@@ -1,0 +1,5 @@
+# Windows (MSVC): vcruntime linked statically, UCRT from the system (part of Windows 10+).
+# Otherwise the exe needs VCRUNTIME140.dll from the Visual C++ Redistributable, which a clean
+# system lacks (especially Windows on ARM). Cost: +22 KB; a fully static CRT: +106 KB.
+[target.'cfg(all(windows, target_env = "msvc"))']
+rustflags = ["-C", "target-feature=+crt-static", "-C", "link-arg=/NODEFAULTLIB:libucrt.lib", "-C", "link-arg=/DEFAULTLIB:ucrt.lib"]

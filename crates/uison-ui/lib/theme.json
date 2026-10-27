@@ -1,0 +1,102 @@
+// Themes: tokens available in templates as "$name".
+{
+  light: {
+    primary: "#007AFF",
+    primaryHover: "#0071EB",
+    primaryPressed: "#0062CC",
+    primaryDisabled: "#A8CFFF",
+    onPrimary: "#FFFFFF",
+
+    danger: "#FF3B30",
+    dangerHover: "#F0352B",
+    dangerPressed: "#D70015",
+    success: "#34C759",
+    warning: "#FF9500",
+
+    background: "#F5F5F7",
+    card: "#FFFFFF",
+    surface: "#FFFFFF",
+    surfaceHover: "#F2F2F5",
+    surfacePressed: "#E5E5EA",
+    selection: "#E5F0FF",
+    textSelection: "#B4D5FE",
+    tooltip: "#3A3A3C",
+    onTooltip: "#FFFFFF",
+
+    text: "#1D1D1F",
+    label: "#3C3C43",
+    muted: "#86868B",
+
+    border: "#D2D2D7",
+    borderHover: "#AEAEB2",
+    divider: "#E5E5EA",
+
+    track: "#E5E5EA",
+    trackHover: "#DADADF",
+    thumb: "#FFFFFF",
+    tabActive: "#FFFFFF",
+    shadow: "#00000014",
+    scrollbar: "#00000048",
+
+    avatars: ["#FF9500", "#34C759", "#007AFF", "#AF52DE", "#FF3B30", "#5AC8FA", "#FF2D55", "#5856D6"],
+
+    radius: 8,
+    radiusSm: 6,
+    radiusLg: 12,
+
+    fontSize: 13,
+    fontSizeSm: 11,
+    fontSizeLg: 15,
+    fontSizeTitle: 22,
+  },
+
+  dark: {
+    primary: "#0A84FF",
+    primaryHover: "#2C95FF",
+    primaryPressed: "#0068D6",
+    primaryDisabled: "#1E3C5E",
+    onPrimary: "#FFFFFF",
+
+    danger: "#FF453A",
+    dangerHover: "#FF5E55",
+    dangerPressed: "#D93A30",
+    success: "#30D158",
+    warning: "#FF9F0A",
+
+    background: "#1C1C1E",
+    card: "#2C2C2E",
+    surface: "#3A3A3C",
+    surfaceHover: "#444446",
+    surfacePressed: "#505052",
+    selection: "#1C3A5E",
+    textSelection: "#3F638B",
+    tooltip: "#E5E5EA",
+    onTooltip: "#1D1D1F",
+
+    text: "#F5F5F7",
+    label: "#D1D1D6",
+    muted: "#98989D",
+
+    border: "#545458",
+    borderHover: "#6C6C70",
+    divider: "#3A3A3C",
+
+    track: "#48484A",
+    trackHover: "#545456",
+    thumb: "#F5F5F7",
+    tabActive: "#636366",
+    shadow: "#00000055",
+    scrollbar: "#FFFFFF48",
+
+    avatars: ["#FF9F0A", "#30D158", "#0A84FF", "#BF5AF2", "#FF453A", "#64D2FF", "#FF375F", "#5E5CE6"],
+
+    radius: 8,
+    radiusSm: 6,
+    radiusLg: 12,
+
+    fontSize: 13,
+    fontSizeSm: 11,
+    fontSizeLg: 15,
+    fontSizeTitle: 22,
+  },
+}

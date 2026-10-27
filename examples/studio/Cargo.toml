@@ -1,0 +1,7 @@
+[package]
+name = "studio"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison.workspace = true

@@ -1,0 +1,9 @@
+// Browser: :hover on a button link in the CSS showcase (the button background and underline change).
+[
+  ["wait", 300],
+  ["wheel", "scroll1", 500], ["wait", 400],
+  ["capture", "01_normal", 300],
+  ["hover", "a1.0", 400],
+  ["capture", "02_hover", 300],
+  ["done"]
+]

@@ -1,0 +1,1 @@
+[["tap", "agree"], ["tap", "submit"], ["wait", 200], ["type", "Anna"], ["tap", "email/1/0"], ["type", "anna@"], ["capture", "lesson", 300], ["done"]]

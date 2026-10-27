@@ -1,0 +1,12 @@
+// Form (Rust examples/form2 and C examples-c/form2-c: screenshots must match).
+[
+  ["tap", "name/1/0"], ["type", "Anna"],
+  ["tap", "email/1/0"], ["type", "anna@"], ["wait", 200],
+  ["capture", "01_invalid", 300],
+  ["type", "example.com"],
+  ["tap", "root/0/0/0/6/1/0/basic"], ["wait", 200],
+  ["capture", "02_filled", 300],
+  ["tap", "root/0/0/0/7"], ["wait", 300],
+  ["capture", "03_submitted", 300],
+  ["done"]
+]

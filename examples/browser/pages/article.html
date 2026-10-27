@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>World Wide Web — a history</title>
+<style>
+  body { margin: 0; font: 17px/1.6 Georgia, serif; color: #202122; background: #fff; }
+  header { border-bottom: 1px solid #a2a9b1; padding: 12px 24px; font-family: sans-serif; font-size: 14px; }
+  header a { color: #3366cc; }
+  main { max-width: 760px; margin: 0 auto; padding: 8px 24px 64px; }
+  h1 { font-weight: normal; font-size: 32px; border-bottom: 1px solid #a2a9b1; margin: 16px 0 4px; line-height: 1.3; }
+  h2 { font-weight: normal; font-size: 24px; border-bottom: 1px solid #a2a9b1; margin: 28px 0 8px; line-height: 1.3; }
+  h3 { font-family: sans-serif; font-size: 18px; margin: 20px 0 6px; }
+  .sub { color: #54595d; font-size: 14px; font-family: sans-serif; margin-bottom: 16px; }
+  a { color: #3366cc; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .infobox { float: right; border: 1px solid #a2a9b1; background: #f8f9fa; padding: 8px; font: 13px/1.4 sans-serif; margin: 0 0 16px; }
+  .infobox th { text-align: left; padding-right: 8px; }
+  blockquote { margin: 16px 0; padding: 0 20px; border-left: 3px solid #c8ccd1; color: #54595d; font-style: italic; }
+  code, pre { font-family: monospace; background: #f8f9fa; }
+  pre { border: 1px solid #eaecf0; padding: 10px; font-size: 13px; }
+  .toc { display: inline-block; border: 1px solid #a2a9b1; background: #f8f9fa; padding: 8px 16px; font: 14px/1.5 sans-serif; }
+  .toc ol { margin: 4px 0; padding-left: 22px; }
+  sup { color: #3366cc; }
+  .refs { font-size: 14px; }
+</style>
+</head>
+<body>
+<header><a href="about:home">← uison browser</a> · <a href="about:css">CSS showcase</a></header>
+<main>
+<h1>World Wide Web</h1>
+<div class="sub">From the built-in help — for testing long pages</div>
+
+<table class="infobox">
+  <tr><th>Inventor</th><td>Tim Berners-Lee</td></tr>
+  <tr><th>Place</th><td>CERN, Geneva</td></tr>
+  <tr><th>Proposal</th><td>March 1989</td></tr>
+  <tr><th>First website</th><td>December 1990</td></tr>
+  <tr><th>Open to all</th><td>April 1993</td></tr>
+</table>
+
+<p>The <b>World Wide Web</b> (<i>WWW</i>, or simply the <i>web</i>) is a distributed system that gives access to linked documents stored on many different computers connected to the Internet. Besides the full name, people also use the word <i>web</i> and the abbreviation <code>WWW</code>.<sup>[1]</sup> The web is made up of hundreds of millions of web servers; most of its resources are hypertext, in which links lead to other documents.</p>
+
+<div class="toc"><b>Contents</b>
+<ol>
+  <li>Background</li>
+  <li>The first browser and the first website</li>
+  <li>HTML, HTTP and URL</li>
+  <li>Cascading Style Sheets</li>
+  <li>The browser wars</li>
+  <li>The web today</li>
+</ol></div>
+
+<h2>Background</h2>
+<p>The idea of linked documents is older than computers. In 1945 Vannevar Bush described the "Memex", a machine in which a reader could connect microfilms with "trails" of association. In the 1960s Ted Nelson coined the word <i>hypertext</i> and started Project Xanadu, and Douglas Engelbart demonstrated the NLS system — with a mouse, windows and links between documents. That 1968 demonstration later became known as "the Mother of All Demos".</p>
+<p>By the late 1980s the Internet already connected universities and laboratories, but documents lived on different machines in different formats. To find something you had to know where it was and be able to use a dozen programs: <code>ftp</code>, <code>telnet</code>, Gopher, WAIS.</p>
+
+<blockquote>"HyperText is a way to link and access information of various kinds as a web of nodes in which the user can browse at will."<br>— Tim Berners-Lee, "Information Management: A Proposal", 1989</blockquote>
+
+<h2>The first browser and the first website</h2>
+<p>In March 1989 Tim Berners-Lee, who worked at CERN, wrote a memo about an information management system. His supervisor Mike Sendall wrote on the cover: "Vague but exciting". In 1990, together with Robert Cailliau, he revised the proposal, and by the end of the year the first web server and the first browser — which was also an editor — <b>WorldWideWeb</b>, were running on a NeXT computer.</p>
+<p>The first website, <a href="http://info.cern.ch/hypertext/WWW/TheProject.html">info.cern.ch</a>, described the project itself: what hypertext is, how to set up a server and how to write a browser. You can still open it today — including with this browser, over plain HTTP.</p>
+<p>Few people ever saw the NeXT browser, so in 1991 a simple text browser, the <i>Line Mode Browser</i>, appeared; it ran on any terminal. It showed links as numbers in square brackets: to follow one, you typed its number.</p>
+
+<h3>Mosaic</h3>
+<p>The web became truly popular in 1993, when the National Center for Supercomputing Applications (NCSA) released <b>Mosaic</b> — a browser with images right in the text that ran on Windows, Macintosh and Unix. That same year CERN gave up its rights to the technology, and the web became a public good.</p>
+
+<h2>HTML, HTTP and URL</h2>
+<p>The web rests on three simple ideas. A <b>URL</b> is the address of any document; <b>HTTP</b> is the protocol a browser uses to request a document from a server; <b>HTML</b> is the markup language in which text is marked up with tags and links point to other URLs.</p>
+<pre>GET /hypertext/WWW/TheProject.html HTTP/1.1
+Host: info.cern.ch
+Connection: close
+
+HTTP/1.1 200 OK
+Content-Type: text/html</pre>
+<p>The first versions of HTML were tiny: headings, paragraphs, lists, links. Tables, forms and images were added gradually, and browsers forgave markup errors — an unclosed <code>&lt;p&gt;</code> closed itself before the next block. This tolerance became the norm and is written into the modern standard: HTML parsing is specified as an exact algorithm that knows what to do with any page, even a broken one.</p>
+
+<h2>Cascading Style Sheets</h2>
+<p>Early pages were styled right in the markup: <code>&lt;font color="red"&gt;</code>, <code>&lt;center&gt;</code>, tables for column layout. In 1994 Håkon Wium Lie proposed <b>CSS</b> — Cascading Style Sheets, which separate presentation from content. The word "cascade" means that styles from different sources — the browser, the page author, the user — are layered by rules: importance, selector specificity, order.</p>
+<table>
+  <tr><th>Year</th><th>Event</th></tr>
+  <tr><td>1996</td><td>CSS level 1: fonts, colors, spacing, borders</td></tr>
+  <tr><td>1998</td><td>CSS 2: positioning, media types</td></tr>
+  <tr><td>2009</td><td>first Flexbox drafts</td></tr>
+  <tr><td>2017</td><td>Grid in all major browsers</td></tr>
+</table>
+
+<h2>The browser wars</h2>
+<p>In the second half of the 1990s Netscape Navigator and Internet Explorer competed by adding their own tags and features: <code>&lt;blink&gt;</code>, <code>&lt;marquee&gt;</code>, layers, different versions of JavaScript. Sites were made "best viewed in…", and developers had to maintain several versions of their pages. The answer was the W3C web standards and the movement to follow them.</p>
+<p>The 2000s brought Firefox, Safari and Chrome; engines became open source and standards became shared. Today browsers update every few weeks, and a new CSS feature usually reaches all major browsers within a year or two.</p>
+
+<h2>The web today</h2>
+<p>A modern page is not just a document but also an application: JavaScript, networking, graphics, video. A browser engine is one of the most complex programs there is: millions of lines of code, its own programming language, its own graphics subsystem. That is why small browsers like this one show only the essence: parse HTML, apply CSS, lay out blocks and lines — and draw.</p>
+<ul>
+  <li>About two billion websites, of which hundreds of millions are active.</li>
+  <li>Almost all traffic goes over HTTPS — encrypted HTTP.</li>
+  <li>The first website still works at info.cern.ch.</li>
+</ul>
+
+<h2>Notes</h2>
+<ol class="refs">
+  <li>"Web" is used both as a noun and as the first part of compounds: web page, web server, website.</li>
+  <li>The text of this article was written for testing the browser and does not claim to be complete.</li>
+</ol>
+</main>
+</body>
+</html>

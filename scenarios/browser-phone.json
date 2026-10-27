@@ -1,0 +1,12 @@
+// Browser on a phone: start page → CSS showcase (link) → back; JSON view.
+[
+  ["wait", 1500],
+  ["capture", "01_home", 1500],
+  ["wheel", "scroll1", -500], ["wait", 800],
+  ["tap", "a0.0"], ["wait", 1500],
+  ["capture", "02_css", 1500],
+  ["tap", "back"], ["wait", 1500],
+  ["tap", "modeNarrow/0/json"], ["wait", 1500],
+  ["capture", "03_json", 1500],
+  ["done"]
+]

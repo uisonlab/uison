@@ -1,0 +1,559 @@
+// Standard element library. Only templates made of built-in nodes,
+// parameters ($name), theme tokens ($theme.name), state selectors
+// and behaviors (toggle, select, drag).
+{
+  // ------------------------------------------------------------ buttons
+
+  Button: {
+    params: {
+      text: "",
+      variant: "primary", // primary | secondary | outline | text | danger
+      size: "md", // sm | md | lg
+      icon: null,
+      // text and icon color — depends on variant and state.
+      fg: {
+        switch: "$variant",
+        cases: {
+          primary: "$theme.onPrimary",
+          danger: "$theme.onPrimary",
+          outline: { state: { normal: "$theme.primary", disabled: "$theme.muted" } },
+          text: { state: { normal: "$theme.primary", disabled: "$theme.muted" } },
+        },
+        default: { state: { normal: "$theme.text", disabled: "$theme.muted" } },
+      },
+    },
+    interactive: true,
+    body: {
+      Box: {
+        padding: { switch: "$size", cases: { sm: [4, 10], lg: [11, 22] }, default: [7, 16] },
+        radius: { switch: "$size", cases: { sm: "$theme.radiusSm" }, default: "$theme.radius" },
+        align: "center",
+        fill: {
+          switch: "$variant",
+          cases: {
+            primary: { state: { normal: "$theme.primary", hover: "$theme.primaryHover", pressed: "$theme.primaryPressed", disabled: "$theme.primaryDisabled" } },
+            danger: { state: { normal: "$theme.danger", hover: "$theme.dangerHover", pressed: "$theme.dangerPressed", disabled: "$theme.primaryDisabled" } },
+            secondary: { state: { normal: "$theme.surface", hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } },
+            outline: { state: { normal: null, hover: "$theme.selection", pressed: "$theme.surfacePressed" } },
+            text: { state: { normal: null, hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } },
+          },
+        },
+        stroke: {
+          switch: "$variant",
+          cases: { secondary: "$theme.border", outline: { state: { normal: "$theme.primary", disabled: "$theme.border" } } },
+        },
+        child: {
+          Row: {
+            gap: 6,
+            cross: "center",
+            children: [
+              { Icon: { name: "$icon", visible: "$icon", color: "$fg", weight: 2, size: { switch: "$size", cases: { sm: 13, lg: 18 }, default: 15 } } },
+              { Text: { text: "$text", visible: "$text", bold: true, color: "$fg", size: { switch: "$size", cases: { sm: 12, lg: 15 }, default: 13 } } },
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  IconButton: {
+    params: {
+      icon: "plus",
+      variant: "text", // text | secondary | primary
+      size: "md", // sm | md | lg
+      color: { switch: "$variant", cases: { primary: "$theme.onPrimary" }, default: { state: { normal: "$theme.label", disabled: "$theme.muted" } } },
+    },
+    interactive: true,
+    body: {
+      Box: {
+        w: { switch: "$size", cases: { sm: 24, lg: 38 }, default: 30 },
+        h: { switch: "$size", cases: { sm: 24, lg: 38 }, default: 30 },
+        radius: 999,
+        align: "center",
+        fill: {
+          switch: "$variant",
+          cases: {
+            primary: { state: { normal: "$theme.primary", hover: "$theme.primaryHover", pressed: "$theme.primaryPressed", disabled: "$theme.primaryDisabled" } },
+            secondary: { state: { normal: "$theme.surface", hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } },
+          },
+          default: { state: { normal: null, hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } },
+        },
+        stroke: { switch: "$variant", cases: { secondary: "$theme.border" } },
+        child: { Icon: { name: "$icon", color: "$color", weight: 2, size: { switch: "$size", cases: { sm: 14, lg: 20 }, default: 16 } } },
+      },
+    },
+  },
+
+  // ------------------------------------------------------------ choice
+
+  Checkbox: {
+    params: { checked: false, label: "" },
+    interactive: true,
+    body: {
+      Row: {
+        gap: 8,
+        cross: "center",
+        toggle: "$checked",
+        children: [
+          {
+            Box: {
+              w: 18, h: 18, radius: 5, align: "center",
+              fill: {
+                switch: "$checked",
+                cases: { true: { state: { normal: "$theme.primary", hover: "$theme.primaryHover", pressed: "$theme.primaryPressed", disabled: "$theme.primaryDisabled" } } },
+                default: { state: { normal: "$theme.surface", hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed", disabled: "$theme.surfaceHover" } },
+              },
+              stroke: { switch: "$checked", cases: { true: null }, default: { state: { normal: "$theme.border", hover: "$theme.borderHover" } } },
+              child: { Icon: { name: "check", size: 14, weight: 2.4, color: "$theme.onPrimary", visible: "$checked" } },
+            },
+          },
+          { Text: { text: "$label", visible: "$label", color: { state: { normal: "$theme.text", disabled: "$theme.muted" } } } },
+        ],
+      },
+    },
+  },
+
+  Radio: {
+    params: { value: "", group: null, label: "" },
+    interactive: true,
+    body: {
+      Row: {
+        gap: 8,
+        cross: "center",
+        select: { path: "$group", value: "$value" },
+        children: [
+          {
+            Box: {
+              w: 18, h: 18, radius: 9, align: "center",
+              fill: {
+                switch: { eq: ["$group", "$value"] },
+                cases: { true: { state: { normal: "$theme.primary", hover: "$theme.primaryHover", pressed: "$theme.primaryPressed", disabled: "$theme.primaryDisabled" } } },
+                default: { state: { normal: "$theme.surface", hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } },
+              },
+              stroke: { switch: { eq: ["$group", "$value"] }, cases: { true: null }, default: { state: { normal: "$theme.border", hover: "$theme.borderHover" } } },
+              child: { Circle: { r: 3.5, fill: "$theme.onPrimary", visible: { eq: ["$group", "$value"] } } },
+            },
+          },
+          { Text: { text: "$label", visible: "$label", color: { state: { normal: "$theme.text", disabled: "$theme.muted" } } } },
+        ],
+      },
+    },
+  },
+
+  // options: [{ value, label }]
+  RadioGroup: {
+    params: { value: null, options: [], direction: "column" },
+    body: {
+      switch: "$direction",
+      cases: {
+        row: {
+          Row: {
+            gap: 18,
+            children: { For: { each: "$options", as: "o", key: "@o.value", do: { Radio: { label: "@o.label", value: "@o.value", group: "$value" } } } },
+          },
+        },
+      },
+      default: {
+        Column: {
+          gap: 10,
+          children: { For: { each: "$options", as: "o", key: "@o.value", do: { Radio: { label: "@o.label", value: "@o.value", group: "$value" } } } },
+        },
+      },
+    },
+  },
+
+  Switch: {
+    params: { checked: false, label: "" },
+    interactive: true,
+    body: {
+      Row: {
+        gap: 10,
+        cross: "center",
+        toggle: "$checked",
+        children: [
+          {
+            Box: {
+              w: 38, h: 22, radius: 11, padding: 2,
+              fill: {
+                switch: "$checked",
+                cases: { true: { state: { normal: "$theme.primary", hover: "$theme.primaryHover", pressed: "$theme.primaryPressed", disabled: "$theme.primaryDisabled" } } },
+                default: { state: { normal: "$theme.track", hover: "$theme.trackHover", pressed: "$theme.trackHover" } },
+              },
+              align: { switch: "$checked", cases: { true: "right" }, default: "left" },
+              child: { Circle: { r: 9, fill: "$theme.thumb", stroke: "$theme.shadow", width: 0.5 } },
+            },
+          },
+          { Text: { text: "$label", visible: "$label", color: { state: { normal: "$theme.text", disabled: "$theme.muted" } } } },
+        ],
+      },
+    },
+  },
+
+  // Draggable slider: value in the range min..max.
+  Slider: {
+    params: { value: 0, min: 0, max: 100, step: 0 },
+    interactive: true,
+    body: {
+      Row: {
+        h: 22,
+        cross: "center",
+        drag: { path: "$value", min: "$min", max: "$max", step: "$step", inset: 10 },
+        children: [
+          { Box: { h: 4, radius: 2, fill: { state: { normal: "$theme.primary", disabled: "$theme.primaryDisabled" } }, flex: { ratio: "$value", min: "$min", max: "$max" } } },
+          { Box: { w: 20, h: 20, radius: 10, fill: "$theme.thumb", stroke: { state: { normal: "$theme.border", hover: "$theme.borderHover", pressed: "$theme.primary" } } } },
+          { Box: { h: 4, radius: 2, fill: "$theme.track", flex: { ratio: "$value", min: "$min", max: "$max", invert: true } } },
+        ],
+      },
+    },
+  },
+
+  // Dropdown list. options: [{ value, label }]. Open state is the local @~open.
+  Select: {
+    params: { value: null, options: [], placeholder: "Select…", label: null },
+    body: {
+      Column: {
+        gap: 6,
+        cross: "stretch",
+        children: [
+          { Text: { text: "$label", visible: "$label", size: 12, color: "$theme.label" } },
+          {
+            Stack: {
+              w: "fill",
+              children: [
+                {
+                  Box: {
+                    w: "fill", h: 32, padding: [0, 10], radius: "$theme.radius", fill: "$theme.surface",
+                    toggle: "@~open",
+                    stroke: { switch: "@~open", cases: { true: "$theme.primary" }, default: { state: { normal: "$theme.border", hover: "$theme.borderHover" } } },
+                    width: { switch: "@~open", cases: { true: 2 }, default: 1 },
+                    align: "left",
+                    child: {
+                      Row: {
+                        w: "fill", cross: "center", gap: 8,
+                        children: [
+                          {
+                            Stack: {
+                              flex: 1,
+                              children: [
+                                { For: { each: "$options", as: "o", key: "@o.value", do: { Text: { text: "@o.label", maxLines: 1, visible: { eq: ["@o.value", "$value"] } } } } },
+                                { Text: { text: "$placeholder", color: "$theme.muted", maxLines: 1, visible: { not: "$value" } } },
+                              ],
+                            },
+                          },
+                          { Icon: { name: { switch: "@~open", cases: { true: "chevronUp" }, default: "chevronDown" }, size: 14, weight: 2, color: "$theme.muted" } },
+                        ],
+                      },
+                    },
+                  },
+                },
+                // The panel is an overlay: above everything, doesn't affect size. The backing below is the shadow.
+                {
+                  Box: {
+                    overlay: true, visible: "@~open", dismiss: "@~open",
+                    pos: [0, 36], w: "fill", radius: "$theme.radius", fill: "$theme.shadow", padding: [0, 0, 3, 0],
+                    child: {
+                      Box: {
+                        w: "fill", padding: 4, radius: "$theme.radius", fill: "$theme.surface", stroke: "$theme.border",
+                    child: {
+                      Column: {
+                        cross: "stretch",
+                        children: {
+                          For: {
+                            each: "$options", as: "o", key: "@o.value",
+                            do: {
+                              Box: {
+                                h: 28, padding: [0, 8], radius: "$theme.radiusSm", align: "left",
+                                select: [{ path: "$value", value: "@o.value" }, { path: "@~open", value: false }],
+                                fill: { state: { normal: null, hover: "$theme.selection", pressed: "$theme.surfacePressed" } },
+                                child: {
+                                  Row: {
+                                    gap: 6, cross: "center",
+                                    children: [
+                                      { Box: { w: 16, h: 16, child: { Icon: { name: "check", size: 16, weight: 2, color: "$theme.primary", visible: { eq: ["@o.value", "$value"] } } } } },
+                                      { Text: { text: "@o.label", maxLines: 1 } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  // tabs: [{ value, label }] — segmented control.
+  Tabs: {
+    params: { value: null, tabs: [] },
+    body: {
+      Box: {
+        fill: "$theme.track", radius: "$theme.radius", padding: 2,
+        child: {
+          Row: {
+            w: "fill", gap: 2,
+            children: { For: { each: "$tabs", as: "t", key: "@t.value", do: { Tab: { label: "@t.label", value: "@t.value", group: "$value" } } } },
+          },
+        },
+      },
+    },
+  },
+
+  Tab: {
+    params: { label: "", value: "", group: null },
+    interactive: true,
+    body: {
+      Box: {
+        flex: 1, padding: [5, 12], radius: "$theme.radiusSm", align: "center",
+        select: { path: "$group", value: "$value" },
+        fill: { switch: { eq: ["$group", "$value"] }, cases: { true: "$theme.tabActive" }, default: { state: { normal: null, hover: "$theme.trackHover" } } },
+        stroke: { switch: { eq: ["$group", "$value"] }, cases: { true: "$theme.shadow" } },
+        width: 0.5,
+        child: {
+          Text: {
+            text: "$label", size: 12, maxLines: 1,
+            bold: { eq: ["$group", "$value"] },
+            color: { switch: { eq: ["$group", "$value"] }, cases: { true: "$theme.text" }, default: "$theme.label" },
+          },
+        },
+      },
+    },
+  },
+
+  // ------------------------------------------------------------ input
+
+  TextField: {
+    params: { value: null, label: null, placeholder: "", error: null, password: false, keyboard: "text" },
+    body: {
+      Column: {
+        gap: 6,
+        cross: "stretch",
+        children: [
+          { Text: { text: "$label", visible: "$label", size: 12, color: "$theme.label" } },
+          {
+            Box: {
+              h: 32, padding: [0, 10], radius: "$theme.radius", fill: "$theme.surface", align: "left",
+              stroke: {
+                switch: { not: "$error" },
+                cases: { true: { state: { normal: "$theme.border", hover: "$theme.borderHover", focus: "$theme.primary" } } },
+                default: "$theme.danger",
+              },
+              width: { state: { normal: 1, focus: 2 } },
+              child: { Input: { value: "$value", placeholder: "$placeholder", password: "$password", keyboard: "$keyboard" } },
+            },
+          },
+          { Text: { text: "$error", visible: "$error", size: 12, color: "$theme.danger" } },
+        ],
+      },
+    },
+  },
+
+  // ------------------------------------------------------------ display
+
+  // value: 0..1
+  ProgressBar: {
+    params: { value: 0, color: "$theme.primary" },
+    body: {
+      Stack: {
+        w: "fill", h: 6,
+        children: [
+          { Box: { w: "fill", h: 6, radius: 3, fill: "$theme.track" } },
+          {
+            Row: {
+              w: "fill", h: 6,
+              children: [
+                { Box: { h: 6, radius: 3, fill: "$color", flex: { ratio: "$value" } } },
+                { Spacer: { flex: { ratio: "$value", invert: true } } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  Divider: {
+    params: { vertical: false },
+    body: {
+      switch: "$vertical",
+      cases: { true: { Box: { w: 1, h: "fill", fill: "$theme.divider" } } },
+      default: { Box: { w: "fill", h: 1, fill: "$theme.divider" } },
+    },
+  },
+
+  Card: {
+    params: { title: null, children: [], padding: 16, gap: 12 },
+    body: {
+      Box: {
+        fill: "$theme.card", stroke: "$theme.divider", radius: "$theme.radiusLg", padding: "$padding",
+        child: {
+          Column: {
+            gap: "$gap",
+            cross: "stretch",
+            children: [{ Text: { text: "$title", visible: "$title", bold: true, size: 15 } }, "$children"],
+          },
+        },
+      },
+    },
+  },
+
+  // List row. leading/trailing are nodes (icon, avatar, badge, switch).
+  // Clickable when `on` is set.
+  ListTile: {
+    params: { title: "", subtitle: null, leading: null, trailing: null, selected: false },
+    body: {
+      Box: {
+        padding: [7, 10], radius: "$theme.radius",
+        fill: { switch: "$selected", cases: { true: "$theme.selection" }, default: { state: { normal: null, hover: "$theme.surfaceHover", pressed: "$theme.surfacePressed" } } },
+        child: {
+          Row: {
+            gap: 12,
+            cross: "center",
+            children: [
+              "$leading",
+              {
+                Column: {
+                  flex: 1, gap: 2,
+                  children: [
+                    { Text: { text: "$title", maxLines: 1 } },
+                    { Text: { text: "$subtitle", visible: "$subtitle", size: 12, color: "$theme.muted", maxLines: 1 } },
+                  ],
+                },
+              },
+              "$trailing",
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  Badge: {
+    params: { text: "", color: "$theme.danger", textColor: "#FFFFFF" },
+    body: {
+      Box: {
+        padding: [1, 6], minW: 18, radius: 999, align: "center", fill: "$color",
+        child: { Text: { text: "$text", size: 11, bold: true, color: "$textColor" } },
+      },
+    },
+  },
+
+  // Avatar: a photo (src — "mem:name" or a file), otherwise initials on a colored circle.
+  Avatar: {
+    params: { name: "", size: 32, color: null, src: null },
+    body: {
+      Box: {
+        w: "$size", h: "$size", radius: 999, align: "center",
+        fill: { switch: { not: "$color" }, cases: { true: { pick: "$name", from: "$theme.avatars" } }, default: "$color" },
+        child: {
+          switch: { not: "$src" },
+          cases: {
+            true: {
+              Text: {
+                text: { initials: "$name" }, bold: true, color: "#FFFFFF",
+                size: { switch: "$size", cases: { "24": 10, "28": 11, "40": 15, "48": 18, "64": 24 }, default: 13 },
+              },
+            },
+          },
+          default: { Image: { src: "$src", w: "$size", h: "$size", radius: 999 } },
+        },
+      },
+    },
+  },
+
+  // Heading of a form/settings section.
+  Section: {
+    params: { title: "", children: [], gap: 10 },
+    body: {
+      Column: {
+        gap: "$gap",
+        cross: "stretch",
+        children: [{ Text: { text: "$title", size: 11, bold: true, color: "$theme.muted" } }, "$children"],
+      },
+    },
+  },
+
+  // Link: href opens in the browser; or a custom action via on: { click }.
+  Link: {
+    params: { text: "", href: null },
+    interactive: true,
+    body: {
+      Column: {
+        href: "$href",
+        children: [
+          { Text: { text: "$text", color: { state: { normal: "$theme.primary", hover: "$theme.primaryHover", pressed: "$theme.primaryPressed" } } } },
+          // Underline on hover.
+          { Box: { w: "fill", h: 1, fill: { state: { normal: null, hover: "$theme.primaryHover", pressed: "$theme.primaryPressed" } } } },
+        ],
+      },
+    },
+  },
+
+  // ------------------------------------------------------------ popups shown by the runtime
+  // The tooltip (tooltip property) and context menu (contextMenu, text field menu) are shown by
+  // the runtime: data is @env.tooltip and @env.menu; it places them at the cursor and keeps them inside the window.
+  // For custom styling, define a component with the same name in the app's components.
+
+  Tooltip: {
+    body: {
+      Box: {
+        maxW: 280, padding: [4, 8], radius: "$theme.radiusSm", fill: "$theme.tooltip",
+        child: { Text: { text: "@env.tooltip", size: 12, color: "$theme.onTooltip" } },
+      },
+    },
+  },
+
+  // Items: { label, shortcut, disabled, sep, sel } — sel: selected by keyboard; itemH is the row height (taller for touch).
+  ContextMenu: {
+    body: {
+      Box: {
+        key: "~menu", dismiss: "@env.menu.open",
+        radius: "$theme.radius", fill: "$theme.shadow", padding: [0, 0, 3, 0],
+        child: {
+          Box: {
+            minW: 180, padding: 4, radius: "$theme.radius", fill: "$theme.surface", stroke: "$theme.border",
+            child: {
+              Column: {
+                cross: "stretch",
+                children: {
+                  For: {
+                    each: "@env.menu.items", as: "m", index: "i",
+                    do: {
+                      switch: "@m.sep",
+                      cases: { true: { Box: { w: "fill", h: 1, margin: [4, 6], fill: "$theme.divider" } } },
+                      default: {
+                        Box: {
+                          key: "~menu/{@i}", h: "@env.menu.itemH", padding: [0, 10], radius: "$theme.radiusSm", align: "left",
+                          disabled: "@m.disabled", on: { click: "~menu" },
+                          fill: { switch: "@m.sel", cases: { true: "$theme.selection" }, default: { state: { normal: null, hover: "$theme.selection", pressed: "$theme.surfacePressed" } } },
+                          child: {
+                            Row: {
+                              w: "fill", gap: 24, cross: "center",
+                              children: [
+                                { Text: { text: "@m.label", flex: 1, maxLines: 1, color: { state: { normal: "$theme.text", disabled: "$theme.muted" } } } },
+                                { Text: { text: "@m.shortcut", visible: "@m.shortcut", color: "$theme.muted" } },
+                              ],
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}

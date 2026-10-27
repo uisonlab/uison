@@ -1,0 +1,9 @@
+[package]
+name = "uison-macos"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison-core.workspace = true
+uison-frame.workspace = true
+uison-apple.workspace = true

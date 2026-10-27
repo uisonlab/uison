@@ -1,0 +1,2 @@
+// Do nothing for 8 seconds and exit: for real input from outside (lindrive, xdotool, windrive) via linux.sh -a.
+[["wait", 8000], ["done"]]

@@ -1,0 +1,9 @@
+[package]
+name = "uison-gen"
+version.workspace = true
+edition.workspace = true
+description = "Typed C++ widgets (uison_widgets.hpp) from the screen schema and components JSON"
+
+[dependencies]
+uison-json.workspace = true
+uison-ui.workspace = true

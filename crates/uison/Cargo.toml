@@ -1,0 +1,40 @@
+[package]
+name = "uison"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison-json.workspace = true
+uison-core.workspace = true
+uison-frame.workspace = true
+uison-ui.workspace = true
+uison-derive.workspace = true
+
+[target.'cfg(target_os = "macos")'.dependencies]
+uison-macos.workspace = true
+
+[target.'cfg(target_os = "ios")'.dependencies]
+uison-ios.workspace = true
+
+[target.'cfg(target_os = "android")'.dependencies]
+uison-android.workspace = true
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+uison-web.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+uison-windows.workspace = true
+
+[features]
+default = ["gui-subsystem"]
+# Windows: a release program without a console window (see uison-windows); uison-c turns it off.
+gui-subsystem = ["uison-windows/gui-subsystem"]
+
+[target.'cfg(target_os = "linux")'.dependencies]
+uison-linux.workspace = true
+
+# Rust lessons (docs/rust/lessons): cargo run -p uison --example 01-hello. Lesson 9 tests run in cargo test.
+[[example]]
+name = "09-tests"
+test = true
+

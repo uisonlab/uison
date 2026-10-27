@@ -1,0 +1,49 @@
+// Demo form: primitives only, absolute coordinates.
+{
+  size: [480, 560],
+  background: "#F2F2F7",
+  items: [
+    // card
+    { rect: [24, 24, 432, 512], fill: "#FFFFFF", stroke: "#E0E0E5", radius: 12 },
+    { text: "Sign up", at: [48, 44], size: 22, bold: true, color: "#1C1C1E" },
+    { text: "Fill in the form to continue", at: [48, 76], size: 13, color: "#8E8E93" },
+
+    // the Name field with a placeholder
+    { text: "Name", at: [48, 114], size: 12, color: "#3C3C43" },
+    { rect: [48, 134, 384, 36], fill: "#FFFFFF", stroke: "#C7C7CC", radius: 8, id: "name" },
+    { text: "John Smith", at: [60, 143], size: 14, color: "#AEAEB2" },
+
+    // the Email field with a value typed in
+    { text: "Email", at: [48, 182], size: 12, color: "#3C3C43" },
+    { rect: [48, 202, 384, 36], fill: "#FFFFFF", stroke: "#C7C7CC", radius: 8, id: "email" },
+    { text: "john@example.com", at: [60, 211], size: 14, color: "#1C1C1E" },
+
+    // select with an arrow
+    { text: "Country", at: [48, 250], size: 12, color: "#3C3C43" },
+    { rect: [48, 270, 384, 36], fill: "#FFFFFF", stroke: "#C7C7CC", radius: 8, id: "country" },
+    { text: "Ukraine", at: [60, 279], size: 14, color: "#1C1C1E" },
+    { tri: [404, 285, 416, 285, 410, 292], fill: "#8E8E93" },
+
+    { line: [48, 326, 432, 326], color: "#E5E5EA" },
+
+    // checkbox (checked)
+    { rect: [48, 342, 20, 20], fill: "#007AFF", radius: 5, id: "agree" },
+    { line: [53, 352, 57, 356], color: "#FFFFFF", width: 2 },
+    { line: [57, 356, 63, 347], color: "#FFFFFF", width: 2 },
+    { text: "I agree to the terms", at: [78, 343], size: 14, color: "#1C1C1E" },
+
+    // radio buttons
+    { text: "Plan", at: [48, 378], size: 12, color: "#3C3C43" },
+    { circle: [58, 410, 9], fill: "#FFFFFF", stroke: "#C7C7CC", id: "plan_basic" },
+    { text: "Basic", at: [74, 401], size: 14, color: "#1C1C1E" },
+    { circle: [178, 410, 9], fill: "#007AFF", id: "plan_pro" },
+    { circle: [178, 410, 3.5], fill: "#FFFFFF" },
+    { text: "Pro", at: [194, 401], size: 14, color: "#1C1C1E" },
+
+    // button
+    { rect: [48, 448, 384, 44], fill: "#007AFF", radius: 10, id: "submit" },
+    { text: "Submit", at: [214, 460], size: 15, bold: true, color: "#FFFFFF" },
+
+    { text: "Have an account? Sign in", at: [164, 506], size: 12, color: "#8E8E93" },
+  ],
+}

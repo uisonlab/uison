@@ -1,0 +1,8 @@
+// list10k: inertial scrolling by finger (UISON_TOUCH=1); frame intervals in UISON_STATS (animation: …).
+[
+  ["wait", 500],
+  ["swipe", "list", -500, 120], ["wait", 2500],
+  ["swipe", "list", -500, 120], ["wait", 2500],
+  ["swipe", "list", 500, 120], ["wait", 2500],
+  ["done"]
+]

@@ -1,0 +1,51 @@
+// Disk Usage on uison: panels, list and menus are the screen; the chart is drawn by code (Canvas "chart").
+{
+  size: [1280, 840],
+  // Dark theme in the original's (egui) colors.
+  theme: {
+    background: "#24252A", card: "#2B2C32", surface: "#33343B", surfaceHover: "#3D3E46", surfacePressed: "#474852",
+    selection: "#3A3C48", border: "#3E3F47", divider: "#36373E", text: "#E8E8EC", label: "#E8E8EC", muted: "#9A9BA3",
+    danger: "#C03A3A", dangerHover: "#CF4646", dangerPressed: "#A83131", warning: "#F0A06A",
+    tooltip: "#1B1C20", onTooltip: "#E8E8EC", shadow: "#00000040", scrollbar: "#FFFFFF30", primary: "#5B8DEF",
+  },
+  data: { mode: "start", about: false, menu: [], console: false },
+  root: {
+    Stack: {
+      w: "fill", h: "fill",
+      children: [
+        {
+          Column: {
+            w: "fill", h: "fill", cross: "stretch",
+            children: [
+              { Toolbar: {} },
+              { Box: { h: 1, fill: "$theme.divider" } },
+              {
+                Box: {
+                  flex: 1, w: "fill",
+                  child: {
+                    switch: "@mode",
+                    cases: {
+                      scan: { ScanScreen: { w: "fill", h: "fill" } },
+                      view: { ViewScreen: { w: "fill", h: "fill" } },
+                    },
+                    default: { StartScreen: { w: "fill", h: "fill" } },
+                  },
+                },
+              },
+              { Box: { h: 1, fill: "$theme.divider" } },
+              { StatusBar: {} },
+            ],
+          },
+        },
+        // About: the dimmed backdrop catches the mouse; Escape or "Close" closes it.
+        {
+          Box: {
+            overlay: true, visible: "@about", w: "fill", h: "fill", fill: "#00000066", align: "center",
+            interactive: true, cursor: "arrow",
+            child: { AboutDialog: {} },
+          },
+        },
+      ],
+    },
+  },
+}

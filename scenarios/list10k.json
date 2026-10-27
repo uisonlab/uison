@@ -1,0 +1,10 @@
+// Virtual list (Rust examples/list10k and C++ examples-cpp/list10k-cpp: screenshots must match).
+[
+  ["wait", 300],
+  ["tap", "list/2/0"], ["wait", 100],
+  ["capture", "01_top", 300],
+  ["wheel", "list", -5000], ["wait", 600],
+  ["tap", "list/90/0"], ["wait", 100],
+  ["capture", "02_scrolled", 300],
+  ["done"]
+]

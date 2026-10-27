@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CSS showcase</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px 32px 48px; font: 15px/1.5 system-ui, sans-serif; color: #222; }
+  h1 { font-size: 30px; margin: 0 0 4px; }
+  h2 { font-size: 20px; margin: 32px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #eef0f4; }
+  .lead { color: #666; margin: 0 0 16px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .swatch { width: 120px; height: 64px; border-radius: 10px; color: white; padding: 8px 10px; font-size: 13px; font-weight: 600; }
+  .btn { display: inline-block; background: #228be6; color: white; padding: 8px 16px; border-radius: 6px; font-weight: 600; }
+  .btn:hover { background: #1971c2; }
+  .btn.ghost { background: white; color: #228be6; border: 1px solid #228be6; }
+  .btn.ghost:hover { background: #e7f5ff; }
+  .flexbox { display: flex; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 8px; }
+  .flexbox > div { background: #ffd43b; padding: 10px; border-radius: 6px; text-align: center; }
+  .grow { flex: 1; }
+  .between { justify-content: space-between; align-items: center; }
+  .center { justify-content: center; }
+  blockquote { margin: 0; padding: 4px 16px; border-left: 4px solid #be4bdb; background: #f8f0fc; color: #5f3dc4; }
+  pre { background: #1e1e2e; color: #cdd6f4; padding: 12px 14px; border-radius: 8px; font-size: 13px; line-height: 1.45; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #f1f3f5; text-align: left; }
+  th, td { border: 1px solid #dee2e6; padding: 6px 10px; }
+  tr:nth-child(even) td { background: #f8f9fa; }
+  .badge { background: #e6fcf5; color: #087f5b; border-radius: 999px; padding: 1px 8px; font-size: 12px; font-weight: 600; }
+  kbd { border: 1px solid #ced4da; border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font-size: 12px; background: #f8f9fa; }
+  mark { padding: 0 2px; }
+  .upper { text-transform: uppercase; letter-spacing: 1px; color: #868e96; font-size: 12px; font-weight: 700; }
+  .card { border: 1px solid #e9ecef; border-radius: 12px; padding: 16px; max-width: 420px; margin: 0 auto; text-align: center; }
+  @media (max-width: 600px) { .swatch { width: 100%; } }
+</style>
+</head>
+<body>
+  <h1>CSS showcase</h1>
+  <p class="lead">Everything below is ordinary uison nodes. Hover over the buttons and the lines of links.</p>
+
+  <h2>Text with mixed styles</h2>
+  <p>One paragraph is one <code>Flow</code>: <b>bold</b>, <i>italic</i>, <u>underlined</u>, <s>strikethrough</s>,
+  <span style="color: #e8590c">orange</span>, <span style="font-size: 20px">large</span> and <small>small</small> text,
+  <mark>highlight</mark>, <code>inline code</code>, keys <kbd>Ctrl</kbd> + <kbd>C</kbd>, a badge <span class="badge">new</span>
+  and <a href="about:home">a link that can wrap onto the next line as a single whole</a>.
+  The line is aligned on the baseline, and wrapping goes across run boundaries.</p>
+  <p class="upper">text-transform: uppercase</p>
+
+  <h2>Colors and rounded corners</h2>
+  <div class="row">
+    <div class="swatch" style="background: #fa5252">#fa5252</div>
+    <div class="swatch" style="background: rgb(64, 192, 87)">rgb(64, 192, 87)</div>
+    <div class="swatch" style="background: hsl(210, 80%, 55%)">hsl(210, 80%, 55%)</div>
+    <div class="swatch" style="background: rebeccapurple">rebeccapurple</div>
+    <div class="swatch" style="background: #ffd43b; color: #333; border-radius: 50%">50%</div>
+  </div>
+
+  <h2>Buttons and :hover</h2>
+  <p><a class="btn" href="about:home">Primary</a> <a class="btn ghost" href="about:article">Secondary</a></p>
+
+  <h2>Flex</h2>
+  <div class="flexbox"><div>auto</div><div class="grow">flex: 1</div><div>auto</div></div>
+  <p></p>
+  <div class="flexbox between"><div>left</div><div>space-between</div><div>right</div></div>
+  <p></p>
+  <div class="flexbox center"><div>justify-content: center</div></div>
+
+  <h2>Lists</h2>
+  <div class="row">
+    <ul style="margin: 0">
+      <li>disc marker</li>
+      <li>nested:
+        <ul><li>circle</li><li>one more</li></ul>
+      </li>
+    </ul>
+    <ol style="margin: 0"><li>first</li><li>second</li><li>third</li></ol>
+    <ol style="margin: 0; list-style-type: upper-roman"><li>roman</li><li>numerals</li><li>too</li></ol>
+  </div>
+
+  <h2>Table</h2>
+  <table>
+    <tr><th>uison node</th><th>Made from</th><th>Example</th></tr>
+    <tr><td>Column</td><td>block: div, p, section</td><td>&lt;div&gt;</td></tr>
+    <tr><td>Flow</td><td>inline content of a block</td><td>text, &lt;b&gt;, &lt;a&gt;</td></tr>
+    <tr><td>Box</td><td>background, border, rounding</td><td>background, border</td></tr>
+    <tr><td>Row</td><td>display: flex, table row</td><td>&lt;tr&gt;</td></tr>
+  </table>
+
+  <h2>Quote and code</h2>
+  <blockquote><p>Simple is better than complex. Flat is better than nested.</p></blockquote>
+  <pre>fn main() {
+    let ui = Ui::new(json)?;   // the screen is JSON
+    uison::run(ui, "Hello");   // a window on any platform
+}</pre>
+
+  <h2>Centered</h2>
+  <div class="card"><b>max-width + margin: auto</b><br>A block no wider than 420 points, centered on the page, with centered text too.</div>
+</body>
+</html>

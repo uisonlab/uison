@@ -1,0 +1,16 @@
+// Tooltips, context menu, text field menu and a link in the gallery (by mouse; UISON_TOUCH=1 for long press).
+[
+  ["hover", "star", 900], ["capture", "01_tooltip", 300],
+  ["hover", "copyLink", 200], ["capture", "02_moved_no_tooltip", 300],
+  ["hover", "copyLink", 700], ["capture", "03_tooltip_short", 300],
+  ["rclick", "anna"], ["capture", "04_menu", 300],
+  ["key", "Down"], ["key", "Down"], ["capture", "05_menu_keys", 300],
+  ["key", "Escape"], ["capture", "06_closed", 300],
+  ["rclick", "more"], ["capture", "07_menu_edge", 300],
+  ["click", "~menu/1"], ["capture", "08_picked", 300],
+  ["tap", "name/1/0"], ["type", "Hello world"], ["click", "name/1/0", 2],
+  ["rclick", "name/1/0"], ["capture", "09_field_menu", 300],
+  ["click", "~menu/1"],
+  ["key", "F10", "shift"], ["capture", "10_shift_f10", 300], ["key", "Escape"],
+  ["done"]
+]

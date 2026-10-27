@@ -1,0 +1,7 @@
+// Todo list (Rust examples/todo and C++ examples-cpp/todo-cpp: screenshots must match).
+[
+  ["tap", "draft/1/0"], ["type", "Buy milk\n"], ["wait", 200],
+  ["tap", "del-1"], ["wait", 200],
+  ["capture", "01_added_removed", 300],
+  ["done"]
+]

@@ -1,0 +1,25 @@
+// uison-player with disk-usage --console on /System/Library/Frameworks (Task Before 12): the program's
+// screen inside the player — hover, select, "Zoom in" (animated), the context menu of a row in the zoomed
+// folder and "Copy path" (the player's clipboard gets it), the language — then the JSON tab with and without frames.
+// Ids of the program's areas have the player's prefix r/.
+[
+  ["wait", 2500],
+  ["capture", "01_view", 1500],
+  ["hover", "r/row-2", 700],
+  ["capture", "02_row_hover", 1500],
+  ["click", "r/row-3", 1], ["wait", 400],
+  ["capture", "03_selected", 1500],
+  ["click", "r/zoomSel", 1], ["wait", 900],
+  ["capture", "04_zoomed", 1500],
+  ["rclick", "r/row-312"], ["wait", 400],
+  ["capture", "05_menu", 1500],
+  ["tap", "r/~menu/5"], ["wait", 400],
+  ["tap", "r/lang-ru"], ["wait", 400],
+  ["capture", "06_ru", 1500],
+  ["tap", "tabs/0/json"], ["wait", 600],
+  ["capture", "07_json", 1500],
+  ["tap", "frames"], ["wait", 400],
+  ["capture", "08_json_frames", 1500],
+  ["hitmap"],
+  ["done"]
+]

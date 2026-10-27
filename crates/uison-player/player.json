@@ -1,0 +1,166 @@
+// uison-player: the program's frames in the App tab (or the start screen to choose one), the messages both ways
+// in the JSON tab.
+{
+  size: [1280, 884],
+  theme: "dark",
+  data: {
+    tab: "app", title: "", stats: "", log: [], detail: "", frames: false, moves: false, send: "",
+    running: false, cmd: "", status: "", suggest: [],
+  },
+  root: {
+    Column: {
+      w: "fill", h: "fill", cross: "stretch",
+      children: [
+        {
+          Row: {
+            h: 44, padding: [0, 12], gap: 16, cross: "center",
+            children: [
+              { Tabs: { key: "tabs", value: "@tab", tabs: [{ value: "app", label: "App" }, { value: "json", label: "JSON" }], on: { change: "tab" } } },
+              { Text: { text: "@title", bold: true, wrap: false } },
+              { Button: { key: "stop", text: "Stop", variant: "secondary", size: "sm", on: { click: "stop" }, visible: "@running" } },
+              { Box: { flex: 1 } },
+              { Text: { text: "@stats", size: 12, color: "$theme.muted", font: "monospace", wrap: false } },
+            ],
+          },
+        },
+        {
+          Box: {
+            flex: 1, w: "fill",
+            child: {
+              switch: "@tab",
+              cases: { json: { JsonTab: { w: "fill", h: "fill" } } },
+              default: {
+                Box: {
+                  w: "fill", h: "fill",
+                  child: {
+                    switch: "@running",
+                    // The program's frame; mouse and keys over it go to the program.
+                    cases: { true: { Canvas: { key: "remote", draw: "remote", w: "fill", h: "fill" } } },
+                    default: { Launcher: {} },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+  components: {
+    // No program yet (or it exited): a command line, the found programs and this session's commands.
+    Launcher: {
+      body: {
+        Box: {
+          w: "fill", h: "fill", align: "center",
+          child: {
+            Column: {
+              w: 680, gap: 12, cross: "stretch",
+              children: [
+                { Text: { text: "Run a program in console mode", size: 20, bold: true } },
+                {
+                  Text: {
+                    text: "The program shows its window here and you can use it; the messages it exchanges with the player are in the JSON tab. It must support console mode, like disk-usage --console [folder].",
+                    size: 13, color: "$theme.muted",
+                  },
+                },
+                {
+                  Row: {
+                    gap: 8, cross: "center",
+                    children: [
+                      { TextField: { key: "cmd", value: "@cmd", placeholder: "/path/to/program --console …", flex: 1, on: { submit: "run" } } },
+                      { Button: { key: "run", text: "Run", on: { click: "run" } } },
+                    ],
+                  },
+                },
+                { Text: { text: "@status", size: 13, color: "$theme.warning", visible: "@status" } },
+                { Text: { text: "Programs", size: 13, bold: true, color: "$theme.muted", visible: "@suggest.0" } },
+                {
+                  For: {
+                    each: "@suggest", as: "s",
+                    do: {
+                      Box: {
+                        key: "sg-{@s.i}", padding: [8, 12], radius: 6, w: "fill", cursor: "pointer", on: { click: "suggest" },
+                        fill: { state: { normal: "$theme.surface", hover: "$theme.surfaceHover" } },
+                        child: { Text: { text: "@s.cmd", size: 12, font: "monospace" } },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+    JsonTab: {
+      body: {
+        Row: {
+          cross: "stretch",
+          children: [
+            {
+              Column: {
+                flex: 1, cross: "stretch",
+                children: [
+                  {
+                    Row: {
+                      padding: [6, 12], gap: 16, cross: "center",
+                      children: [
+                        { Switch: { key: "frames", label: "Frames", checked: "@frames", on: { change: "filter" } } },
+                        { Switch: { key: "moves", label: "Mouse moves", checked: "@moves", on: { change: "filter" } } },
+                        { Box: { flex: 1 } },
+                        { Button: { key: "clear", text: "Clear", variant: "secondary", size: "sm", on: { click: "clear" } } },
+                      ],
+                    },
+                  },
+                  { Box: { h: 1, fill: "$theme.border" } },
+                  {
+                    List: {
+                      key: "log", items: "@log", as: "m", itemKey: "{@m.id}", itemHeight: 22, flex: 1,
+                      item: {
+                        Box: {
+                          key: "m-{@m.id}", padding: [0, 12], h: 22, w: "fill", on: { click: "pick" }, cursor: "pointer",
+                          fill: { state: { normal: "@m.bg", hover: "$theme.surface" } },
+                          child: { Row: { gap: 10, cross: "center", h: 22, children: [
+                            { Text: { text: "@m.dir", w: 14, size: 12, color: "@m.color", bold: true } },
+                            { Text: { text: "@m.t", w: 64, size: 12, color: "$theme.muted", font: "monospace", align: "right", wrap: false } },
+                            { Text: { text: "@m.kind", w: 90, size: 12, wrap: false } },
+                            { Text: { text: "@m.size", w: 64, size: 12, color: "$theme.muted", align: "right", wrap: false } },
+                            { Text: { text: "@m.text", flex: 1, size: 12, font: "monospace", wrap: false, maxLines: 1 } },
+                          ] } },
+                        },
+                      },
+                    },
+                  },
+                  // A narrow screen (a phone): the chosen message under the list, not beside it.
+                  {
+                    Scroll: {
+                      h: 220, visible: { lt: ["@env.width", 760] },
+                      child: { Box: { padding: 12, fill: "$theme.surface", child: { Text: { text: "@detail", size: 11, font: "monospace" } } } },
+                    },
+                  },
+                  { Box: { h: 1, fill: "$theme.border" } },
+                  {
+                    Row: {
+                      padding: [8, 12], gap: 8, cross: "center",
+                      children: [
+                        { TextField: { key: "send", value: "@send", placeholder: "A line for the program: {\"action\":\"rescan\"}", flex: 1, on: { submit: "send" } } },
+                        { Button: { key: "sendBtn", text: "Send", size: "sm", on: { click: "send" } } },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            { Box: { w: 1, fill: "$theme.border", visible: { gt: ["@env.width", 759] } } },
+            {
+              Scroll: {
+                w: 460, key: "detailScroll", visible: { gt: ["@env.width", 759] },
+                child: { Box: { padding: 12, child: { Text: { text: "@detail", size: 12, font: "monospace" } } } },
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+}

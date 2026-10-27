@@ -1,0 +1,34 @@
+[workspace]
+resolver = "3"
+members = ["crates/*", "examples/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+
+[workspace.dependencies]
+uison-json = { path = "crates/uison-json" }
+uison-core = { path = "crates/uison-core" }
+uison-frame = { path = "crates/uison-frame" }
+uison-apple = { path = "crates/uison-apple" }
+uison-macos = { path = "crates/uison-macos" }
+uison-ios = { path = "crates/uison-ios" }
+uison-android = { path = "crates/uison-android" }
+uison-ui = { path = "crates/uison-ui" }
+uison-derive = { path = "crates/uison-derive" }
+uison-web = { path = "crates/uison-web" }
+uison-windows = { path = "crates/uison-windows", default-features = false }
+uison-linux = { path = "crates/uison-linux" }
+uison = { path = "crates/uison" }
+
+[profile.release]
+opt-level = "s"   # -17% size at -2% paint speed (see Task1.md)
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+# the strip run by rustc breaks libuison.dylib for Apple's ld ("mis-aligned LINKEDIT
+# string pool"); symbols are stripped by tools/c-dist.sh and CMake (strip -x / --strip-unneeded).
+[profile.release.package.uison-c]
+strip = "none"

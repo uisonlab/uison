@@ -1,0 +1,11 @@
+// System clipboard by finger (Android, iOS): Copy in the Name field → Paste at the start of the Email field.
+// Cyrillic text on purpose: checks UTF-8 through the phone's system clipboard.
+[
+  ["swipe", "page", -500, 200], ["wait", 1200], ["swipe", "page", -500, 200], ["wait", 1200],
+  ["tap", "name/1/0"], ["type", "Привет мир"], ["wait", 300],
+  ["hold", "name/1/0"], ["tap", "~menu/1"], ["wait", 300],
+  ["tap", "email/1/0"], ["wait", 300], ["key", "Home"],
+  ["hold", "email/1/0"], ["capture", "01_email_menu", 400],
+  ["tap", "~menu/2"], ["wait", 500], ["capture", "02_pasted", 600],
+  ["done"]
+]

@@ -1,0 +1,14 @@
+[package]
+name = "uison-windows"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison-core.workspace = true
+uison-frame.workspace = true
+
+[features]
+default = ["gui-subsystem"]
+# Release program is a Windows app without a console (linker directive from the library).
+# Off for uison.dll and C/C++ programs (uison-c): the DLL has its own entry point, the program picks the subsystem.
+gui-subsystem = []

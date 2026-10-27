@@ -1,0 +1,8 @@
+// Studio: message context menu (right click): star, delete, reply (focus in the reply field).
+[
+  ["rclick", "inboxList/2"], ["capture", "01_menu", 300],
+  ["click", "~menu/2"], ["wait", 300],
+  ["rclick", "inboxList/3"], ["click", "~menu/4"], ["capture", "02_deleted", 600],
+  ["rclick", "inboxList/1"], ["click", "~menu/0"], ["wait", 200], ["type", "OK, will take a look"], ["capture", "03_reply", 400],
+  ["done"]
+]

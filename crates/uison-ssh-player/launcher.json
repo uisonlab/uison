@@ -1,0 +1,129 @@
+// The SSH player's start screen: connect, upload a program, run it.
+{
+  body: {
+    Box: {
+      w: "fill", h: "fill", align: "center",
+      child: {
+        Column: {
+          w: "fill", maxW: 760, padding: 16, gap: 12, cross: "stretch",
+          children: [
+            { Text: { text: "Run a program on a server over SSH", size: 20, bold: true } },
+            {
+              Text: {
+                text: "Connect, upload the program if it isn't there yet, and run it in console mode: its window appears here, the messages are in the JSON tab.",
+                size: 13, color: "$theme.muted",
+              },
+            },
+            // 1. Connect.
+            {
+              Row: {
+                gap: 8, cross: "center",
+                children: [
+                  { TextField: { key: "host", value: "@host", placeholder: "host", flex: 1, on: { submit: "connect" } } },
+                  { TextField: { key: "port", value: "@port", placeholder: "22", w: 70 } },
+                  { TextField: { key: "user", value: "@user", placeholder: "user", w: 160 } },
+                ],
+              },
+            },
+            // How to get in: a key (a file, or one pasted or made here) or a password.
+            { Row: { children: [ { Tabs: { key: "auth", value: "@auth", tabs: [{ value: "key", label: "Key" }, { value: "password", label: "Password" }] } } ] } },
+            {
+              Box: {
+                w: "fill",
+                child: {
+                  switch: "@auth",
+                  cases: {
+                    password: { TextField: { key: "password", value: "@password", password: true, placeholder: "password", on: { submit: "connect" } } },
+                  },
+                  default: {
+                    Column: {
+                      gap: 8, cross: "stretch",
+                      children: [
+                        {
+                          Row: {
+                            gap: 8, cross: "center",
+                            children: [
+                              { TextField: { key: "keyPath", value: "@keyPath", placeholder: "~/.ssh/id_ed25519", flex: 1 } },
+                              { TextField: { key: "passphrase", value: "@passphrase", password: true, placeholder: "passphrase", w: 140 } },
+                            ],
+                          },
+                        },
+                        {
+                          Row: {
+                            gap: 8, cross: "center",
+                            children: [
+                              { Button: { key: "chooseKey", text: "Choose key…", variant: "secondary", size: "sm", on: { click: "chooseKey" }, visible: "@phone", tooltip: "Pick a private key file; the app keeps its own copy" } },
+                              { Button: { key: "newKey", text: "New key", variant: "secondary", size: "sm", on: { click: "newKey" }, tooltip: "Create a key for this device (or show the one created before)" } },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+            // The public part of a key made here: it goes to ~/.ssh/authorized_keys on the server.
+            {
+              Column: {
+                gap: 6, cross: "stretch", visible: "@pubkey",
+                children: [
+                  { Text: { text: "The key's public line (it must be in ~/.ssh/authorized_keys on the server):", size: 12, color: "$theme.muted" } },
+                  { Box: { padding: 8, radius: 6, fill: "$theme.surface", child: { Text: { text: "@pubkey", size: 11, font: "monospace" } } } },
+                  { Row: { children: [ { Button: { key: "copyKey", text: "Copy", variant: "secondary", size: "sm", on: { click: "copyKey" } } } ] } },
+                ],
+              },
+            },
+            {
+              Row: {
+                gap: 8, cross: "center",
+                children: [
+                  { Button: { key: "connect", text: "Connect", on: { click: "connect" }, visible: "!@connected" } },
+                  { Button: { key: "disconnect", text: "Disconnect", variant: "secondary", on: { click: "disconnect" }, visible: "@connected" } },
+                ],
+              },
+            },
+            // Who we are on which server, and how we got in — under the button, so it wraps on a phone.
+            { Text: { text: "@server", size: 13, color: "$theme.success", visible: "@connected" } },
+            { Text: { text: "@status", size: 13, color: "$theme.warning", visible: "@status" } },
+            { Box: { h: 1, fill: "$theme.border", margin: [4, 0] } },
+            // 2. Upload (optional; a phone has no programs to upload).
+            { Text: { text: "Upload a program (optional)", size: 13, bold: true, color: "$theme.muted", visible: "!@phone" } },
+            {
+              Row: {
+                gap: 8, cross: "center", visible: "!@phone",
+                children: [
+                  { TextField: { key: "local", value: "@local", placeholder: "file on this computer", flex: 1 } },
+                  { Text: { text: "→", color: "$theme.muted" } },
+                  { TextField: { key: "remote", value: "@remote", placeholder: "~/uison/<name>", flex: 1 } },
+                  { Button: { key: "upload", text: "Upload", variant: "secondary", on: { click: "upload" }, disabled: "!@connected" } },
+                ],
+              },
+            },
+            // 3. Run.
+            { Text: { text: "Run", size: 13, bold: true, color: "$theme.muted" } },
+            {
+              Row: {
+                gap: 8, cross: "center",
+                children: [
+                  { TextField: { key: "path", value: "@path", placeholder: "program on the server", flex: 1, on: { submit: "run" } } },
+                  { TextField: { key: "args", value: "@args", placeholder: "arguments", flex: 1, on: { submit: "run" } } },
+                ],
+              },
+            },
+            {
+              Row: {
+                gap: 12, cross: "center",
+                children: [
+                  { Checkbox: { key: "console", label: "console mode (--console)", checked: "@console" } },
+                  { Box: { flex: 1 } },
+                  { Button: { key: "run", text: "Run", on: { click: "run" }, disabled: "!@connected" } },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+}

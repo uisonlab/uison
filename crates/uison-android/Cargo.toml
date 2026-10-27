@@ -1,0 +1,8 @@
+[package]
+name = "uison-android"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+uison-core.workspace = true
+uison-frame.workspace = true

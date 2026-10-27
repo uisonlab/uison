@@ -1,0 +1,13 @@
+// The lesson 5 screen: custom components Stat and Counter from components.json.
+{
+  size: [460, 300],
+  data: { tasks: 3, done: 1 },
+  root: { Column: { padding: 20, gap: 16, cross: "stretch", children: [
+    { Row: { gap: 12, children: [
+      { Stat: { title: "Tasks", value: "@tasks", icon: "check" } },
+      { Stat: { title: "Done", value: "@done", icon: "star", color: "$theme.success" } },
+    ] } },
+    { Counter: { label: "Tasks" } },
+    { Counter: { label: "Done" } },
+  ] } }
+}

@@ -1,0 +1,17 @@
+// Selection and clipboard in the gallery's Name field (by mouse; 600 ms pauses so clicks don't merge into a series).
+// The system clipboard is checked from outside: after the scenario it holds "мир" (macOS: pbpaste, X11: xclip -o, Wayland: wl-paste).
+// Cyrillic text on purpose: multibyte characters for word selection, caret moves and the system clipboard.
+[
+  ["tap", "name/1/0"], ["type", "Привет большой мир"], ["wait", 600],
+  ["click", "name/1/0", 2], ["capture", "01_word", 600],
+  ["cmd", "c"],
+  ["click", "name/1/0", 3], ["capture", "02_all", 600],
+  ["paste", "вставлено\nиз буфера"], ["capture", "03_pasted", 600],
+  ["select", "name/1/0", 2, 60], ["capture", "04_drag", 600],
+  ["cmd", "x"], ["capture", "05_cut", 600],
+  ["key", "End"], ["key", "Left", "shift"], ["key", "Left", "shift"], ["capture", "06_shift", 600],
+  ["cmd", "a"], ["type", "Привет большой мир"], ["key", "Left", "shift+alt"], ["key", "Left", "shift+cmd"],
+  ["capture", "07_words", 600],
+  ["key", "End"], ["click", "name/1/0", 2], ["cmd", "c"],
+  ["done"]
+]
