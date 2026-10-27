@@ -82,6 +82,8 @@ cargo run --release -p uison-ssh-player -- me@server.example -i ~/.ssh/id_ed2551
 
 The SSH library lives in this player only: the program itself still knows nothing but stdin and stdout. The connection stays open between runs, and **Stop** ends the program but keeps the connection.
 
+The player is also a repository of its own, [uisonlab/uison-ssh-player](https://github.com/uisonlab/uison-ssh-player), built against `uison-player` from crates.io; the copy here stays as an example of a player with a custom link.
+
 ## Costs
 
 Measured on a Mac (M series) with Disk Usage on `/System/Library/Frameworks`:

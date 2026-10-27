@@ -82,6 +82,8 @@ cargo run --release -p uison-ssh-player -- me@server.example -i ~/.ssh/id_ed2551
 
 SSH-библиотека — только в этом плеере: сама программа по-прежнему знает только stdin и stdout. Соединение остаётся открытым между запусками, а **Stop** завершает программу, но не соединение.
 
+Плеер есть и отдельным репозиторием — [uisonlab/uison-ssh-player](https://github.com/uisonlab/uison-ssh-player), он собирается с `uison-player` из crates.io; копия здесь остаётся примером плеера со своим каналом.
+
 ## Цена
 
 Замеры на Mac (M-серия), Disk Usage на `/System/Library/Frameworks`:

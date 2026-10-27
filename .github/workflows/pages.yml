@@ -1,0 +1,66 @@
+# The Studio example in the browser (WASM, tools/web.sh) on GitHub Pages.
+# Runs on a push to main that touches the code Studio is built from, or by hand.
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crates/**'
+      - 'examples/studio/**'
+      - 'web/**'
+      - 'tools/web.sh'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a newer push replaces a queued one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  BINARYEN: version_130
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable --no-self-update && rustup target add wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      # wasm-opt is optional for tools/web.sh: without it the page works, app.wasm is just larger.
+      - name: wasm-opt (binaryen)
+        continue-on-error: true
+        run: |
+          curl -fsSL "https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN/binaryen-$BINARYEN-x86_64-linux.tar.gz" | tar xz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/binaryen-$BINARYEN/bin" >> "$GITHUB_PATH"
+      - name: build Studio for the browser
+        run: sh tools/web.sh studio
+      # Only the page, its glue and the module; drive.js and the scenarios are for local checks.
+      - name: site
+        run: |
+          mkdir -p site
+          cp target/web/studio/index.html target/web/studio/uison.js target/web/studio/app.wasm site/
+          sed -i 's|<title>uison</title>|<title>uison Studio</title>|' site/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
