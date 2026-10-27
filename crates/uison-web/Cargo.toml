@@ -2,7 +2,14 @@
 name = "uison-web"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Browser backend of uison: WebAssembly with canvas 2D, no wasm-bindgen. Internal part of uison: use the `uison` crate."
 
 [dependencies]
 uison-core.workspace = true
 uison-frame.workspace = true
+
+[package.metadata.docs.rs]
+targets = ["wasm32-unknown-unknown"]

@@ -2,6 +2,7 @@
 name = "form2"
 version.workspace = true
 edition.workspace = true
+publish = false
 
 [dependencies]
 uison.workspace = true

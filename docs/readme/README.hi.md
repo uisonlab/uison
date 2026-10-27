@@ -278,7 +278,7 @@ crates/
   uison-android   JNI backend और उसकी Java layer (java/dev/uison)
   uison-windows   Win32 + Direct2D + DirectWrite backend
   uison-linux     Wayland और X11 backend, Cairo + Pango, सब dlopen के ज़रिए
-  uison-web       WebAssembly backend (web/uison.js)
+  uison-web       WebAssembly backend (crates/uison-web/uison.js)
   uison-c         C API और C++ headers, static और dynamic library, CMake package
   uison-gen       स्क्रीन schema से C++ widgets, Rust DSL और elements reference generate करता है
   uison-derive    syn के बिना #[derive(Data)]

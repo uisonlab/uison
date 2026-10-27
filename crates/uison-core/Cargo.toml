@@ -2,5 +2,9 @@
 name = "uison-core"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Core types of uison: geometry, colors, fonts, the Canvas, TextMeasure and Host traits, events, App. Internal part of uison: use the `uison` crate."
 
 [dependencies]

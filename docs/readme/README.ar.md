@@ -274,7 +274,7 @@ crates/
   uison-android   واجهة خلفية عبر JNI مع طبقة Java الخاصة بها (java/dev/uison)
   uison-windows   واجهة خلفية Win32 + Direct2D + DirectWrite
   uison-linux     واجهة خلفية Wayland وX11، وCairo + Pango، وكلها عبر dlopen
-  uison-web       واجهة خلفية WebAssembly (web/uison.js)
+  uison-web       واجهة خلفية WebAssembly (crates/uison-web/uison.js)
   uison-c         واجهة C البرمجية وترويسات C++، مكتبة ثابتة وديناميكية، حزمة CMake
   uison-gen       يولّد عناصر C++ وRust DSL ومرجع العناصر من مخطط الشاشات
   uison-derive    #[derive(Data)] دون syn

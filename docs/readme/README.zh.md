@@ -264,7 +264,7 @@ crates/
   uison-android   JNI 后端及其 Java 层（java/dev/uison）
   uison-windows   Win32 + Direct2D + DirectWrite 后端
   uison-linux     Wayland 和 X11 后端，Cairo + Pango，全部通过 dlopen
-  uison-web       WebAssembly 后端（web/uison.js）
+  uison-web       WebAssembly 后端（crates/uison-web/uison.js）
   uison-c         C API 和 C++ 头文件，静态库和动态库，CMake 包
   uison-gen       根据界面 schema 生成 C++ 组件、Rust DSL 和元素参考
   uison-derive    #[derive(Data)]，不依赖 syn

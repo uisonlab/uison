@@ -2,6 +2,13 @@
 name = "uison"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Tiny zero-dependency UI framework: screens described in JSON compile to frames of primitives, diffed and partially redrawn by native backends on macOS, Windows, Linux, iOS, Android and the web."
+readme = "../../README.md"
+keywords = ["gui", "ui", "json", "declarative", "cross-platform"]
+categories = ["gui", "wasm"]
 
 [dependencies]
 uison-json.workspace = true
@@ -38,3 +45,5 @@ uison-linux.workspace = true
 name = "09-tests"
 test = true
 
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu", "aarch64-apple-darwin", "x86_64-pc-windows-msvc", "aarch64-apple-ios", "aarch64-linux-android", "wasm32-unknown-unknown"]

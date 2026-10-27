@@ -2,6 +2,7 @@
 name = "uison-ssh-player"
 version.workspace = true
 edition.workspace = true
+publish = false
 description = "Connects to a server over SSH, uploads and runs a uison program in console mode, shows it"
 
 # SSH lives only here: the framework and the programs know nothing but stdin/stdout.

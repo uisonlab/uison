@@ -2,6 +2,9 @@
 name = "uison-player"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
 description = "Runs a uison program in console mode and shows it: its frames in a window, the JSON both ways in a tab"
 
 [dependencies]

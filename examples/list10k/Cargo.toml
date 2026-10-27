@@ -2,6 +2,7 @@
 name = "list10k"
 version.workspace = true
 edition.workspace = true
+publish = false
 
 [dependencies]
 uison.workspace = true

@@ -2,6 +2,10 @@
 name = "uison-ui"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Screen compiler of uison: templates, bindings, styles, layout and widgets from JSON to primitive frames. Internal part of uison: use the `uison` crate."
 
 [dependencies]
 uison-json.workspace = true

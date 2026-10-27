@@ -6,7 +6,7 @@ The same program runs in the browser: the screen, data and handlers are the same
 
 ## Rust
 
-A Rust program is built for `wasm32-unknown-unknown` — no wasm-bindgen and no glue code: drawing and input live in `web/uison.js` (about 350 lines), the program is `app.wasm`.
+A Rust program is built for `wasm32-unknown-unknown` — no wasm-bindgen and no glue code: drawing and input live in `crates/uison-web/uison.js` (about 350 lines), the program is `app.wasm`.
 
 ```sh
 rustup target add wasm32-unknown-unknown

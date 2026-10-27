@@ -2,8 +2,15 @@
 name = "uison-ios"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "iOS backend of uison (UIKit, CoreGraphics, CoreText). Internal part of uison: use the `uison` crate."
 
 [dependencies]
 uison-core.workspace = true
 uison-frame.workspace = true
 uison-apple.workspace = true
+
+[package.metadata.docs.rs]
+targets = ["aarch64-apple-ios"]

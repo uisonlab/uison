@@ -49,6 +49,6 @@ Copy-Item "target\wasm32-unknown-unknown\release\$Pkg.wasm" "$out\app.wasm"
 if (-not $env:NO_WASM_OPT -and (Get-Command wasm-opt -ErrorAction SilentlyContinue)) {
     wasm-opt -Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals -o "$out\app.wasm" "$out\app.wasm"
 }
-Copy-Item web\index.html, web\uison.js, web\drive.js "$out\"
+Copy-Item web\index.html, crates\uison-web\uison.js, web\drive.js "$out\"
 Copy-Scenarios $out
 "$out\app.wasm: $(Size "$out\app.wasm")"

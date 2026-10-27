@@ -2,5 +2,9 @@
 name = "uison-json"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Pull JSON parser, mutable Value tree and writer for uison (relaxed JSON: comments, trailing commas, bare keys). Internal part of uison: use the `uison` crate."
 
 [dependencies]

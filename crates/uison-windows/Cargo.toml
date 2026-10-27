@@ -2,6 +2,10 @@
 name = "uison-windows"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Windows backend of uison (Win32, Direct2D, DirectWrite, hand-written COM). Internal part of uison: use the `uison` crate."
 
 [dependencies]
 uison-core.workspace = true
@@ -12,3 +16,6 @@ default = ["gui-subsystem"]
 # Release program is a Windows app without a console (linker directive from the library).
 # Off for uison.dll and C/C++ programs (uison-c): the DLL has its own entry point, the program picks the subsystem.
 gui-subsystem = []
+
+[package.metadata.docs.rs]
+targets = ["x86_64-pc-windows-msvc"]

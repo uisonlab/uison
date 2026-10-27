@@ -2,7 +2,14 @@
 name = "uison-android"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Android backend of uison (hand-written JNI, android.graphics.Canvas). Internal part of uison: use the `uison` crate."
 
 [dependencies]
 uison-core.workspace = true
 uison-frame.workspace = true
+
+[package.metadata.docs.rs]
+targets = ["aarch64-linux-android"]

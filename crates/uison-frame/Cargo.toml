@@ -2,6 +2,10 @@
 name = "uison-frame"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Primitive frames of uison: parsing, diff to damage regions, hit testing, painting, console mode. Internal part of uison: use the `uison` crate."
 
 [dependencies]
 uison-json.workspace = true

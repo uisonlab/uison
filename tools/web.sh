@@ -21,7 +21,7 @@ case $pkg in
     wasm-opt -Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals \
       -o "$out/app.wasm" "$out/app.wasm"
   fi
-  cp web/index.html web/uison.js web/drive.js "$out/"
+  cp web/index.html crates/uison-web/uison.js web/drive.js "$out/"
   cp web/scenarios/*.json scenarios/*.json "$out/scenarios/"
   echo "$out/app.wasm: $(wc -c < "$out/app.wasm" | tr -d ' ') B (gzip $(gzip -9 -c "$out/app.wasm" | wc -c | tr -d ' ') B)"
   exit 0
@@ -53,7 +53,7 @@ if [ -z "$NO_WASM_OPT" ] && command -v wasm-opt > /dev/null; then
   wasm-opt -Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals \
     -o "$out/app.wasm" "$out/app.wasm"
 fi
-cp web/index.html web/uison.js web/drive.js "$out/"
+cp web/index.html crates/uison-web/uison.js web/drive.js "$out/"
 cp -R web/scenarios "$out/"
 # Shared scenarios (uison_frame::script): drive.js understands the same steps; web-specific scenarios take precedence.
 # cp -n on macOS returns 1 if the file already exists.

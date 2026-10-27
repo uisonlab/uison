@@ -287,7 +287,7 @@ crates/
   uison-android   backend JNI e sua camada Java (java/dev/uison)
   uison-windows   backend Win32 + Direct2D + DirectWrite
   uison-linux     backend Wayland e X11, Cairo + Pango, tudo via dlopen
-  uison-web       backend WebAssembly (web/uison.js)
+  uison-web       backend WebAssembly (crates/uison-web/uison.js)
   uison-c         a API de C e os headers de C++, biblioteca estática e dinâmica, pacote CMake
   uison-gen       gera os widgets C++, a DSL em Rust e a referência de elementos a partir do schema de telas
   uison-derive    #[derive(Data)] sem syn

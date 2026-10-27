@@ -1,4 +1,4 @@
-//! Imports from `web/uison.js`. Colors are RGBA in u32 (0xRRGGBBAA),
+//! Imports from `uison.js` (next to Cargo.toml). Colors are RGBA in u32 (0xRRGGBBAA),
 //! strings are a pointer and length in WASM memory (UTF-8).
 //!
 //! Names in WASM are `uison_js_<name>`. A Rust program (`wasm32-unknown-unknown`) gets them

@@ -1,5 +1,5 @@
 //! Web backend: canvas 2D in the browser. No wasm-bindgen: drawing and metrics are
-//! imports from `web/uison.js` (the `uison` module), events are `uison_*` exports.
+//! imports from `uison.js` (next to Cargo.toml) (the `uison` module), events are `uison_*` exports.
 //!
 //! An app is written as usual: `fn main() { uison::run(app(), "Title") }`.
 //! In WASM `run` only remembers the app; after that JS calls the exports.

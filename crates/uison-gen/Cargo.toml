@@ -2,7 +2,10 @@
 name = "uison-gen"
 version.workspace = true
 edition.workspace = true
-description = "Typed C++ widgets (uison_widgets.hpp) from the screen schema and components JSON"
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Typed uison widgets from the screen schema and components JSON: C++ (uison_widgets.hpp), Rust DSL, Markdown reference"
 
 [dependencies]
 uison-json.workspace = true

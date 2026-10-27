@@ -274,7 +274,7 @@ crates/
   uison-android   JNI ব্যাকএন্ড ও তার Java স্তর (java/dev/uison)
   uison-windows   Win32 + Direct2D + DirectWrite ব্যাকএন্ড
   uison-linux     Wayland ও X11 ব্যাকএন্ড, Cairo + Pango, সবই dlopen-এর মাধ্যমে
-  uison-web       WebAssembly ব্যাকএন্ড (web/uison.js)
+  uison-web       WebAssembly ব্যাকএন্ড (crates/uison-web/uison.js)
   uison-c         C API ও C++ হেডার, স্ট্যাটিক ও ডায়নামিক লাইব্রেরি, CMake প্যাকেজ
   uison-gen       স্ক্রিন স্কিমা থেকে C++ উইজেট, Rust DSL ও এলিমেন্ট রেফারেন্স জেনারেট করে
   uison-derive    syn ছাড়া #[derive(Data)]

@@ -6,7 +6,7 @@
 
 ## Rust
 
-Программа на Rust собирается под `wasm32-unknown-unknown` — без wasm-bindgen и без обвязки: рисование и ввод — `web/uison.js` (около 350 строк), программа — `app.wasm`.
+Программа на Rust собирается под `wasm32-unknown-unknown` — без wasm-bindgen и без обвязки: рисование и ввод — `crates/uison-web/uison.js` (около 350 строк), программа — `app.wasm`.
 
 ```sh
 rustup target add wasm32-unknown-unknown

@@ -1,9 +1,9 @@
-// Emscripten: all of web/uison.js sits in libuison.a as an EM_JS string (body of uison_js_boot) and stays
+// Emscripten: all of uison.js sits in libuison.a as an EM_JS string (body of uison_js_boot) and stays
 // in program memory — store a copy without comments and indentation (emcc minifies its own JS later).
 fn main() {
-    let src = "../../web/uison.js";
+    let src = "uison.js";
     println!("cargo:rerun-if-changed={src}");
-    let js = std::fs::read_to_string(src).expect("web/uison.js");
+    let js = std::fs::read_to_string(src).expect("uison.js");
     let mut out = String::with_capacity(js.len());
     for line in js.lines() {
         let t = line.trim();

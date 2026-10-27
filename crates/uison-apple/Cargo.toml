@@ -2,6 +2,10 @@
 name = "uison-apple"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Shared macOS/iOS code of uison: hand-written Objective-C, CoreGraphics and CoreText FFI. Internal part of uison: use the `uison` crate."
 
 [dependencies]
 uison-core.workspace = true
@@ -9,3 +13,6 @@ uison-frame.workspace = true
 
 [dev-dependencies]
 uison-json.workspace = true
+
+[package.metadata.docs.rs]
+targets = ["aarch64-apple-darwin", "aarch64-apple-ios"]

@@ -282,7 +282,7 @@ crates/
   uison-android   бэкенд на JNI и его прослойка на Java (java/dev/uison)
   uison-windows   бэкенд Win32 + Direct2D + DirectWrite
   uison-linux     бэкенд Wayland и X11, Cairo + Pango, всё через dlopen
-  uison-web       бэкенд WebAssembly (web/uison.js)
+  uison-web       бэкенд WebAssembly (crates/uison-web/uison.js)
   uison-c         C API и заголовки C++, статическая и динамическая библиотеки, пакет CMake
   uison-gen       генерирует виджеты C++, Rust DSL и справочник элементов из схемы экранов
   uison-derive    #[derive(Data)] без syn

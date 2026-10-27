@@ -291,7 +291,7 @@ crates/
   uison-android   backend JNI dan lapisan Java-nya (java/dev/uison)
   uison-windows   backend Win32 + Direct2D + DirectWrite
   uison-linux     backend Wayland dan X11, Cairo + Pango, semuanya lewat dlopen
-  uison-web       backend WebAssembly (web/uison.js)
+  uison-web       backend WebAssembly (crates/uison-web/uison.js)
   uison-c         API C dan header C++, pustaka statis dan dinamis, paket CMake
   uison-gen       men-generate widget C++, DSL Rust, dan referensi elemen dari skema layar
   uison-derive    #[derive(Data)] tanpa syn

@@ -276,7 +276,7 @@ crates/
   uison-android   JNI バックエンドとその Java レイヤー（java/dev/uison）
   uison-windows   Win32 + Direct2D + DirectWrite バックエンド
   uison-linux     Wayland と X11 のバックエンド、Cairo + Pango、すべて dlopen 経由
-  uison-web       WebAssembly バックエンド（web/uison.js）
+  uison-web       WebAssembly バックエンド（crates/uison-web/uison.js）
   uison-c         C API と C++ ヘッダー、静的・動的ライブラリ、CMake パッケージ
   uison-gen       画面スキーマから C++ ウィジェット、Rust DSL、要素リファレンスを生成
   uison-derive    syn を使わない #[derive(Data)]

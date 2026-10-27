@@ -277,7 +277,7 @@ crates/
   uison-android   JNI బ్యాకెండ్, దాని Java పొర (java/dev/uison)
   uison-windows   Win32 + Direct2D + DirectWrite బ్యాకెండ్
   uison-linux     Wayland, X11 బ్యాకెండ్, Cairo + Pango, అన్నీ dlopen ద్వారా
-  uison-web       WebAssembly బ్యాకెండ్ (web/uison.js)
+  uison-web       WebAssembly బ్యాకెండ్ (crates/uison-web/uison.js)
   uison-c         C API, C++ హెడర్‌లు, స్టాటిక్, డైనమిక్ లైబ్రరీ, CMake ప్యాకేజ్
   uison-gen       స్క్రీన్ స్కీమా నుంచి C++ విడ్జెట్‌లు, Rust DSL, ఎలిమెంట్ రిఫరెన్స్‌ను జనరేట్ చేస్తుంది
   uison-derive    syn లేకుండా #[derive(Data)]

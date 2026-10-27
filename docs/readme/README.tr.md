@@ -288,7 +288,7 @@ crates/
   uison-android   JNI backend'i ve Java katmanı (java/dev/uison)
   uison-windows   Win32 + Direct2D + DirectWrite backend'i
   uison-linux     Wayland ve X11 backend'i, Cairo + Pango, hepsi dlopen ile
-  uison-web       WebAssembly backend'i (web/uison.js)
+  uison-web       WebAssembly backend'i (crates/uison-web/uison.js)
   uison-c         C API'si ve C++ başlıkları, statik ve dinamik kütüphane, CMake paketi
   uison-gen       ekran şemasından C++ widget'larını, Rust DSL'i ve öğe başvuru belgesini üretir
   uison-derive    syn olmadan #[derive(Data)]

@@ -2,6 +2,9 @@
 name = "uison-derive"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
 description = "#[derive(Data)] for uison: struct <-> data model (IntoJson + FromJson), no dependencies"
 
 [lib]

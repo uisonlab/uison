@@ -2,6 +2,7 @@
 name = "uison-c"
 version.workspace = true
 edition.workspace = true
+publish = false
 description = "C ABI for uison: static (libuison.a, uison.lib) and dynamic (libuison.dylib/.so, uison.dll) library"
 
 [lib]
