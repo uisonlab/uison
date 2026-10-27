@@ -2,7 +2,7 @@
 # CMake and pkg-config — packages dist/uison-<platform> (tools/c-dist.sh, tools/c-dist.ps1) as artifacts.
 # Every package is checked: headless ABI and uison.hpp tests where they can run,
 # otherwise building a lesson program from the package.
-# Runs only for a tag v* (release of that version) or by hand (packages as artifacts, no release).
+# Runs only for a tag v* (release of that version: GitHub release + crates.io) or by hand (packages as artifacts, no release).
 name: libs
 
 on:
@@ -211,10 +211,29 @@ jobs:
           path: dist/uison-wasm
           retention-days: ${{ env.RETENTION }}
 
+  # Rust crates to crates.io: Trusted Publishing (OIDC, no stored token), set up for every crate with
+  # this workflow file and the crates-io environment (GitHub: tags v* only). Before the GitHub release:
+  # crates.io can't be undone, so a failure here leaves no release. A brand-new crate is published by hand first.
+  crates:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [test, apple, android, linux, windows, wasm]
+    runs-on: ubuntu-24.04
+    environment: crates-io
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable --no-self-update
+      - uses: rust-lang/crates-io-auth-action@v1
+        id: auth
+      - run: cargo publish --workspace
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+
   # Release: all packages as archives (Windows — zip, the rest — tar.gz) + SHA256SUMS.txt.
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [test, apple, android, linux, windows, wasm]
+    needs: [crates]
     runs-on: ubuntu-24.04
     permissions:
       contents: write
