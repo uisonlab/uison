@@ -2,14 +2,12 @@
 # CMake and pkg-config — packages dist/uison-<platform> (tools/c-dist.sh, tools/c-dist.ps1) as artifacts.
 # Every package is checked: headless ABI and uison.hpp tests where they can run,
 # otherwise building a lesson program from the package.
-# Releases: push to main — nightly prerelease (recreated), tag v* — release of that version.
+# Runs only for a tag v* (release of that version) or by hand (packages as artifacts, no release).
 name: libs
 
 on:
   push:
-    branches: [main]
     tags: ['v*']
-  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -27,6 +25,15 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      # The version lives in Cargo.toml only; the tag must be "v" + that version.
+      - name: tag matches Cargo.toml
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          ver="v$(sed -n 's/^version *= *"\(.*\)"/\1/p' Cargo.toml | head -n1)"
+          if [ "$ver" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::The tag is $GITHUB_REF_NAME but Cargo.toml has $ver"
+            exit 1
+          fi
       - run: rustup update stable --no-self-update && rustup component add clippy
       - uses: Swatinem/rust-cache@v2
       - run: cargo test --workspace --exclude uison-apple
@@ -206,7 +213,7 @@ jobs:
 
   # Release: all packages as archives (Windows — zip, the rest — tar.gz) + SHA256SUMS.txt.
   release:
-    if: github.event_name == 'push'
+    if: startsWith(github.ref, 'refs/tags/v')
     needs: [test, apple, android, linux, windows, wasm]
     runs-on: ubuntu-24.04
     permissions:
@@ -217,7 +224,7 @@ jobs:
           path: pkgs
       - name: archives
         run: |
-          if [[ $GITHUB_REF == refs/tags/* ]]; then ver=$GITHUB_REF_NAME; else ver=nightly; fi
+          ver=$GITHUB_REF_NAME
           echo "VER=$ver" >> "$GITHUB_ENV"
           mkdir out
           cd pkgs
@@ -247,12 +254,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: |
-          if [ "$VER" = nightly ]; then
-            # The nightly prerelease is always the latest main: the old one is deleted with its tag.
-            gh release delete nightly --cleanup-tag --yes || true
-            gh release create nightly out/* --prerelease --target "$GITHUB_SHA" \
-              --title "nightly (${GITHUB_SHA::7})" --notes-file notes.md
-          else
-            gh release create "$VER" out/* --title "$VER" --notes-file notes.md
-          fi
+        run: gh release create "$VER" out/* --title "$VER" --notes-file notes.md

@@ -73,7 +73,7 @@ Visual Studio открывает проект CMake без `.sln`:
 
 ## Готовый пакет вместо Rust
 
-Если Rust ставить не хочется: в релизах репозитория (`nightly` или версия) лежат пакеты `uison-macos`, `uison-linux-x86_64`, `uison-windows-x64`… Распакуйте и укажите CMake путь:
+Если Rust ставить не хочется: в релизах репозитория (теги `v*`) лежат пакеты `uison-macos`, `uison-linux-x86_64`, `uison-windows-x64`… Распакуйте и укажите CMake путь:
 
 ```sh
 cmake -S examples-cpp -B build -DUISON_PACKAGE=/path/to/uison-macos

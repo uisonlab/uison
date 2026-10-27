@@ -73,7 +73,7 @@ The other way is without the Visual Studio IDE: the "Developer Command Prompt" a
 
 ## A prebuilt package instead of Rust
 
-If you'd rather not install Rust: the repository releases (`nightly` or a version) contain the packages `uison-macos`, `uison-linux-x86_64`, `uison-windows-x64`… Unpack one and give CMake the path:
+If you'd rather not install Rust: the repository releases (tags `v*`) contain the packages `uison-macos`, `uison-linux-x86_64`, `uison-windows-x64`… Unpack one and give CMake the path:
 
 ```sh
 cmake -S examples-c -B build -DUISON_PACKAGE=/path/to/uison-macos
