@@ -37,7 +37,7 @@ em release é um único arquivo de cerca de 0,7–0,9 MB que não precisa de nad
 bibliotecas do próprio sistema, e um evento chega à tela em cerca de um milissegundo em um
 desktop.
 
-![Disk Usage, um exemplo feito com uison: gráfico sunburst de uma pasta, lista de arquivos e um tooltip](../img/disk-usage.jpg)
+![Programas feitos com uison: Studio (e-mail, configurações, gráficos), a galeria de elementos, Todo, Disk Usage e um pequeno navegador web](../img/showcase.jpg)
 
 ## Como funciona
 

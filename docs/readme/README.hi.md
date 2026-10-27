@@ -35,7 +35,7 @@ DirectWrite के साथ Win32 (COM भी हाथ से), शुरू �
 होता है, जिसे सिस्टम की अपनी libraries के अलावा कुछ नहीं चाहिए, और desktop पर कोई event लगभग एक
 मिलीसेकंड में स्क्रीन तक पहुँच जाता है।
 
-![Disk Usage, uison से बना एक उदाहरण: फ़ोल्डर का sunburst chart, फ़ाइलों की सूची और एक tooltip](../img/disk-usage.jpg)
+![uison से बने प्रोग्राम: Studio (मेल, सेटिंग्स, चार्ट), एलिमेंट गैलरी, Todo, Disk Usage और एक छोटा वेब ब्राउज़र](../img/showcase.jpg)
 
 ## यह कैसे काम करता है
 

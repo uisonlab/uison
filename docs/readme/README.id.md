@@ -37,7 +37,7 @@ WebAssembly. Program release berupa satu file berukuran sekitar 0,7–0,9 MB yan
 membutuhkan apa pun selain pustaka bawaan sistem, dan sebuah event sampai ke layar dalam
 sekitar satu milidetik di desktop.
 
-![Disk Usage, contoh yang dibuat dengan uison: diagram sunburst sebuah folder, daftar file, dan tooltip](../img/disk-usage.jpg)
+![Program yang dibuat dengan uison: Studio (surel, pengaturan, grafik), galeri elemen, Todo, Disk Usage, dan peramban web kecil](../img/showcase.jpg)
 
 ## Cara kerjanya
 

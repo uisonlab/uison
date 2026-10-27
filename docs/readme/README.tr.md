@@ -37,7 +37,7 @@ program yaklaşık 0,7–0,9 MB boyutunda tek bir dosyadır, sistemin kendi küt
 başka hiçbir şeye ihtiyaç duymaz ve masaüstünde bir olay ekrana yaklaşık bir milisaniyede
 ulaşır.
 
-![Disk Usage, uison ile yapılmış bir örnek: bir klasörün sunburst grafiği, dosya listesi ve bir tooltip](../img/disk-usage.jpg)
+![uison ile yapılmış programlar: Studio (e-posta, ayarlar, grafikler), öğe galerisi, Todo, Disk Usage ve küçük bir web tarayıcısı](../img/showcase.jpg)
 
 ## Nasıl çalışır
 

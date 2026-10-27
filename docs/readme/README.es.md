@@ -37,7 +37,7 @@ WebAssembly. Un programa en release es un único archivo de unos 0,7–0,9 MB qu
 nada más que las bibliotecas del propio sistema, y un evento llega a la pantalla en
 aproximadamente un milisegundo en un equipo de escritorio.
 
-![Disk Usage, un ejemplo hecho con uison: diagrama solar (sunburst) de una carpeta, lista de archivos y un tooltip](../img/disk-usage.jpg)
+![Programas hechos con uison: Studio (correo, ajustes, gráficos), la galería de elementos, Todo, Disk Usage y un pequeño navegador web](../img/showcase.jpg)
 
 ## Cómo funciona
 

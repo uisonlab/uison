@@ -36,7 +36,7 @@ et X11, UIKit, le Canvas d'Android via JNI et un canvas 2D depuis WebAssembly. U
 en release est un seul fichier d'environ 0,7–0,9 Mo qui n'a besoin que des bibliothèques du
 système, et un événement atteint l'écran en environ une milliseconde sur un ordinateur de bureau.
 
-![Disk Usage, un exemple construit avec uison : diagramme en rayons de soleil d'un dossier, liste de fichiers et infobulle](../img/disk-usage.jpg)
+![Programmes construits avec uison : Studio (courrier, réglages, graphiques), la galerie d'éléments, Todo, Disk Usage et un petit navigateur web](../img/showcase.jpg)
 
 ## Fonctionnement
 

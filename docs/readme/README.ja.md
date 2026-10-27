@@ -34,7 +34,7 @@ DirectWrite（COM も手書き）、ゼロから実装した Wayland プロト�
 Canvas、そして WebAssembly からの 2D canvas。リリース版のプログラムは約 0.7–0.9 MB のファイル 1 つで、
 システム標準のライブラリ以外は何も必要とせず、デスクトップではイベントが約 1 ミリ秒で画面に反映されます。
 
-![uison で作ったサンプル Disk Usage：フォルダーのサンバーストチャート、ファイル一覧、ツールチップ](../img/disk-usage.jpg)
+![uison で作ったプログラム：Studio（メール、設定、グラフ）、要素ギャラリー、Todo、Disk Usage、小さなウェブブラウザー](../img/showcase.jpg)
 
 ## 仕組み
 

@@ -33,7 +33,7 @@ macOS、Windows、Linux（Wayland 和 X11）、iOS、Android 以及浏览器中�
 WebAssembly 中的 2D canvas。release 版程序只是一个约 0.7–0.9 MB 的文件，除系统自带的库之外不需要
 任何东西；在桌面系统上，一个事件大约一毫秒就能反映到屏幕上。
 
-![Disk Usage，一个用 uison 构建的示例：文件夹的旭日图、文件列表和提示框](../img/disk-usage.jpg)
+![用 uison 构建的程序：Studio（邮件、设置、图表）、元素库、Todo、Disk Usage 和一个小型网页浏览器](../img/showcase.jpg)
 
 ## 工作原理
 

@@ -35,7 +35,7 @@ scratch and X11, UIKit, Android's Canvas over JNI, and a 2D canvas from WebAssem
 release program is one file of about 0.7–0.9 MB that needs nothing but the system's own
 libraries, and an event reaches the screen in about a millisecond on a desktop.
 
-![Disk Usage, an example built with uison: a sunburst chart of a folder, a file list and a tooltip](docs/img/disk-usage.jpg)
+![Programs built with uison: Studio (mail, settings, analytics), the element gallery, Todo, Disk Usage and a small web browser](docs/img/showcase.jpg)
 
 ## How it works
 
