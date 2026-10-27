@@ -1,0 +1,22 @@
+[
+  ["capture", "01_start"],
+  ["tap", "inboxList/2"], ["wait", 300],
+  ["tap", "reply/1/0"], ["type", "Отлично, беру в работу!"], ["key", "Enter"], ["wait", 1700],
+  ["capture", "02_reply"],
+  ["cmd", "n"], ["wait", 300], ["type", "Проверить в браузере"], ["key", "Enter"], ["wait", 400],
+  ["capture", "03_task"],
+  ["tap", "right-100"], ["tap", "del-1"], ["wait", 300],
+  ["capture", "04_deleted"],
+  ["tap", "root/2/0/2"], ["wait", 300],
+  ["cmd", "4"], ["wait", 300], ["cmd", "r"], ["wait", 150],
+  ["capture", "05_anim"], ["wait", 700],
+  ["capture", "06_stats"],
+  ["cmd", "6"], ["wait", 300],
+  ["tap", "root/0/1/0/1/0/0/0/0/1/2/pink"], ["cmd", "d"], ["wait", 300],
+  ["tap", "root/0/1/0/1/0/0/2/0/1/0/1/0"], ["wait", 300],
+  ["tap", "root/0/1/0/1/0/0/2/0/1/0/1/1/0/0/en"], ["wait", 400],
+  ["capture", "07_settings"],
+  ["cmd", "1"], ["wait", 300], ["wheel", "inboxList", -3000], ["wait", 300],
+  ["capture", "08_scrolled"],
+  ["done"]
+]

@@ -1,0 +1,19 @@
+<!doctype html>
+<!-- Page template for C/C++ programs (Emscripten): em++ … libuison.a --shell-file shell.html -o app.html.
+     The uison JS lives in libuison.a (EM_JS) and draws on the #uison canvas; emcc replaces {{{ SCRIPT }}} with its script. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>uison</title>
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #f5f5f7; }
+      @media (prefers-color-scheme: dark) { html, body { background: #1c1c1e; } }
+      canvas { display: block; width: 100vw; height: 100vh; outline: none; touch-action: none; }
+    </style>
+  </head>
+  <body>
+    <canvas id="uison" tabindex="0"></canvas>
+    {{{ SCRIPT }}}
+  </body>
+</html>
