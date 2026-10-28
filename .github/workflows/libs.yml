@@ -226,18 +226,23 @@ jobs:
       - run: rustup update stable --no-self-update
       - uses: rust-lang/crates-io-auth-action@v1
         id: auth
-      # Versions already on crates.io are skipped: a brand-new crate goes up by hand together with the
-      # versions it needs, and a rerun after a failed release doesn't stop at what is published.
+      # Skipped: versions already on crates.io (a rerun after a failed release doesn't stop at them) and
+      # crates that aren't there yet — Trusted Publishing can't create a crate, so a new one goes up by
+      # hand with a token after this job, then gets Trusted Publishing like the rest.
       - name: publish
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
         run: |
           skip=()
           total=0
+          ua="uison-ci (github.com/uisonlab/uison)"
           while read -r name ver; do
             total=$((total + 1))
-            if curl -sf -A "uison-ci (github.com/uisonlab/uison)" "https://crates.io/api/v1/crates/$name/$ver" > /dev/null; then
+            if curl -sf -A "$ua" "https://crates.io/api/v1/crates/$name/$ver" > /dev/null; then
               echo "already on crates.io: $name $ver"
+              skip+=(--exclude "$name")
+            elif ! curl -sf -A "$ua" "https://crates.io/api/v1/crates/$name" > /dev/null; then
+              echo "::warning::$name is new: publish it by hand (cargo publish -p $name), then set up Trusted Publishing"
               skip+=(--exclude "$name")
             fi
           done < <(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.publish != []) | "\(.name) \(.version)"')
