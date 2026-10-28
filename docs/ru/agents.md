@@ -33,7 +33,7 @@ claude mcp add todo -- "$PWD/target/release/todo" --mcp
 
 ```toml
 [dependencies]
-uison-agent = { version = "0.1", optional = true }
+uison-agent = { version = "0.2", optional = true }
 
 [features]
 agent = ["dep:uison-agent"]

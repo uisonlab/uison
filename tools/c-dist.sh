@@ -13,6 +13,8 @@ set -e
 cd "$(dirname "$0")/.."
 what=${1:-all}
 root=$PWD
+# The package version is the workspace one (Cargo.toml, [workspace.package]).
+version=$(sed -n '/^\[workspace.package\]/,/^\[/s/^version = "\(.*\)"/\1/p' Cargo.toml)
 
 # Shared: headers, CMake files, README, LICENSE.
 common() {
@@ -45,7 +47,7 @@ libdir=\${prefix}/lib
 
 Name: uison
 Description: Tiny UI: screens in JSON, logic in C/C++ (dynamic library)
-Version: 0.1.1
+Version: $version
 Cflags: -I\${includedir}
 Libs: -L\${libdir} -Wl,-rpath,\${libdir} -luison
 PC
@@ -56,7 +58,7 @@ libdir=\${prefix}/lib
 
 Name: uison-static
 Description: Tiny UI: screens in JSON, logic in C/C++ (static library)
-Version: 0.1.1
+Version: $version
 Cflags: -I\${includedir}
 Libs: \${libdir}/libuison.a $libs $static
 PC

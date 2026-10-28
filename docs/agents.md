@@ -33,7 +33,7 @@ Agent mode is in a separate crate, `uison-agent`. A program without it is unchan
 
 ```toml
 [dependencies]
-uison-agent = { version = "0.1", optional = true }
+uison-agent = { version = "0.2", optional = true }
 
 [features]
 agent = ["dep:uison-agent"]
