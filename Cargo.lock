@@ -141,7 +141,7 @@ dependencies = [
 
 [[package]]
 name = "browser"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
 ]
@@ -369,7 +369,7 @@ dependencies = [
 
 [[package]]
 name = "demo"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
 ]
@@ -408,7 +408,7 @@ dependencies = [
 
 [[package]]
 name = "disk-usage"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
  "uison-agent",
@@ -524,7 +524,7 @@ dependencies = [
 
 [[package]]
 name = "form2"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
  "uison-agent",
@@ -620,7 +620,7 @@ dependencies = [
 
 [[package]]
 name = "gallery"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
  "uison-agent",
@@ -808,7 +808,7 @@ checksum = "65cd87c9a6d60536580b316ad985726104730a5151c99845f2490428ef91240a"
 
 [[package]]
 name = "list10k"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
 ]
@@ -1295,7 +1295,7 @@ dependencies = [
 
 [[package]]
 name = "scroll"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
 ]
@@ -1373,7 +1373,7 @@ dependencies = [
 
 [[package]]
 name = "settings"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
 ]
@@ -1535,7 +1535,7 @@ dependencies = [
 
 [[package]]
 name = "studio"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
  "uison-agent",
@@ -1591,7 +1591,7 @@ dependencies = [
 
 [[package]]
 name = "todo"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
  "uison-agent",
@@ -1631,14 +1631,14 @@ checksum = "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20"
 
 [[package]]
 name = "uibench"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
 ]
 
 [[package]]
 name = "uison"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-android",
  "uison-core",
@@ -1655,7 +1655,7 @@ dependencies = [
 
 [[package]]
 name = "uison-agent"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-core",
  "uison-frame",
@@ -1665,7 +1665,7 @@ dependencies = [
 
 [[package]]
 name = "uison-android"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-core",
  "uison-frame",
@@ -1673,7 +1673,7 @@ dependencies = [
 
 [[package]]
 name = "uison-apple"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-core",
  "uison-frame",
@@ -1682,7 +1682,7 @@ dependencies = [
 
 [[package]]
 name = "uison-c"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
  "uison-ui",
@@ -1690,15 +1690,15 @@ dependencies = [
 
 [[package]]
 name = "uison-core"
-version = "0.1.0"
+version = "0.1.1"
 
 [[package]]
 name = "uison-derive"
-version = "0.1.0"
+version = "0.1.1"
 
 [[package]]
 name = "uison-frame"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-core",
  "uison-json",
@@ -1706,7 +1706,7 @@ dependencies = [
 
 [[package]]
 name = "uison-gen"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-json",
  "uison-ui",
@@ -1714,7 +1714,7 @@ dependencies = [
 
 [[package]]
 name = "uison-ios"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-apple",
  "uison-core",
@@ -1723,11 +1723,11 @@ dependencies = [
 
 [[package]]
 name = "uison-json"
-version = "0.1.0"
+version = "0.1.1"
 
 [[package]]
 name = "uison-linux"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-core",
  "uison-frame",
@@ -1735,7 +1735,7 @@ dependencies = [
 
 [[package]]
 name = "uison-macos"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-apple",
  "uison-core",
@@ -1744,14 +1744,14 @@ dependencies = [
 
 [[package]]
 name = "uison-player"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison",
 ]
 
 [[package]]
 name = "uison-ssh-player"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "russh",
  "tokio",
@@ -1760,7 +1760,7 @@ dependencies = [
 
 [[package]]
 name = "uison-ui"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-core",
  "uison-frame",
@@ -1769,7 +1769,7 @@ dependencies = [
 
 [[package]]
 name = "uison-web"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-core",
  "uison-frame",
@@ -1777,7 +1777,7 @@ dependencies = [
 
 [[package]]
 name = "uison-windows"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "uison-core",
  "uison-frame",

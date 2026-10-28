@@ -226,9 +226,26 @@ jobs:
       - run: rustup update stable --no-self-update
       - uses: rust-lang/crates-io-auth-action@v1
         id: auth
-      - run: cargo publish --workspace
+      # Versions already on crates.io are skipped: a brand-new crate goes up by hand together with the
+      # versions it needs, and a rerun after a failed release doesn't stop at what is published.
+      - name: publish
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+        run: |
+          skip=()
+          total=0
+          while read -r name ver; do
+            total=$((total + 1))
+            if curl -sf -A "uison-ci (github.com/uisonlab/uison)" "https://crates.io/api/v1/crates/$name/$ver" > /dev/null; then
+              echo "already on crates.io: $name $ver"
+              skip+=(--exclude "$name")
+            fi
+          done < <(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.publish != []) | "\(.name) \(.version)"')
+          if [ "${#skip[@]}" -eq $((total * 2)) ]; then
+            echo "every crate is already published"
+            exit 0
+          fi
+          cargo publish --workspace "${skip[@]}"
 
   # Release: all packages as archives (Windows — zip, the rest — tar.gz) + SHA256SUMS.txt.
   release:

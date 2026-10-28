@@ -45,7 +45,7 @@ libdir=\${prefix}/lib
 
 Name: uison
 Description: Tiny UI: screens in JSON, logic in C/C++ (dynamic library)
-Version: 0.1.0
+Version: 0.1.1
 Cflags: -I\${includedir}
 Libs: -L\${libdir} -Wl,-rpath,\${libdir} -luison
 PC
@@ -56,7 +56,7 @@ libdir=\${prefix}/lib
 
 Name: uison-static
 Description: Tiny UI: screens in JSON, logic in C/C++ (static library)
-Version: 0.1.0
+Version: 0.1.1
 Cflags: -I\${includedir}
 Libs: \${libdir}/libuison.a $libs $static
 PC
