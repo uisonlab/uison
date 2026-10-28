@@ -207,12 +207,16 @@ impl<'a> Sem<'a> {
                 let on = sets.iter().filter(|(p, _)| !local(p)).all(|(p, v)| self.data.get(p) == Some(v));
                 n.set("selected", on);
             }
-            Some(Behavior::Drag { path, min, max, step, .. }) => {
+            Some(Behavior::Drag { path, min, max, step, delta, .. }) => {
                 n.set("value", self.data.num(path));
                 n.set("min", *min);
                 n.set("max", *max);
                 if *step > 0.0 {
                     n.set("step", *step);
+                }
+                // A divider: the value follows the shift, not the point on the node.
+                if *delta != 0.0 {
+                    n.set("delta", *delta);
                 }
             }
             None => {}

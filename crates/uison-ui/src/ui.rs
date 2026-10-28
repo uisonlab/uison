@@ -13,7 +13,7 @@ use uison_frame::Writer;
 use crate::data::{Data, IntoJson};
 use crate::edit::{Field, next_char, next_word, prev_char, word_at, word_left, word_right};
 use crate::el::{Behavior, El};
-use crate::emit::{NodeInfo, Style, emit};
+use crate::emit::{MIN_TOUCH, NodeInfo, Style, at_least, emit};
 use crate::expand::{expand_root, node_kind};
 use crate::gesture::{FLING_TICK, Fling, SLOP, Spring, Touch, rubber, unrubber};
 use crate::layout::{Cons, Ctx, layout};
@@ -755,6 +755,7 @@ impl Ui {
                 ink: self.token_color("text", Color::BLACK),
                 scrollbar: self.token_color("scrollbar", Color::rgba(0, 0, 0, 80)),
                 touch: self.data.bool("env.touch"),
+                capture: self.st.dragging.clone(),
             };
             // Tooltip and menu — as separate roots on top of the frame, at the cursor, pressed against the edges.
             let safe = uison_core::Rect::new(s.left, s.top, inner.w, inner.h);
@@ -1004,10 +1005,15 @@ impl Ui {
 
     fn drag_to(&mut self, idx: usize, p: Point) {
         let info = &self.infos[idx];
-        if let Some(Behavior::Drag { path, min, max, step, inset }) = &info.act.behavior {
+        if let Some(Behavior::Drag { path, min, max, step, inset, delta }) = &info.act.behavior {
             let r = info.rect;
-            let t = ((p.x - r.x - inset) / (r.w - 2.0 * inset).max(1.0)).clamp(0.0, 1.0);
-            let mut v = min + t * (max - min);
+            let mut v = if *delta != 0.0 {
+                let (x0, v0) = self.st.drag_from;
+                (v0 + delta * (p.x - x0)).clamp(*min, max.max(*min))
+            } else {
+                let t = ((p.x - r.x - inset) / (r.w - 2.0 * inset).max(1.0)).clamp(0.0, 1.0);
+                min + t * (max - min)
+            };
             if *step > 0.0 {
                 v = min + ((v - min) / step).round() * step;
             }
@@ -1429,7 +1435,7 @@ impl Ui {
                 // Dragging with the mouse selects text in the pressed field.
                 self.st.selecting = self.st.pressed.clone().filter(|k| self.index(k).is_some_and(|i| self.infos[i].input.is_some()));
             }
-            Event::MouseUp(_, MouseButton::Left) => return self.release(hit),
+            Event::MouseUp(p, MouseButton::Left) => return self.release(*p, hit),
             Event::MouseDown(p, MouseButton::Right) => {
                 let was = self.menu.take().is_some();
                 self.dismiss_outside(hit);
@@ -1601,8 +1607,9 @@ impl Ui {
                 self.st.caret_on = true;
                 self.caret_toggled = now();
             }
-            if matches!(self.infos[i].act.behavior, Some(Behavior::Drag { .. })) {
+            if let Some(Behavior::Drag { path, .. }) = &self.infos[i].act.behavior {
                 self.st.dragging = Some(self.infos[i].key.clone());
+                self.st.drag_from = (p.x, self.data.num(path) as f32);
                 self.drag_to(i, p);
             }
         }
@@ -1649,11 +1656,20 @@ impl Ui {
     }
 
     /// Release: a click if released over the pressed node.
-    fn release(&mut self, hit: Option<usize>) -> bool {
-        self.st.dragging = None;
+    fn release(&mut self, p: Point, hit: Option<usize>) -> bool {
+        // While dragging, the whole window is the dragged node's area (`emit`, `capture`): over the node
+        // is where its own area is.
+        let dragged = self.st.dragging.take().and_then(|k| self.index(&k));
         self.st.selecting = None;
         let Some(pressed) = self.st.pressed.take() else { return false };
-        if let Some(i) = self.chain(hit).into_iter().find(|&i| self.infos[i].key == pressed) {
+        let over = match dragged {
+            Some(i) => {
+                let r = self.infos[i].rect;
+                (if self.data.bool("env.touch") { at_least(r, MIN_TOUCH) } else { r }).contains(p).then_some(i)
+            }
+            None => self.chain(hit).into_iter().find(|&i| self.infos[i].key == pressed),
+        };
+        if let Some(i) = over {
             self.click(i);
         }
         true
@@ -1763,7 +1779,7 @@ impl Ui {
             return true;
         }
         if self.st.dragging.is_some() {
-            return self.release(hit);
+            return self.release(p, hit);
         }
         let t = now();
         let key = touch.scroll.clone().unwrap_or_default();
@@ -1791,7 +1807,7 @@ impl Ui {
         if self.chain(hit).iter().any(|&i| self.infos[i].key == pressed) {
             self.press(p, hit, m);
             self.reveal = true;
-            self.release(hit);
+            self.release(p, hit);
         }
         self.st.pressed = None;
         true

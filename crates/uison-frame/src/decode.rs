@@ -172,7 +172,7 @@ fn read_item(p: &mut Parser, m: &dyn TextMeasure, depth: u32) -> Result<Item, Er
                 let at = p.pos();
                 let name = p.string()?;
                 cursor = Cursor::parse(&name)
-                    .ok_or_else(|| p.error_at(at, "cursor must be 'arrow', 'pointer' or 'text'"))?;
+                    .ok_or_else(|| p.error_at(at, "cursor must be 'arrow', 'pointer', 'text', 'resize-x' or 'resize-y'"))?;
                 k::CURSOR
             }
             "items" => {

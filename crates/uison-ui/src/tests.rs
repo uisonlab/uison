@@ -335,6 +335,73 @@ fn slider_drag_and_scroll() {
 }
 
 #[test]
+fn divider_drags_by_shift_and_keeps_the_pointer() {
+    let mut ui = Ui::new(
+        r##"{ size: [300, 100], data: { w: 100 }, root: { Row: { w: "fill", h: "fill", cross: "stretch", children: [
+            { Box: { key: "left", w: "@w" } },
+            { Box: { key: "div", w: 6, cursor: "resize-x", drag: { path: "@w", min: 50, max: 150, delta: 1 }, on: { click: "reset" } } },
+            { Box: { key: "right", flex: 1, on: { click: "other" } } },
+        ] } } }"##,
+    )
+    .unwrap();
+    let clicks = Rc::new(RefCell::new(Vec::new()));
+    let c = clicks.clone();
+    ui.on("reset", move |cx| {
+        c.borrow_mut().push(cx.clicks);
+        if cx.clicks == 2 {
+            cx.data.set("w", 100);
+        }
+    });
+    ui.on("other", |_| panic!("the right box must not get the release"));
+    let f = frame(&mut ui);
+    let r = hit_rect(&f, "div");
+    let p = center(r);
+    let far = Point::new(280.0, p.y);
+    assert_eq!(uison_frame::cursor_at(&f, p), uison_core::Cursor::ResizeX);
+    assert_eq!(uison_frame::hit_test(&f, far), Some("right"));
+    // The press doesn't move it; the value follows the shift, not the point on the node.
+    ui.on_event(&Event::MouseDown(p, MouseButton::Left), Some("div"), &Fake);
+    assert_eq!(ui.data.num("w"), 100.0);
+    ui.on_event(&Event::MouseMove(Point::new(p.x + 30.0, p.y)), Some("div"), &Fake);
+    assert_eq!(ui.data.num("w"), 130.0);
+    // Past the limit the divider stops, and the pointer ahead of it stays the divider's.
+    ui.on_event(&Event::MouseMove(far), Some("right"), &Fake);
+    assert_eq!(ui.data.num("w"), 150.0);
+    let f = frame(&mut ui);
+    assert_eq!(hit_rect(&f, "div").x, r.x + 50.0);
+    assert_eq!(uison_frame::hit_test(&f, far), Some("div"));
+    assert_eq!(uison_frame::cursor_at(&f, far), uison_core::Cursor::ResizeX);
+    ui.on_event(&Event::MouseMove(Point::new(p.x - 70.0, p.y)), Some("div"), &Fake);
+    assert_eq!(ui.data.num("w"), 50.0);
+    // Released away from the divider: no click; the window is back to normal.
+    ui.on_event(&Event::MouseUp(far, MouseButton::Left), Some("div"), &Fake);
+    let f = frame(&mut ui);
+    assert_eq!(uison_frame::hit_test(&f, far), Some("right"));
+    assert_eq!(uison_frame::cursor_at(&f, far), uison_core::Cursor::Pointer);
+    assert!(clicks.borrow().is_empty());
+    // A double click — the default width.
+    ui.on_event(&Event::MouseMove(Point::new(p.x + 30.0, p.y)), Some("div"), &Fake);
+    click(&mut ui, "div");
+    click(&mut ui, "div");
+    assert_eq!(*clicks.borrow(), [1, 2]);
+    assert_eq!(ui.data.num("w"), 100.0);
+    // The other way: `delta: -1` — a panel to the right of the divider.
+    let mut ui = Ui::new(
+        r##"{ size: [300, 100], data: { w: 100 }, root: { Row: { w: "fill", h: "fill", cross: "stretch", children: [
+            { Box: { flex: 1 } },
+            { Box: { key: "div", w: 6, cursor: "resize-x", drag: { path: "@w", min: 50, max: 150, delta: -1 } } },
+            { Box: { w: "@w" } },
+        ] } } }"##,
+    )
+    .unwrap();
+    let p = center(hit_rect(&frame(&mut ui), "div"));
+    ui.on_event(&Event::MouseDown(p, MouseButton::Left), Some("div"), &Fake);
+    ui.on_event(&Event::MouseMove(Point::new(p.x - 20.0, p.y)), Some("div"), &Fake);
+    ui.on_event(&Event::MouseUp(Point::new(p.x - 20.0, p.y), MouseButton::Left), Some("div"), &Fake);
+    assert_eq!(ui.data.num("w"), 120.0);
+}
+
+#[test]
 fn virtualized_list_renders_only_visible_items() {
     let items: Vec<Json> = (0..10_000).map(|i| obj([("name", format!("Row {i}").into_json())])).collect();
     let mut ui = Ui::from_node(list("rows", "r", 20.0, text("@r.name")).key("list").fill_w().fill_h()).with_size(200.0, 100.0);

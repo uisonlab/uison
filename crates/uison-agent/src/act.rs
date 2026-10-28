@@ -263,7 +263,10 @@ impl Agent<'_> {
                     return Err("slider without a range".into());
                 }
                 let r = rect_of(node).unwrap_or_default();
-                self.drag_to(key, r, ((want - min) / (max - min)).clamp(0.0, 1.0) as f32, min, max, want)
+                match n("delta") {
+                    0.0 => self.drag_to(key, r, ((want - min) / (max - min)).clamp(0.0, 1.0) as f32, min, max, want),
+                    delta => self.drag_by(r, ((want - n("value")) / delta) as f32),
+                }
             }
             Some(other) => Err(format!("'{key}' is a {other}: set works for sliders, checkboxes and textfields")),
             None => Err(format!("no node '{key}'")),
@@ -289,6 +292,19 @@ impl Agent<'_> {
             }
             x += ((want - got) / (max - min)) as f32 * r.w;
         }
+        self.send(Event::MouseLeave);
+        Ok(())
+    }
+
+    /// A divider (`drag` with `delta`): press on it and move by `dx`.
+    fn drag_by(&mut self, r: Rect, dx: f32) -> Result<(), String> {
+        let p = Point::new(r.x + r.w / 2.0, r.y + r.h / 2.0);
+        let to = Point::new(p.x + dx, p.y);
+        advance(APART);
+        self.send(Event::MouseMove(p));
+        self.send(Event::MouseDown(p, MouseButton::Left));
+        self.send(Event::MouseMove(to));
+        self.send(Event::MouseUp(to, MouseButton::Left));
         self.send(Event::MouseLeave);
         Ok(())
     }

@@ -51,13 +51,15 @@ pub(crate) struct Style {
     pub scrollbar: Color,
     /// Touch screen: hit areas of pressable elements are at least [`MIN_TOUCH`].
     pub touch: bool,
+    /// Node being dragged: its area covers the whole window on top of everything.
+    pub capture: Option<String>,
 }
 
 /// Minimum touch target (pt), as in Apple's guidelines.
 pub(crate) const MIN_TOUCH: f32 = 44.0;
 
 /// Grow the rectangle to `min` on each axis around its center.
-fn at_least(r: Rect, min: f32) -> Rect {
+pub(crate) fn at_least(r: Rect, min: f32) -> Rect {
     let (dw, dh) = ((min - r.w).max(0.0) / 2.0, (min - r.h).max(0.0) / 2.0);
     Rect::new(r.x - dw, r.y - dh, r.w + 2.0 * dw, r.h + 2.0 * dh)
 }
@@ -90,6 +92,12 @@ pub(crate) fn emit(roots: &[El], size: Size, origin: Point, style: &Style, m: &d
         em.node(el, origin);
         em.parents = saved;
         i += 1;
+    }
+    // While dragging, the pointer runs ahead of a divider stopped at its limit and off a slider:
+    // the cursor stays the dragged node's, and what lies under the pointer doesn't take it.
+    if let Some(info) = style.capture.as_deref().and_then(|k| em.infos.iter().find(|i| i.key == k)) {
+        let cursor = if info.act.disabled { Cursor::Arrow } else { info.act.cursor };
+        em.w.hit(Rect::new(0.0, 0.0, size.w, size.h), &info.key, cursor);
     }
     Emitted { src: em.w.finish(), infos: em.infos, prims: em.prims }
 }

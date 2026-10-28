@@ -314,7 +314,7 @@ impl Node {
         self.prop("disabled", v)
     }
 
-    /// cursor over the node: arrow, pointer, text.
+    /// cursor over the node: arrow, pointer, text, resize-x, resize-y.
     ///
     /// `cursor` — any node.
     pub fn cursor(self, v: impl IntoJson) -> Node {
@@ -356,7 +356,7 @@ impl Node {
         self.prop("select", v)
     }
 
-    /// dragging sets a number: { path: "@volume", min, max, step }.
+    /// dragging sets a number: { path: "@volume", min, max, step }; delta: 1 / -1 — the value at the press + the shift (divider).
     ///
     /// `drag` — Box, Row, Column, Stack, Wrap.
     pub fn drag(self, v: impl IntoJson) -> Node {

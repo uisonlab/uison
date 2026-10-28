@@ -171,6 +171,10 @@ pub enum Cursor {
     Pointer,
     /// I-beam — a text input field.
     Text,
+    /// Left-right arrows — a vertical divider dragged along X (panel width).
+    ResizeX,
+    /// Up-down arrows — a horizontal divider dragged along Y.
+    ResizeY,
 }
 
 impl Cursor {
@@ -179,6 +183,8 @@ impl Cursor {
             "arrow" => Some(Cursor::Arrow),
             "pointer" => Some(Cursor::Pointer),
             "text" => Some(Cursor::Text),
+            "resize-x" => Some(Cursor::ResizeX),
+            "resize-y" => Some(Cursor::ResizeY),
             _ => None,
         }
     }
@@ -188,6 +194,8 @@ impl Cursor {
             Cursor::Arrow => "arrow",
             Cursor::Pointer => "pointer",
             Cursor::Text => "text",
+            Cursor::ResizeX => "resize-x",
+            Cursor::ResizeY => "resize-y",
         }
     }
 }

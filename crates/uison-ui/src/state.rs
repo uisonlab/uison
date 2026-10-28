@@ -33,8 +33,10 @@ pub struct UiState {
     pub over: HashMap<String, f32>,
     /// Scroll area height from the previous layout — for List virtualization.
     pub viewport: HashMap<String, f32>,
-    /// Node being dragged (Slider).
+    /// Node being dragged (Slider, divider).
     pub dragging: Option<String>,
+    /// Where the drag started: pointer x and the value then (relative `drag` with `delta`).
+    pub drag_from: (f32, f32),
 }
 
 /// `k` is the `key` itself or its descendant (`key/...`).

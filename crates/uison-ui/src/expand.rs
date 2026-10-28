@@ -327,7 +327,7 @@ fn parse_info(props: &Json, sc: &Scope, env: &Env) -> Result<(Option<String>, Op
 fn parse_cursor(props: &Json, sc: &Scope, env: &Env) -> Result<Option<Cursor>, Error> {
     let Some(c) = props.get("cursor") else { return Ok(None) };
     let c = eval(c, sc, env)?;
-    c.as_str().and_then(Cursor::parse).map(Some).ok_or_else(|| Error::new("cursor must be arrow, pointer or text"))
+    c.as_str().and_then(Cursor::parse).map(Some).ok_or_else(|| Error::new("cursor must be arrow, pointer, text, resize-x or resize-y"))
 }
 
 /// Path from an `@path` binding (after subst); otherwise `None`.
@@ -694,7 +694,8 @@ fn build(kind: &str, props: &Json, sc: &Scope, key: String, env: &Env) -> Result
             let n = |k: &str, d: f32| -> Result<f32, Error> {
                 opt_num(&eval(s.get(k).unwrap_or(&Json::Null), sc, env)?, k).map(|v| v.unwrap_or(d))
             };
-            Some(Behavior::Drag { path, min: n("min", 0.0)?, max: n("max", 1.0)?, step: n("step", 0.0)?, inset: n("inset", 0.0)? })
+            let (min, max, step, inset, delta) = (n("min", 0.0)?, n("max", 1.0)?, n("step", 0.0)?, n("inset", 0.0)?, n("delta", 0.0)?);
+            Some(Behavior::Drag { path, min, max, step, inset, delta })
         } else {
             None
         };

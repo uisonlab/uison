@@ -108,7 +108,7 @@ pub trait App {
 | `text` | `"одна строка текста"` | `at: [x, y]` (левый верх, обязателен), `size` (по умолчанию 13), `color`, `font` (семейство или `monospace` / `serif` / `sans-serif`), `bold`, `italic` | `Canvas::text` |
 | `image` | `[x, y, w, h]` | `src` (файл или имя `mem:`, обязателен), `fit`: `"cover"` (по умолчанию), `"contain"`, `"fill"`; `radius` | `Canvas::image` |
 | `clip` | `[x, y, w, h]` | `items`: вложенные элементы, обрезанные по прямоугольнику | `Canvas::push_clip` / `pop_clip` |
-| `hit` | `[x, y, w, h]` | `id` (его `on_event` получает как `hit`), `cursor`: `"arrow"`, `"pointer"`, `"text"` | не рисуется: hit-test и курсоры |
+| `hit` | `[x, y, w, h]` | `id` (его `on_event` получает как `hit`), `cursor`: `"arrow"`, `"pointer"`, `"text"`, `"resize-x"`, `"resize-y"` | не рисуется: hit-test и курсоры |
 
 Фигурам нужен `fill`, `stroke` или оба; цвета — `"#RGB"`, `"#RRGGBB"` или `"#RRGGBBAA"`. Неизвестный ключ, ключ не от этой фигуры или повтор — ошибка со `строка:столбец`. Парсер не пропускает их молча, поэтому опечатка в кадре находится сразу.
 

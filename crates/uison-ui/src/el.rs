@@ -138,8 +138,10 @@ pub enum Behavior {
     Toggle(String),
     /// A click writes values at paths (selection + closing the list).
     Select(Vec<(String, Json)>),
-    /// Dragging along X changes the number at the path.
-    Drag { path: String, min: f32, max: f32, step: f32, inset: f32 },
+    /// Dragging along X changes the number at the path. `delta` 0 — the point in the node sets the value
+    /// (Slider); otherwise the value at the press plus `delta` × the shift since it (a divider that moves
+    /// with the value: `delta: -1` — the panel to the right of it grows when dragged to the left).
+    Drag { path: String, min: f32, max: f32, step: f32, inset: f32, delta: f32 },
 }
 
 impl Act {

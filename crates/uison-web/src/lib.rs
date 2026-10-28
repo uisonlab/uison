@@ -150,6 +150,8 @@ impl State {
                 Cursor::Arrow => 0,
                 Cursor::Pointer => 1,
                 Cursor::Text => 2,
+                Cursor::ResizeX => 3,
+                Cursor::ResizeY => 4,
             };
             unsafe { js::set_cursor(k) };
         }

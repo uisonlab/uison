@@ -29,7 +29,7 @@
 | `pos` | `pos` | положение в Stack: [x, y] |
 | `overlay` | `overlay` | поверх соседей и не влияет на размер родителя (всплывающие панели) |
 | `on` | `on` | события → действия: { click: "add", change: …, submit: …, hover: … } |
-| `cursor` | `cursor` | курсор над узлом: arrow, pointer, text |
+| `cursor` | `cursor` | курсор над узлом: arrow, pointer, text, resize-x, resize-y |
 | `tooltip` | `tooltip` | подсказка при наведении (долгом нажатии) |
 | `contextMenu` | `context_menu` | меню по правой кнопке: [{ label, action }, "-", …] |
 | `alt` | `alt` | текстовая альтернатива для тех, кто не видит экран (агенты, экранные дикторы): что делает кнопка-иконка |
@@ -42,7 +42,7 @@
 |---|---|---|
 | `toggle` | `toggle` | нажатие переключает bool по пути: "@form.agree" |
 | `select` | `select` | нажатие записывает значение: { path: "@tab", value: "inbox" } |
-| `drag` | `drag` | перетаскивание задаёт число: { path: "@volume", min, max, step } |
+| `drag` | `drag` | перетаскивание задаёт число: { path: "@volume", min, max, step }; delta: 1 / -1 — значение при нажатии + смещение (разделитель) |
 | `interactive` | `interactive` | состояния hover/pressed для селекторов { state: … } |
 | `focusable` | `focusable` | получает фокус клавиатуры (Tab) |
 | `dismiss` | `dismiss` | нажатие мимо узла записывает false по пути (закрыть всплывающее) |

@@ -56,7 +56,8 @@ struct State {
     stats_buf: String,
     pending_since: Option<Instant>,
     cursor: Cursor,
-    cursors: [HCURSOR; 3],
+    /// By `Cursor as usize`.
+    cursors: [HCURSOR; 5],
     /// A `WM_MOUSELEAVE` notification has been requested.
     tracking: bool,
     tick_at: Option<Instant>,
@@ -980,7 +981,7 @@ pub fn run(app: impl App + 'static, title: &str) {
             stats_buf: String::new(),
             pending_since: None,
             cursor: Cursor::Arrow,
-            cursors: [arrow, LoadCursorW(null_mut(), IDC_HAND as *const u16), LoadCursorW(null_mut(), IDC_IBEAM as *const u16)],
+            cursors: [IDC_ARROW, IDC_HAND, IDC_IBEAM, IDC_SIZEWE, IDC_SIZENS].map(|c| LoadCursorW(null_mut(), c as *const u16)),
             tracking: false,
             tick_at: None,
             clock: None,

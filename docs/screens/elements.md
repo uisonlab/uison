@@ -29,7 +29,7 @@ Available on every node and component.
 | `pos` | `pos` | position in Stack: [x, y] |
 | `overlay` | `overlay` | drawn above siblings, does not affect the parent's size (popups) |
 | `on` | `on` | events → actions: { click: "add", change: …, submit: …, hover: … } |
-| `cursor` | `cursor` | cursor over the node: arrow, pointer, text |
+| `cursor` | `cursor` | cursor over the node: arrow, pointer, text, resize-x, resize-y |
 | `tooltip` | `tooltip` | tooltip on hover (long press) |
 | `contextMenu` | `context_menu` | right-click menu: [{ label, action }, "-", …] |
 | `alt` | `alt` | text alternative for those who can't see the screen (agents, screen readers): what an icon button does |
@@ -42,7 +42,7 @@ On built-in nodes (`Box`, `Row`, `Column`, `Stack`, `Wrap`…): the library elem
 |---|---|---|
 | `toggle` | `toggle` | a press toggles the bool at the path: "@form.agree" |
 | `select` | `select` | a press writes the value: { path: "@tab", value: "inbox" } |
-| `drag` | `drag` | dragging sets a number: { path: "@volume", min, max, step } |
+| `drag` | `drag` | dragging sets a number: { path: "@volume", min, max, step }; delta: 1 / -1 — the value at the press + the shift (divider) |
 | `interactive` | `interactive` | hover/pressed states for { state: … } selectors |
 | `focusable` | `focusable` | receives keyboard focus (Tab) |
 | `dismiss` | `dismiss` | a press outside the node writes false to the path (closes a popup) |

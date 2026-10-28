@@ -172,6 +172,8 @@ pub const ICON_SMALL: usize = 0;
 pub const ICON_BIG: usize = 1;
 pub const IDC_IBEAM: usize = 32513;
 pub const IDC_HAND: usize = 32649;
+pub const IDC_SIZEWE: usize = 32644;
+pub const IDC_SIZENS: usize = 32645;
 
 pub const VK_BACK: u32 = 0x08;
 pub const VK_TAB: u32 = 0x09;

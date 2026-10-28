@@ -39,13 +39,13 @@ struct BoxProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
-    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
+    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }; delta: 1 / -1 — the value at the press + the shift (divider)
     Prop interactive = {}; ///< hover/pressed states for { state: … } selectors
     Prop focusable = {}; ///< receives keyboard focus (Tab)
     Prop dismiss = {}; ///< a press outside the node writes false to the path (closes a popup)
@@ -90,13 +90,13 @@ struct RowProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
-    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
+    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }; delta: 1 / -1 — the value at the press + the shift (divider)
     Prop interactive = {}; ///< hover/pressed states for { state: … } selectors
     Prop focusable = {}; ///< receives keyboard focus (Tab)
     Prop dismiss = {}; ///< a press outside the node writes false to the path (closes a popup)
@@ -139,13 +139,13 @@ struct ColumnProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
-    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
+    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }; delta: 1 / -1 — the value at the press + the shift (divider)
     Prop interactive = {}; ///< hover/pressed states for { state: … } selectors
     Prop focusable = {}; ///< receives keyboard focus (Tab)
     Prop dismiss = {}; ///< a press outside the node writes false to the path (closes a popup)
@@ -186,13 +186,13 @@ struct StackProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
-    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
+    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }; delta: 1 / -1 — the value at the press + the shift (divider)
     Prop interactive = {}; ///< hover/pressed states for { state: … } selectors
     Prop focusable = {}; ///< receives keyboard focus (Tab)
     Prop dismiss = {}; ///< a press outside the node writes false to the path (closes a popup)
@@ -232,7 +232,7 @@ struct CenterProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -269,7 +269,7 @@ struct AlignProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -304,7 +304,7 @@ struct SpacerProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -342,13 +342,13 @@ struct WrapProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
-    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
+    Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }; delta: 1 / -1 — the value at the press + the shift (divider)
     Prop interactive = {}; ///< hover/pressed states for { state: … } selectors
     Prop focusable = {}; ///< receives keyboard focus (Tab)
     Prop dismiss = {}; ///< a press outside the node writes false to the path (closes a popup)
@@ -390,7 +390,7 @@ struct FlowProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -426,7 +426,7 @@ struct ScrollProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -466,7 +466,7 @@ struct ListProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -514,7 +514,7 @@ struct TextProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -566,7 +566,7 @@ struct InputProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -610,7 +610,7 @@ struct ImageProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -654,7 +654,7 @@ struct RectProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -694,7 +694,7 @@ struct CircleProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -734,7 +734,7 @@ struct LineProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -772,7 +772,7 @@ struct TriProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -809,7 +809,7 @@ struct VectorProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -846,7 +846,7 @@ struct CanvasProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -901,7 +901,7 @@ struct ButtonProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -945,7 +945,7 @@ struct IconButtonProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -987,7 +987,7 @@ struct CheckboxProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1031,7 +1031,7 @@ struct RadioProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1070,7 +1070,7 @@ struct RadioGroupProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1109,7 +1109,7 @@ struct SwitchProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1154,7 +1154,7 @@ struct SliderProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1194,7 +1194,7 @@ struct SelectProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1234,7 +1234,7 @@ struct TabsProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1273,7 +1273,7 @@ struct TabProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1312,7 +1312,7 @@ struct TextFieldProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1355,7 +1355,7 @@ struct ProgressBarProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1391,7 +1391,7 @@ struct DividerProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1428,7 +1428,7 @@ struct CardProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1469,7 +1469,7 @@ struct ListTileProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1513,7 +1513,7 @@ struct BadgeProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1556,7 +1556,7 @@ struct AvatarProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1597,7 +1597,7 @@ struct SectionProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1635,7 +1635,7 @@ struct LinkProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
@@ -1678,7 +1678,7 @@ struct IconProps {
     Prop key = {}; ///< node name: events (cx.key), focus, hit areas, test scenarios
     Prop visible = {}; ///< whether the node is shown: bool or binding "@path" / "!@path"
     Prop disabled = {}; ///< disabled: grayed out, not clickable; bool or binding
-    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
+    Prop cursor = {}; ///< cursor over the node: arrow, pointer, text, resize-x, resize-y
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
     Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does

@@ -1399,7 +1399,7 @@ public:
         s_ += '}';
         return *this;
     }
-    /// Invisible mouse area: the event arrives with `hit` = id; cursor — arrow, pointer, text.
+    /// Invisible mouse area: the event arrives with `hit` = id; cursor — arrow, pointer, text, resize-x, resize-y.
     FrameWriter& hit(double x, double y, double w, double h, std::string_view id, std::string_view cursor = "pointer") {
         item("hit", {x, y, w, h});
         key("id", id);

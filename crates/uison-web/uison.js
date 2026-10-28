@@ -63,7 +63,7 @@ function loadImage(src, blob) {
 }
 
 
-const cursors = ["default", "pointer", "text"];
+const cursors = ["default", "pointer", "text", "col-resize", "row-resize"];
 
 // Full-window canvas if the page has none (Emscripten's default page).
 function newCanvas() {

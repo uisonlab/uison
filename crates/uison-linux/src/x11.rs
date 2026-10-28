@@ -232,7 +232,8 @@ struct X11 {
     /// behind it is read with that layout), later changes in the batch — once, after it.
     keymap_read: bool,
     keymap_stale: bool,
-    cursors: [u32; 3],
+    /// By `Cursor as usize`.
+    cursors: [u32; 5],
     shown_cursor: Option<Cursor>,
     portal: Option<Portal>,
     last_tick: Instant,
@@ -326,7 +327,7 @@ pub fn run(app: impl App + 'static, title: &str) {
         xkb_event: 0,
         keymap_read: false,
         keymap_stale: false,
-        cursors: [0; 3],
+        cursors: [0; 5],
         shown_cursor: None,
         portal,
         last_tick: started,
@@ -435,7 +436,13 @@ impl X11 {
 
     /// Cursors from the theme (libxcb-cursor), otherwise from the X11 cursor font.
     fn init_cursors(&mut self) {
-        let names: [&[&str]; 3] = [&["default", "left_ptr"], &["pointer", "hand2"], &["text", "xterm"]];
+        let names: [&[&str]; 5] = [
+            &["default", "left_ptr"],
+            &["pointer", "hand2"],
+            &["text", "xterm"],
+            &["col-resize", "ew-resize", "sb_h_double_arrow"],
+            &["row-resize", "ns-resize", "sb_v_double_arrow"],
+        ];
         if let Ok(xc) = XcbCursor::load() {
             let mut ctx = std::ptr::null_mut();
             if unsafe { xc.xcb_cursor_context_new(self.c, self.screen, &mut ctx) } >= 0 {
@@ -456,8 +463,8 @@ impl X11 {
             unsafe {
                 let font = x.xcb_generate_id(c);
                 x.xcb_open_font(c, font, 6, c"cursor".as_ptr());
-                // XC_left_ptr, XC_hand2, XC_xterm.
-                for (i, glyph) in [68u16, 60, 152].into_iter().enumerate() {
+                // XC_left_ptr, XC_hand2, XC_xterm, XC_sb_h_double_arrow, XC_sb_v_double_arrow.
+                for (i, glyph) in [68u16, 60, 152, 108, 116].into_iter().enumerate() {
                     if self.cursors[i] == 0 {
                         let id = x.xcb_generate_id(c);
                         x.xcb_create_glyph_cursor(c, id, font, font, glyph, glyph + 1, 0, 0, 0, 0xffff, 0xffff, 0xffff);

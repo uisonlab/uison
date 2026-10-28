@@ -108,7 +108,7 @@ Everything any screen shows is built from nine kinds of items. Each item has exa
 | `text` | `"one line of text"` | `at: [x, y]` (top left, required), `size` (default 13), `color`, `font` (a family or `monospace` / `serif` / `sans-serif`), `bold`, `italic` | `Canvas::text` |
 | `image` | `[x, y, w, h]` | `src` (a file or `mem:` name, required), `fit`: `"cover"` (default), `"contain"`, `"fill"`; `radius` | `Canvas::image` |
 | `clip` | `[x, y, w, h]` | `items`: nested items, cut to the rectangle | `Canvas::push_clip` / `pop_clip` |
-| `hit` | `[x, y, w, h]` | `id` (what `on_event` receives as `hit`), `cursor`: `"arrow"`, `"pointer"`, `"text"` | not drawn: hit testing and cursors |
+| `hit` | `[x, y, w, h]` | `id` (what `on_event` receives as `hit`), `cursor`: `"arrow"`, `"pointer"`, `"text"`, `"resize-x"`, `"resize-y"` | not drawn: hit testing and cursors |
 
 Shapes need `fill`, `stroke` or both; colors are `"#RGB"`, `"#RRGGBB"` or `"#RRGGBBAA"`. An unknown key, a key that does not belong to the shape, or a duplicate is an error with its `line:col`. The parser rejects them rather than ignoring them, so a typo in a frame is found at once.
 

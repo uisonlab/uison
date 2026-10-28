@@ -135,6 +135,8 @@ impl State {
                 Cursor::Arrow => msg(cls, sel!("arrowCursor"), ()),
                 Cursor::Pointer => msg(cls, sel!("pointingHandCursor"), ()),
                 Cursor::Text => msg(cls, sel!("IBeamCursor"), ()),
+                Cursor::ResizeX => msg(cls, sel!("resizeLeftRightCursor"), ()),
+                Cursor::ResizeY => msg(cls, sel!("resizeUpDownCursor"), ()),
             };
             msg::<(), _>(cursor, sel!("set"), ());
         }
