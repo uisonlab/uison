@@ -164,6 +164,9 @@ Para começar um projeto seu, veja o guia de início rápido (em inglês) para
 - **Testes sem janela**: um cenário (`UISON_SCRIPT=scenario.json`) toca, digita, rola e tira
   screenshots pela `key` dos elementos; os mesmos cenários rodam em todas as plataformas, no
   Chrome headless, no simulador de iOS e em um celular.
+- **[Modo agente](../agents.md)**: um agente LLM usa o programa sem capturas de tela. Ele lê a tela
+  pelo significado (papéis, nomes, estados, chaves) e clica, digita e escolhe pelo mesmo caminho da
+  entrada de uma pessoa, em linhas JSON (`--agent`) ou como servidor MCP (`--mcp`).
 - **API de C e C++**: `uison.h` (C99), `uison_kit.h` (utilitários para C), `uison.hpp` (C++17,
   com facilidades em C++20) e `uison_widgets.hpp` (widgets C++20 gerados a partir do mesmo
   schema da DSL em Rust); bibliotecas estáticas e dinâmicas, um pacote CMake e `pkg-config`.

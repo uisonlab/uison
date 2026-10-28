@@ -411,6 +411,7 @@ name = "disk-usage"
 version = "0.1.0"
 dependencies = [
  "uison",
+ "uison-agent",
 ]
 
 [[package]]
@@ -526,6 +527,7 @@ name = "form2"
 version = "0.1.0"
 dependencies = [
  "uison",
+ "uison-agent",
 ]
 
 [[package]]
@@ -621,6 +623,7 @@ name = "gallery"
 version = "0.1.0"
 dependencies = [
  "uison",
+ "uison-agent",
 ]
 
 [[package]]
@@ -1535,6 +1538,7 @@ name = "studio"
 version = "0.1.0"
 dependencies = [
  "uison",
+ "uison-agent",
 ]
 
 [[package]]
@@ -1590,6 +1594,7 @@ name = "todo"
 version = "0.1.0"
 dependencies = [
  "uison",
+ "uison-agent",
 ]
 
 [[package]]
@@ -1646,6 +1651,16 @@ dependencies = [
  "uison-ui",
  "uison-web",
  "uison-windows",
+]
+
+[[package]]
+name = "uison-agent"
+version = "0.1.0"
+dependencies = [
+ "uison-core",
+ "uison-frame",
+ "uison-json",
+ "uison-ui",
 ]
 
 [[package]]

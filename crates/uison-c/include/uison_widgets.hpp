@@ -42,6 +42,7 @@ struct BoxProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
     Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
@@ -57,13 +58,13 @@ inline UISON_NOINLINE Node Box(BoxProps p) {
         &BoxProps::clip, &BoxProps::align, &BoxProps::w, &BoxProps::h, &BoxProps::min_w, &BoxProps::max_w,
         &BoxProps::min_h, &BoxProps::max_h, &BoxProps::flex, &BoxProps::margin, &BoxProps::place,
         &BoxProps::pos, &BoxProps::overlay, &BoxProps::key, &BoxProps::visible, &BoxProps::disabled,
-        &BoxProps::cursor, &BoxProps::tooltip, &BoxProps::context_menu, &BoxProps::toggle, &BoxProps::select,
-        &BoxProps::drag, &BoxProps::interactive, &BoxProps::focusable, &BoxProps::dismiss, &BoxProps::href,
-        &BoxProps::child};
+        &BoxProps::cursor, &BoxProps::tooltip, &BoxProps::context_menu, &BoxProps::alt, &BoxProps::toggle,
+        &BoxProps::select, &BoxProps::drag, &BoxProps::interactive, &BoxProps::focusable, &BoxProps::dismiss,
+        &BoxProps::href, &BoxProps::child};
     static constexpr const char* k[] = {"padding", "fill", "stroke", "width", "radius", "clip", "align", "w", "h", "minW", "maxW", "minH",
         "maxH", "flex", "margin", "place", "pos", "overlay", "key", "visible", "disabled", "cursor",
-        "tooltip", "contextMenu", "toggle", "select", "drag", "interactive", "focusable", "dismiss", "href",
-        "child"};
+        "tooltip", "contextMenu", "alt", "toggle", "select", "drag", "interactive", "focusable", "dismiss",
+        "href", "child"};
     Node n = uison::detail::widget("Box", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -92,6 +93,7 @@ struct RowProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
     Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
@@ -107,11 +109,11 @@ inline UISON_NOINLINE Node Row(RowProps p) {
         &RowProps::w, &RowProps::h, &RowProps::min_w, &RowProps::max_w, &RowProps::min_h, &RowProps::max_h,
         &RowProps::flex, &RowProps::margin, &RowProps::place, &RowProps::pos, &RowProps::overlay,
         &RowProps::key, &RowProps::visible, &RowProps::disabled, &RowProps::cursor, &RowProps::tooltip,
-        &RowProps::context_menu, &RowProps::toggle, &RowProps::select, &RowProps::drag,
+        &RowProps::context_menu, &RowProps::alt, &RowProps::toggle, &RowProps::select, &RowProps::drag,
         &RowProps::interactive, &RowProps::focusable, &RowProps::dismiss, &RowProps::href};
     static constexpr const char* k[] = {"padding", "gap", "main", "cross", "stackBelow", "w", "h", "minW", "maxW", "minH", "maxH", "flex",
         "margin", "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip",
-        "contextMenu", "toggle", "select", "drag", "interactive", "focusable", "dismiss", "href"};
+        "contextMenu", "alt", "toggle", "select", "drag", "interactive", "focusable", "dismiss", "href"};
     Node n = uison::detail::widget("Row", p, f, k);
     if (!p.children.empty()) n.children(std::move(p.children));
     p.on_click.apply(n, "click");
@@ -140,6 +142,7 @@ struct ColumnProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
     Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
@@ -155,11 +158,11 @@ inline UISON_NOINLINE Node Column(ColumnProps p) {
         &ColumnProps::h, &ColumnProps::min_w, &ColumnProps::max_w, &ColumnProps::min_h, &ColumnProps::max_h,
         &ColumnProps::flex, &ColumnProps::margin, &ColumnProps::place, &ColumnProps::pos,
         &ColumnProps::overlay, &ColumnProps::key, &ColumnProps::visible, &ColumnProps::disabled,
-        &ColumnProps::cursor, &ColumnProps::tooltip, &ColumnProps::context_menu, &ColumnProps::toggle,
-        &ColumnProps::select, &ColumnProps::drag, &ColumnProps::interactive, &ColumnProps::focusable,
-        &ColumnProps::dismiss, &ColumnProps::href};
+        &ColumnProps::cursor, &ColumnProps::tooltip, &ColumnProps::context_menu, &ColumnProps::alt,
+        &ColumnProps::toggle, &ColumnProps::select, &ColumnProps::drag, &ColumnProps::interactive,
+        &ColumnProps::focusable, &ColumnProps::dismiss, &ColumnProps::href};
     static constexpr const char* k[] = {"padding", "gap", "main", "cross", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu",
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt",
         "toggle", "select", "drag", "interactive", "focusable", "dismiss", "href"};
     Node n = uison::detail::widget("Column", p, f, k);
     if (!p.children.empty()) n.children(std::move(p.children));
@@ -186,6 +189,7 @@ struct StackProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
     Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
@@ -201,10 +205,10 @@ inline UISON_NOINLINE Node Stack(StackProps p) {
         &StackProps::min_h, &StackProps::max_h, &StackProps::flex, &StackProps::margin, &StackProps::place,
         &StackProps::pos, &StackProps::overlay, &StackProps::key, &StackProps::visible,
         &StackProps::disabled, &StackProps::cursor, &StackProps::tooltip, &StackProps::context_menu,
-        &StackProps::toggle, &StackProps::select, &StackProps::drag, &StackProps::interactive,
-        &StackProps::focusable, &StackProps::dismiss, &StackProps::href};
+        &StackProps::alt, &StackProps::toggle, &StackProps::select, &StackProps::drag,
+        &StackProps::interactive, &StackProps::focusable, &StackProps::dismiss, &StackProps::href};
     static constexpr const char* k[] = {"padding", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos", "overlay",
-        "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "toggle", "select", "drag",
+        "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt", "toggle", "select", "drag",
         "interactive", "focusable", "dismiss", "href"};
     Node n = uison::detail::widget("Stack", p, f, k);
     if (!p.children.empty()) n.children(std::move(p.children));
@@ -231,6 +235,7 @@ struct CenterProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Prop child = {}; ///< single child
 };
@@ -239,9 +244,9 @@ inline UISON_NOINLINE Node Center(CenterProps p) {
         &CenterProps::min_h, &CenterProps::max_h, &CenterProps::flex, &CenterProps::margin,
         &CenterProps::place, &CenterProps::pos, &CenterProps::overlay, &CenterProps::key,
         &CenterProps::visible, &CenterProps::disabled, &CenterProps::cursor, &CenterProps::tooltip,
-        &CenterProps::context_menu, &CenterProps::child};
+        &CenterProps::context_menu, &CenterProps::alt, &CenterProps::child};
     static constexpr const char* k[] = {"padding", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos", "overlay",
-        "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "child"};
+        "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt", "child"};
     Node n = uison::detail::widget("Center", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -267,6 +272,7 @@ struct AlignProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Prop child = {}; ///< single child
 };
@@ -275,9 +281,9 @@ inline UISON_NOINLINE Node Align(AlignProps p) {
         &AlignProps::max_w, &AlignProps::min_h, &AlignProps::max_h, &AlignProps::flex, &AlignProps::margin,
         &AlignProps::place, &AlignProps::pos, &AlignProps::overlay, &AlignProps::key, &AlignProps::visible,
         &AlignProps::disabled, &AlignProps::cursor, &AlignProps::tooltip, &AlignProps::context_menu,
-        &AlignProps::child};
+        &AlignProps::alt, &AlignProps::child};
     static constexpr const char* k[] = {"padding", "align", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "child"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt", "child"};
     Node n = uison::detail::widget("Align", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -301,15 +307,17 @@ struct SpacerProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Spacer(SpacerProps p) {
     static constexpr Prop SpacerProps::*f[] = {&SpacerProps::w, &SpacerProps::h, &SpacerProps::min_w, &SpacerProps::max_w, &SpacerProps::min_h,
         &SpacerProps::max_h, &SpacerProps::flex, &SpacerProps::margin, &SpacerProps::place,
         &SpacerProps::pos, &SpacerProps::overlay, &SpacerProps::key, &SpacerProps::visible,
-        &SpacerProps::disabled, &SpacerProps::cursor, &SpacerProps::tooltip, &SpacerProps::context_menu};
+        &SpacerProps::disabled, &SpacerProps::cursor, &SpacerProps::tooltip, &SpacerProps::context_menu,
+        &SpacerProps::alt};
     static constexpr const char* k[] = {"w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos", "overlay", "key",
-        "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Spacer", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -337,6 +345,7 @@ struct WrapProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Prop toggle = {}; ///< a press toggles the bool at the path: "@form.agree"
     Prop select = {}; ///< a press writes the value: { path: "@tab", value: "inbox" }
     Prop drag = {}; ///< dragging sets a number: { path: "@volume", min, max, step }
@@ -352,10 +361,10 @@ inline UISON_NOINLINE Node Wrap(WrapProps p) {
         &WrapProps::h, &WrapProps::min_w, &WrapProps::max_w, &WrapProps::min_h, &WrapProps::max_h,
         &WrapProps::flex, &WrapProps::margin, &WrapProps::place, &WrapProps::pos, &WrapProps::overlay,
         &WrapProps::key, &WrapProps::visible, &WrapProps::disabled, &WrapProps::cursor, &WrapProps::tooltip,
-        &WrapProps::context_menu, &WrapProps::toggle, &WrapProps::select, &WrapProps::drag,
+        &WrapProps::context_menu, &WrapProps::alt, &WrapProps::toggle, &WrapProps::select, &WrapProps::drag,
         &WrapProps::interactive, &WrapProps::focusable, &WrapProps::dismiss, &WrapProps::href};
     static constexpr const char* k[] = {"padding", "gap", "runGap", "cross", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu",
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt",
         "toggle", "select", "drag", "interactive", "focusable", "dismiss", "href"};
     Node n = uison::detail::widget("Wrap", p, f, k);
     if (!p.children.empty()) n.children(std::move(p.children));
@@ -384,6 +393,7 @@ struct FlowProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     std::vector<Node> children = {}; ///< children
 };
@@ -392,9 +402,9 @@ inline UISON_NOINLINE Node Flow(FlowProps p) {
         &FlowProps::min_w, &FlowProps::max_w, &FlowProps::min_h, &FlowProps::max_h, &FlowProps::flex,
         &FlowProps::margin, &FlowProps::place, &FlowProps::pos, &FlowProps::overlay, &FlowProps::key,
         &FlowProps::visible, &FlowProps::disabled, &FlowProps::cursor, &FlowProps::tooltip,
-        &FlowProps::context_menu};
+        &FlowProps::context_menu, &FlowProps::alt};
     static constexpr const char* k[] = {"padding", "align", "lineHeight", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Flow", p, f, k);
     if (!p.children.empty()) n.children(std::move(p.children));
     p.on_click.apply(n, "click");
@@ -419,6 +429,7 @@ struct ScrollProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Prop child = {}; ///< single child
 };
@@ -427,9 +438,9 @@ inline UISON_NOINLINE Node Scroll(ScrollProps p) {
         &ScrollProps::max_h, &ScrollProps::flex, &ScrollProps::margin, &ScrollProps::place,
         &ScrollProps::pos, &ScrollProps::overlay, &ScrollProps::key, &ScrollProps::visible,
         &ScrollProps::disabled, &ScrollProps::cursor, &ScrollProps::tooltip, &ScrollProps::context_menu,
-        &ScrollProps::child};
+        &ScrollProps::alt, &ScrollProps::child};
     static constexpr const char* k[] = {"w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos", "overlay", "key",
-        "visible", "disabled", "cursor", "tooltip", "contextMenu", "child"};
+        "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt", "child"};
     Node n = uison::detail::widget("Scroll", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -458,6 +469,7 @@ struct ListProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Prop item = {}; ///< row template
 };
@@ -466,10 +478,10 @@ inline UISON_NOINLINE Node List(ListProps p) {
         &ListProps::w, &ListProps::h, &ListProps::min_w, &ListProps::max_w, &ListProps::min_h,
         &ListProps::max_h, &ListProps::flex, &ListProps::margin, &ListProps::place, &ListProps::pos,
         &ListProps::overlay, &ListProps::key, &ListProps::visible, &ListProps::disabled, &ListProps::cursor,
-        &ListProps::tooltip, &ListProps::context_menu, &ListProps::item};
+        &ListProps::tooltip, &ListProps::context_menu, &ListProps::alt, &ListProps::item};
     static constexpr const char* k[] = {"items", "as", "index", "itemKey", "itemHeight", "w", "h", "minW", "maxW", "minH", "maxH", "flex",
         "margin", "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip",
-        "contextMenu", "item"};
+        "contextMenu", "alt", "item"};
     Node n = uison::detail::widget("List", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -505,6 +517,7 @@ struct TextProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Text(TextProps p) {
@@ -514,10 +527,10 @@ inline UISON_NOINLINE Node Text(TextProps p) {
         &TextProps::min_w, &TextProps::max_w, &TextProps::min_h, &TextProps::max_h, &TextProps::flex,
         &TextProps::margin, &TextProps::place, &TextProps::pos, &TextProps::overlay, &TextProps::key,
         &TextProps::visible, &TextProps::disabled, &TextProps::cursor, &TextProps::tooltip,
-        &TextProps::context_menu};
+        &TextProps::context_menu, &TextProps::alt};
     static constexpr const char* k[] = {"text", "size", "bold", "color", "font", "align", "maxLines", "lineHeight", "wrap", "decoration",
         "fill", "italic", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Text", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -556,6 +569,7 @@ struct InputProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
     Action on_submit = {};
@@ -566,10 +580,11 @@ inline UISON_NOINLINE Node Input(InputProps p) {
         &InputProps::keyboard, &InputProps::font, &InputProps::w, &InputProps::h, &InputProps::min_w,
         &InputProps::max_w, &InputProps::min_h, &InputProps::max_h, &InputProps::flex, &InputProps::margin,
         &InputProps::place, &InputProps::pos, &InputProps::overlay, &InputProps::key, &InputProps::visible,
-        &InputProps::disabled, &InputProps::cursor, &InputProps::tooltip, &InputProps::context_menu};
+        &InputProps::disabled, &InputProps::cursor, &InputProps::tooltip, &InputProps::context_menu,
+        &InputProps::alt};
     static constexpr const char* k[] = {"value", "placeholder", "size", "bold", "color", "placeholderColor", "caretColor", "password",
         "keyboard", "font", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Input", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -598,6 +613,7 @@ struct ImageProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Image(ImageProps p) {
@@ -605,9 +621,9 @@ inline UISON_NOINLINE Node Image(ImageProps p) {
         &ImageProps::min_w, &ImageProps::max_w, &ImageProps::min_h, &ImageProps::max_h, &ImageProps::flex,
         &ImageProps::margin, &ImageProps::place, &ImageProps::pos, &ImageProps::overlay, &ImageProps::key,
         &ImageProps::visible, &ImageProps::disabled, &ImageProps::cursor, &ImageProps::tooltip,
-        &ImageProps::context_menu};
+        &ImageProps::context_menu, &ImageProps::alt};
     static constexpr const char* k[] = {"src", "fit", "radius", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Image", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -641,6 +657,7 @@ struct RectProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Rect(RectProps p) {
@@ -648,10 +665,10 @@ inline UISON_NOINLINE Node Rect(RectProps p) {
         &RectProps::w, &RectProps::h, &RectProps::min_w, &RectProps::max_w, &RectProps::min_h,
         &RectProps::max_h, &RectProps::flex, &RectProps::margin, &RectProps::place, &RectProps::pos,
         &RectProps::overlay, &RectProps::key, &RectProps::visible, &RectProps::disabled, &RectProps::cursor,
-        &RectProps::tooltip, &RectProps::context_menu};
+        &RectProps::tooltip, &RectProps::context_menu, &RectProps::alt};
     static constexpr const char* k[] = {"fill", "stroke", "width", "radius", "at", "w", "h", "minW", "maxW", "minH", "maxH", "flex",
         "margin", "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip",
-        "contextMenu"};
+        "contextMenu", "alt"};
     Node n = uison::detail::widget("Rect", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -680,6 +697,7 @@ struct CircleProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Circle(CircleProps p) {
@@ -687,9 +705,10 @@ inline UISON_NOINLINE Node Circle(CircleProps p) {
         &CircleProps::w, &CircleProps::h, &CircleProps::min_w, &CircleProps::max_w, &CircleProps::min_h,
         &CircleProps::max_h, &CircleProps::flex, &CircleProps::margin, &CircleProps::place,
         &CircleProps::pos, &CircleProps::overlay, &CircleProps::key, &CircleProps::visible,
-        &CircleProps::disabled, &CircleProps::cursor, &CircleProps::tooltip, &CircleProps::context_menu};
+        &CircleProps::disabled, &CircleProps::cursor, &CircleProps::tooltip, &CircleProps::context_menu,
+        &CircleProps::alt};
     static constexpr const char* k[] = {"r", "fill", "stroke", "width", "at", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Circle", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -718,6 +737,7 @@ struct LineProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Line(LineProps p) {
@@ -725,9 +745,9 @@ inline UISON_NOINLINE Node Line(LineProps p) {
         &LineProps::w, &LineProps::h, &LineProps::min_w, &LineProps::max_w, &LineProps::min_h,
         &LineProps::max_h, &LineProps::flex, &LineProps::margin, &LineProps::place, &LineProps::pos,
         &LineProps::overlay, &LineProps::key, &LineProps::visible, &LineProps::disabled, &LineProps::cursor,
-        &LineProps::tooltip, &LineProps::context_menu};
+        &LineProps::tooltip, &LineProps::context_menu, &LineProps::alt};
     static constexpr const char* k[] = {"from", "to", "width", "color", "cap", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Line", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -755,6 +775,7 @@ struct TriProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Tri(TriProps p) {
@@ -762,9 +783,9 @@ inline UISON_NOINLINE Node Tri(TriProps p) {
         &TriProps::min_w, &TriProps::max_w, &TriProps::min_h, &TriProps::max_h, &TriProps::flex,
         &TriProps::margin, &TriProps::place, &TriProps::pos, &TriProps::overlay, &TriProps::key,
         &TriProps::visible, &TriProps::disabled, &TriProps::cursor, &TriProps::tooltip,
-        &TriProps::context_menu};
+        &TriProps::context_menu, &TriProps::alt};
     static constexpr const char* k[] = {"points", "fill", "stroke", "width", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Tri", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -791,6 +812,7 @@ struct VectorProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     std::vector<Node> children = {}; ///< children
 };
@@ -799,9 +821,9 @@ inline UISON_NOINLINE Node Vector(VectorProps p) {
         &VectorProps::min_w, &VectorProps::max_w, &VectorProps::min_h, &VectorProps::max_h,
         &VectorProps::flex, &VectorProps::margin, &VectorProps::place, &VectorProps::pos,
         &VectorProps::overlay, &VectorProps::key, &VectorProps::visible, &VectorProps::disabled,
-        &VectorProps::cursor, &VectorProps::tooltip, &VectorProps::context_menu};
+        &VectorProps::cursor, &VectorProps::tooltip, &VectorProps::context_menu, &VectorProps::alt};
     static constexpr const char* k[] = {"view", "color", "weight", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place",
-        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Vector", p, f, k);
     if (!p.children.empty()) n.children(std::move(p.children));
     p.on_click.apply(n, "click");
@@ -827,6 +849,7 @@ struct CanvasProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_hover = {};
 };
@@ -835,9 +858,9 @@ inline UISON_NOINLINE Node Canvas(CanvasProps p) {
         &CanvasProps::min_h, &CanvasProps::max_h, &CanvasProps::flex, &CanvasProps::margin,
         &CanvasProps::place, &CanvasProps::pos, &CanvasProps::overlay, &CanvasProps::key,
         &CanvasProps::visible, &CanvasProps::disabled, &CanvasProps::cursor, &CanvasProps::tooltip,
-        &CanvasProps::context_menu};
+        &CanvasProps::context_menu, &CanvasProps::alt};
     static constexpr const char* k[] = {"draw", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos", "overlay", "key",
-        "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Canvas", p, f, k);
     p.on_click.apply(n, "click");
     p.on_hover.apply(n, "hover");
@@ -881,6 +904,7 @@ struct ButtonProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Button(ButtonProps p) {
@@ -888,9 +912,10 @@ inline UISON_NOINLINE Node Button(ButtonProps p) {
         &ButtonProps::w, &ButtonProps::h, &ButtonProps::min_w, &ButtonProps::max_w, &ButtonProps::min_h,
         &ButtonProps::max_h, &ButtonProps::flex, &ButtonProps::margin, &ButtonProps::place,
         &ButtonProps::pos, &ButtonProps::overlay, &ButtonProps::key, &ButtonProps::visible,
-        &ButtonProps::disabled, &ButtonProps::cursor, &ButtonProps::tooltip, &ButtonProps::context_menu};
+        &ButtonProps::disabled, &ButtonProps::cursor, &ButtonProps::tooltip, &ButtonProps::context_menu,
+        &ButtonProps::alt};
     static constexpr const char* k[] = {"text", "variant", "size", "icon", "fg", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Button", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -923,6 +948,7 @@ struct IconButtonProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node IconButton(IconButtonProps p) {
@@ -931,9 +957,9 @@ inline UISON_NOINLINE Node IconButton(IconButtonProps p) {
         &IconButtonProps::min_h, &IconButtonProps::max_h, &IconButtonProps::flex, &IconButtonProps::margin,
         &IconButtonProps::place, &IconButtonProps::pos, &IconButtonProps::overlay, &IconButtonProps::key,
         &IconButtonProps::visible, &IconButtonProps::disabled, &IconButtonProps::cursor,
-        &IconButtonProps::tooltip, &IconButtonProps::context_menu};
+        &IconButtonProps::tooltip, &IconButtonProps::context_menu, &IconButtonProps::alt};
     static constexpr const char* k[] = {"icon", "variant", "size", "color", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("IconButton", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -964,6 +990,7 @@ struct CheckboxProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
 };
@@ -972,9 +999,9 @@ inline UISON_NOINLINE Node Checkbox(CheckboxProps p) {
         &CheckboxProps::min_w, &CheckboxProps::max_w, &CheckboxProps::min_h, &CheckboxProps::max_h,
         &CheckboxProps::flex, &CheckboxProps::margin, &CheckboxProps::place, &CheckboxProps::pos,
         &CheckboxProps::overlay, &CheckboxProps::key, &CheckboxProps::visible, &CheckboxProps::disabled,
-        &CheckboxProps::cursor, &CheckboxProps::tooltip, &CheckboxProps::context_menu};
+        &CheckboxProps::cursor, &CheckboxProps::tooltip, &CheckboxProps::context_menu, &CheckboxProps::alt};
     static constexpr const char* k[] = {"checked", "label", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Checkbox", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -1007,6 +1034,7 @@ struct RadioProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
 };
@@ -1015,9 +1043,9 @@ inline UISON_NOINLINE Node Radio(RadioProps p) {
         &RadioProps::min_w, &RadioProps::max_w, &RadioProps::min_h, &RadioProps::max_h, &RadioProps::flex,
         &RadioProps::margin, &RadioProps::place, &RadioProps::pos, &RadioProps::overlay, &RadioProps::key,
         &RadioProps::visible, &RadioProps::disabled, &RadioProps::cursor, &RadioProps::tooltip,
-        &RadioProps::context_menu};
+        &RadioProps::context_menu, &RadioProps::alt};
     static constexpr const char* k[] = {"value", "group", "label", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place",
-        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Radio", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -1045,6 +1073,7 @@ struct RadioGroupProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
 };
@@ -1054,9 +1083,9 @@ inline UISON_NOINLINE Node RadioGroup(RadioGroupProps p) {
         &RadioGroupProps::max_h, &RadioGroupProps::flex, &RadioGroupProps::margin, &RadioGroupProps::place,
         &RadioGroupProps::pos, &RadioGroupProps::overlay, &RadioGroupProps::key, &RadioGroupProps::visible,
         &RadioGroupProps::disabled, &RadioGroupProps::cursor, &RadioGroupProps::tooltip,
-        &RadioGroupProps::context_menu};
+        &RadioGroupProps::context_menu, &RadioGroupProps::alt};
     static constexpr const char* k[] = {"value", "options", "direction", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place",
-        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("RadioGroup", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -1083,6 +1112,7 @@ struct SwitchProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
 };
@@ -1091,9 +1121,9 @@ inline UISON_NOINLINE Node Switch(SwitchProps p) {
         &SwitchProps::max_w, &SwitchProps::min_h, &SwitchProps::max_h, &SwitchProps::flex,
         &SwitchProps::margin, &SwitchProps::place, &SwitchProps::pos, &SwitchProps::overlay,
         &SwitchProps::key, &SwitchProps::visible, &SwitchProps::disabled, &SwitchProps::cursor,
-        &SwitchProps::tooltip, &SwitchProps::context_menu};
+        &SwitchProps::tooltip, &SwitchProps::context_menu, &SwitchProps::alt};
     static constexpr const char* k[] = {"checked", "label", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Switch", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -1127,6 +1157,7 @@ struct SliderProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
 };
@@ -1135,9 +1166,9 @@ inline UISON_NOINLINE Node Slider(SliderProps p) {
         &SliderProps::h, &SliderProps::min_w, &SliderProps::max_w, &SliderProps::min_h, &SliderProps::max_h,
         &SliderProps::flex, &SliderProps::margin, &SliderProps::place, &SliderProps::pos,
         &SliderProps::overlay, &SliderProps::key, &SliderProps::visible, &SliderProps::disabled,
-        &SliderProps::cursor, &SliderProps::tooltip, &SliderProps::context_menu};
+        &SliderProps::cursor, &SliderProps::tooltip, &SliderProps::context_menu, &SliderProps::alt};
     static constexpr const char* k[] = {"value", "min", "max", "step", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place",
-        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Slider", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -1166,6 +1197,7 @@ struct SelectProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
 };
@@ -1174,10 +1206,11 @@ inline UISON_NOINLINE Node Select(SelectProps p) {
         &SelectProps::w, &SelectProps::h, &SelectProps::min_w, &SelectProps::max_w, &SelectProps::min_h,
         &SelectProps::max_h, &SelectProps::flex, &SelectProps::margin, &SelectProps::place,
         &SelectProps::pos, &SelectProps::overlay, &SelectProps::key, &SelectProps::visible,
-        &SelectProps::disabled, &SelectProps::cursor, &SelectProps::tooltip, &SelectProps::context_menu};
+        &SelectProps::disabled, &SelectProps::cursor, &SelectProps::tooltip, &SelectProps::context_menu,
+        &SelectProps::alt};
     static constexpr const char* k[] = {"value", "options", "placeholder", "label", "w", "h", "minW", "maxW", "minH", "maxH", "flex",
         "margin", "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip",
-        "contextMenu"};
+        "contextMenu", "alt"};
     Node n = uison::detail::widget("Select", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -1204,6 +1237,7 @@ struct TabsProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
 };
@@ -1211,9 +1245,10 @@ inline UISON_NOINLINE Node Tabs(TabsProps p) {
     static constexpr Prop TabsProps::*f[] = {&TabsProps::value, &TabsProps::tabs, &TabsProps::w, &TabsProps::h, &TabsProps::min_w,
         &TabsProps::max_w, &TabsProps::min_h, &TabsProps::max_h, &TabsProps::flex, &TabsProps::margin,
         &TabsProps::place, &TabsProps::pos, &TabsProps::overlay, &TabsProps::key, &TabsProps::visible,
-        &TabsProps::disabled, &TabsProps::cursor, &TabsProps::tooltip, &TabsProps::context_menu};
+        &TabsProps::disabled, &TabsProps::cursor, &TabsProps::tooltip, &TabsProps::context_menu,
+        &TabsProps::alt};
     static constexpr const char* k[] = {"value", "tabs", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Tabs", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -1241,15 +1276,16 @@ struct TabProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Tab(TabProps p) {
     static constexpr Prop TabProps::*f[] = {&TabProps::label, &TabProps::value, &TabProps::group, &TabProps::w, &TabProps::h, &TabProps::min_w,
         &TabProps::max_w, &TabProps::min_h, &TabProps::max_h, &TabProps::flex, &TabProps::margin,
         &TabProps::place, &TabProps::pos, &TabProps::overlay, &TabProps::key, &TabProps::visible,
-        &TabProps::disabled, &TabProps::cursor, &TabProps::tooltip, &TabProps::context_menu};
+        &TabProps::disabled, &TabProps::cursor, &TabProps::tooltip, &TabProps::context_menu, &TabProps::alt};
     static constexpr const char* k[] = {"label", "value", "group", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place",
-        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Tab", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -1279,6 +1315,7 @@ struct TextFieldProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     Action on_change = {};
     Action on_submit = {};
@@ -1289,10 +1326,11 @@ inline UISON_NOINLINE Node TextField(TextFieldProps p) {
         &TextFieldProps::min_w, &TextFieldProps::max_w, &TextFieldProps::min_h, &TextFieldProps::max_h,
         &TextFieldProps::flex, &TextFieldProps::margin, &TextFieldProps::place, &TextFieldProps::pos,
         &TextFieldProps::overlay, &TextFieldProps::key, &TextFieldProps::visible, &TextFieldProps::disabled,
-        &TextFieldProps::cursor, &TextFieldProps::tooltip, &TextFieldProps::context_menu};
+        &TextFieldProps::cursor, &TextFieldProps::tooltip, &TextFieldProps::context_menu,
+        &TextFieldProps::alt};
     static constexpr const char* k[] = {"value", "label", "placeholder", "error", "password", "keyboard", "w", "h", "minW", "maxW", "minH",
         "maxH", "flex", "margin", "place", "pos", "overlay", "key", "visible", "disabled", "cursor",
-        "tooltip", "contextMenu"};
+        "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("TextField", p, f, k);
     p.on_click.apply(n, "click");
     p.on_change.apply(n, "change");
@@ -1320,6 +1358,7 @@ struct ProgressBarProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node ProgressBar(ProgressBarProps p) {
@@ -1328,9 +1367,9 @@ inline UISON_NOINLINE Node ProgressBar(ProgressBarProps p) {
         &ProgressBarProps::max_h, &ProgressBarProps::flex, &ProgressBarProps::margin,
         &ProgressBarProps::place, &ProgressBarProps::pos, &ProgressBarProps::overlay, &ProgressBarProps::key,
         &ProgressBarProps::visible, &ProgressBarProps::disabled, &ProgressBarProps::cursor,
-        &ProgressBarProps::tooltip, &ProgressBarProps::context_menu};
+        &ProgressBarProps::tooltip, &ProgressBarProps::context_menu, &ProgressBarProps::alt};
     static constexpr const char* k[] = {"value", "color", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("ProgressBar", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -1355,6 +1394,7 @@ struct DividerProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Divider(DividerProps p) {
@@ -1362,9 +1402,9 @@ inline UISON_NOINLINE Node Divider(DividerProps p) {
         &DividerProps::max_w, &DividerProps::min_h, &DividerProps::max_h, &DividerProps::flex,
         &DividerProps::margin, &DividerProps::place, &DividerProps::pos, &DividerProps::overlay,
         &DividerProps::key, &DividerProps::visible, &DividerProps::disabled, &DividerProps::cursor,
-        &DividerProps::tooltip, &DividerProps::context_menu};
+        &DividerProps::tooltip, &DividerProps::context_menu, &DividerProps::alt};
     static constexpr const char* k[] = {"vertical", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos", "overlay",
-        "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Divider", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -1391,6 +1431,7 @@ struct CardProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     std::vector<Node> children = {}; ///< children
 };
@@ -1399,9 +1440,9 @@ inline UISON_NOINLINE Node Card(CardProps p) {
         &CardProps::min_w, &CardProps::max_w, &CardProps::min_h, &CardProps::max_h, &CardProps::flex,
         &CardProps::margin, &CardProps::place, &CardProps::pos, &CardProps::overlay, &CardProps::key,
         &CardProps::visible, &CardProps::disabled, &CardProps::cursor, &CardProps::tooltip,
-        &CardProps::context_menu};
+        &CardProps::context_menu, &CardProps::alt};
     static constexpr const char* k[] = {"title", "padding", "gap", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place",
-        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Card", p, f, k);
     if (!p.children.empty()) n.children(std::move(p.children));
     p.on_click.apply(n, "click");
@@ -1431,6 +1472,7 @@ struct ListTileProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node ListTile(ListTileProps p) {
@@ -1439,10 +1481,10 @@ inline UISON_NOINLINE Node ListTile(ListTileProps p) {
         &ListTileProps::max_w, &ListTileProps::min_h, &ListTileProps::max_h, &ListTileProps::flex,
         &ListTileProps::margin, &ListTileProps::place, &ListTileProps::pos, &ListTileProps::overlay,
         &ListTileProps::key, &ListTileProps::visible, &ListTileProps::disabled, &ListTileProps::cursor,
-        &ListTileProps::tooltip, &ListTileProps::context_menu};
+        &ListTileProps::tooltip, &ListTileProps::context_menu, &ListTileProps::alt};
     static constexpr const char* k[] = {"title", "subtitle", "leading", "trailing", "selected", "w", "h", "minW", "maxW", "minH", "maxH",
         "flex", "margin", "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip",
-        "contextMenu"};
+        "contextMenu", "alt"};
     Node n = uison::detail::widget("ListTile", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -1474,6 +1516,7 @@ struct BadgeProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Badge(BadgeProps p) {
@@ -1481,9 +1524,9 @@ inline UISON_NOINLINE Node Badge(BadgeProps p) {
         &BadgeProps::min_w, &BadgeProps::max_w, &BadgeProps::min_h, &BadgeProps::max_h, &BadgeProps::flex,
         &BadgeProps::margin, &BadgeProps::place, &BadgeProps::pos, &BadgeProps::overlay, &BadgeProps::key,
         &BadgeProps::visible, &BadgeProps::disabled, &BadgeProps::cursor, &BadgeProps::tooltip,
-        &BadgeProps::context_menu};
+        &BadgeProps::context_menu, &BadgeProps::alt};
     static constexpr const char* k[] = {"text", "color", "textColor", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place",
-        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Badge", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -1516,6 +1559,7 @@ struct AvatarProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Avatar(AvatarProps p) {
@@ -1523,9 +1567,9 @@ inline UISON_NOINLINE Node Avatar(AvatarProps p) {
         &AvatarProps::h, &AvatarProps::min_w, &AvatarProps::max_w, &AvatarProps::min_h, &AvatarProps::max_h,
         &AvatarProps::flex, &AvatarProps::margin, &AvatarProps::place, &AvatarProps::pos,
         &AvatarProps::overlay, &AvatarProps::key, &AvatarProps::visible, &AvatarProps::disabled,
-        &AvatarProps::cursor, &AvatarProps::tooltip, &AvatarProps::context_menu};
+        &AvatarProps::cursor, &AvatarProps::tooltip, &AvatarProps::context_menu, &AvatarProps::alt};
     static constexpr const char* k[] = {"name", "size", "color", "src", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place",
-        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Avatar", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -1556,6 +1600,7 @@ struct SectionProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
     std::vector<Node> children = {}; ///< children
 };
@@ -1564,9 +1609,9 @@ inline UISON_NOINLINE Node Section(SectionProps p) {
         &SectionProps::max_w, &SectionProps::min_h, &SectionProps::max_h, &SectionProps::flex,
         &SectionProps::margin, &SectionProps::place, &SectionProps::pos, &SectionProps::overlay,
         &SectionProps::key, &SectionProps::visible, &SectionProps::disabled, &SectionProps::cursor,
-        &SectionProps::tooltip, &SectionProps::context_menu};
+        &SectionProps::tooltip, &SectionProps::context_menu, &SectionProps::alt};
     static constexpr const char* k[] = {"title", "gap", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Section", p, f, k);
     if (!p.children.empty()) n.children(std::move(p.children));
     p.on_click.apply(n, "click");
@@ -1593,15 +1638,17 @@ struct LinkProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Link(LinkProps p) {
     static constexpr Prop LinkProps::*f[] = {&LinkProps::text, &LinkProps::href, &LinkProps::w, &LinkProps::h, &LinkProps::min_w,
         &LinkProps::max_w, &LinkProps::min_h, &LinkProps::max_h, &LinkProps::flex, &LinkProps::margin,
         &LinkProps::place, &LinkProps::pos, &LinkProps::overlay, &LinkProps::key, &LinkProps::visible,
-        &LinkProps::disabled, &LinkProps::cursor, &LinkProps::tooltip, &LinkProps::context_menu};
+        &LinkProps::disabled, &LinkProps::cursor, &LinkProps::tooltip, &LinkProps::context_menu,
+        &LinkProps::alt};
     static constexpr const char* k[] = {"text", "href", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Link", p, f, k);
     p.on_click.apply(n, "click");
     return n;
@@ -1634,6 +1681,7 @@ struct IconProps {
     Prop cursor = {}; ///< cursor over the node: arrow, pointer, text
     Prop tooltip = {}; ///< tooltip on hover (long press)
     Prop context_menu = {}; ///< right-click menu: [{ label, action }, "-", …]
+    Prop alt = {}; ///< text alternative for those who can't see the screen (agents, screen readers): what an icon button does
     Action on_click = {};
 };
 inline UISON_NOINLINE Node Icon(IconProps p) {
@@ -1641,9 +1689,9 @@ inline UISON_NOINLINE Node Icon(IconProps p) {
         &IconProps::h, &IconProps::min_w, &IconProps::max_w, &IconProps::min_h, &IconProps::max_h,
         &IconProps::flex, &IconProps::margin, &IconProps::place, &IconProps::pos, &IconProps::overlay,
         &IconProps::key, &IconProps::visible, &IconProps::disabled, &IconProps::cursor, &IconProps::tooltip,
-        &IconProps::context_menu};
+        &IconProps::context_menu, &IconProps::alt};
     static constexpr const char* k[] = {"name", "size", "color", "weight", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin",
-        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu"};
+        "place", "pos", "overlay", "key", "visible", "disabled", "cursor", "tooltip", "contextMenu", "alt"};
     Node n = uison::detail::widget("Icon", p, f, k);
     p.on_click.apply(n, "click");
     return n;

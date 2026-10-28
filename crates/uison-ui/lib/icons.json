@@ -5,7 +5,7 @@
     params: { name: "", size: 16, color: "$theme.text", weight: 1.75 },
     body: {
       Vector: {
-        view: 24, w: "$size", h: "$size", color: "$color", weight: "$weight",
+        view: 24, w: "$size", h: "$size", color: "$color", weight: "$weight", alt: "$name",
         children: {
           switch: "$name",
           cases: {

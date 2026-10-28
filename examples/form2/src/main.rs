@@ -1,6 +1,11 @@
 //! uison form: a window on macOS, a canvas in the browser (`tools/web.sh form2`).
 
 fn main() {
+    // `--agent` / `--mcp`: an LLM agent drives the program without a window (built with `--features agent`).
+    #[cfg(feature = "agent")]
+    if let Some(run) = uison_agent::mode(&mut std::env::args_os().collect()) {
+        run(form2::app(), "uison form");
+    }
     #[cfg(target_vendor = "apple")]
     if native::debug_modes() {
         return;

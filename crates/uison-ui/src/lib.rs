@@ -19,6 +19,7 @@ mod layout;
 mod library;
 #[cfg(all(any(debug_assertions, feature = "reload"), not(target_arch = "wasm32")))]
 mod reload;
+mod sem;
 mod state;
 mod testing;
 mod text;

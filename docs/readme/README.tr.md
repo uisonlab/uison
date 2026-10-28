@@ -165,6 +165,9 @@ Kendi projenize başlamak için (İngilizce) hızlı başlangıç rehberine bak�
 - **Pencere olmadan test**: bir senaryo (`UISON_SCRIPT=scenario.json`) öğelerin `key`
   değerine göre dokunur, yazar, kaydırır ve ekran görüntüsü alır; aynı senaryolar her
   platformda, headless Chrome'da, iOS simülatöründe ve telefonda çalışır.
+- **[Ajan modu](../agents.md)**: bir LLM ajanı programı ekran görüntüsü olmadan kullanır. Ekranı
+  anlamıyla okur (roller, adlar, durumlar, anahtarlar) ve bir insanın girdisiyle aynı yoldan tıklar,
+  yazar ve seçer; JSON satırlarıyla (`--agent`) ya da MCP sunucusu olarak (`--mcp`).
 - **C ve C++ API**: `uison.h` (C99), `uison_kit.h` (C için yardımcılar), `uison.hpp` (C++17,
   C++20'de ek kolaylıklar) ve `uison_widgets.hpp` (Rust DSL ile aynı şemadan üretilen C++20
   widget'ları); statik ve dinamik kütüphaneler, bir CMake paketi ve `pkg-config`. C ve C++

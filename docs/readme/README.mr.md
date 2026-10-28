@@ -159,6 +159,8 @@ int main() {
 - **window शिवाय testing**: एक scenario (`UISON_SCRIPT=scenario.json`) element च्या `key` नुसार tap,
   typing, scrolling आणि screenshots करतो; तेच scenarios प्रत्येक प्लॅटफॉर्मवर, headless Chrome मध्ये,
   iOS simulator मध्ये आणि फोनवर चालतात.
+- **[एजंट मोड](../agents.md)**: LLM एजंट स्क्रीनशॉटशिवाय प्रोग्राम वापरतो. तो स्क्रीन अर्थाने वाचतो (भूमिका, नावे, स्थिती, key)
+  आणि माणसाच्या इनपुटच्याच मार्गाने क्लिक, टाइप आणि निवड करतो — JSON ओळींनी (`--agent`) किंवा MCP सर्व्हर (`--mcp`) म्हणून.
 - **C आणि C++ API**: `uison.h` (C99), `uison_kit.h` (C साठी helpers), `uison.hpp` (C++17, C++20 मध्ये
   अधिक सोयी) आणि `uison_widgets.hpp` (Rust DSL च्याच schema वरून generate होणारे C++20 widgets);
   static आणि dynamic libraries, एक CMake package आणि `pkg-config`. C आणि C++ Emscripten ने

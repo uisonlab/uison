@@ -146,6 +146,8 @@ int main() {
 - **热重载**（仅 debug 构建）：设置 `UISON_RELOAD=folder` 后，保存界面的 JSON 文件时会重新读取。
 - **无窗口测试**：场景脚本（`UISON_SCRIPT=scenario.json`）按元素的 `key` 点击、输入、滚动和截图；
   同一套场景可以在所有平台、headless Chrome、iOS 模拟器和手机上运行。
+- **[智能体模式](../agents.md)**：LLM 智能体无需截图即可使用程序。它按含义读取屏幕（角色、名称、状态、key），
+  并沿着与人工输入相同的路径点击、输入和选择，可用 JSON 行（`--agent`），也可作为 MCP 服务器（`--mcp`）。
 - **C 和 C++ API**：`uison.h`（C99）、`uison_kit.h`（C 的辅助工具）、`uison.hpp`（C++17，C++20
   下更便捷）和 `uison_widgets.hpp`（由与 Rust DSL 相同的 schema 生成的 C++20 组件）；提供静态库和
   动态库、CMake 包以及 `pkg-config`。C 和 C++ 也可以用 Emscripten 构建到浏览器：

@@ -72,6 +72,7 @@ pub fn doc(kind: &str, prop: &str) -> Option<&'static str> {
         "cursor" => "cursor over the node: arrow, pointer, text",
         "tooltip" => "tooltip on hover (long press)",
         "contextMenu" => "right-click menu: [{ label, action }, \"-\", …]",
+        "alt" => "text alternative for those who can't see the screen (agents, screen readers): what an icon button does",
         // Behaviors
         "toggle" => "a press toggles the bool at the path: \"@form.agree\"",
         "select" => "a press writes the value: { path: \"@tab\", value: \"inbox\" }",

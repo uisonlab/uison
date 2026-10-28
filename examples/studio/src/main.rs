@@ -4,6 +4,11 @@
 //! `studio --bench` times frame rebuilds and data recomputation.
 
 fn main() {
+    // `--agent` / `--mcp`: an LLM agent drives the program without a window (built with `--features agent`).
+    #[cfg(feature = "agent")]
+    if let Some(run) = uison_agent::mode(&mut std::env::args_os().collect()) {
+        run(studio::app(), "uison Studio");
+    }
     #[cfg(any(target_vendor = "apple", windows, target_os = "linux"))]
     if native::debug_modes() {
         return;

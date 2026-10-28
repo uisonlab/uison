@@ -27,6 +27,12 @@ fn main() {
     let mut args: Vec<OsString> = std::env::args_os().skip(1).collect();
     let lang = take_lang(&mut args);
     let console = take_flag(&mut args, "--console");
+    // `--agent` / `--mcp`: an LLM agent drives the program (built with `--features agent`); as in the
+    // console mode, without the system folder dialog.
+    #[cfg(feature = "agent")]
+    if let Some(run) = uison_agent::mode(&mut args) {
+        run(disk_usage::app_console(args.first().map(PathBuf::from), lang), "Disk Usage");
+    }
     #[cfg(any(target_vendor = "apple", windows, target_os = "linux"))]
     if native::debug_modes(&args, lang) {
         return;

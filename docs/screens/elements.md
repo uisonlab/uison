@@ -32,6 +32,7 @@ Available on every node and component.
 | `cursor` | `cursor` | cursor over the node: arrow, pointer, text |
 | `tooltip` | `tooltip` | tooltip on hover (long press) |
 | `contextMenu` | `context_menu` | right-click menu: [{ label, action }, "-", …] |
+| `alt` | `alt` | text alternative for those who can't see the screen (agents, screen readers): what an icon button does |
 
 ## Behaviors
 

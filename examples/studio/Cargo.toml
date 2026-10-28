@@ -6,3 +6,8 @@ publish = false
 
 [dependencies]
 uison.workspace = true
+uison-agent = { workspace = true, optional = true }
+
+[features]
+# `--agent` (JSON lines) and `--mcp` (MCP server): an LLM agent drives the program without a window.
+agent = ["dep:uison-agent"]

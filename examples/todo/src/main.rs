@@ -1,6 +1,11 @@
 //! uison todo: a window on macOS, a canvas in the browser (`tools/web.sh todo`).
 
 fn main() {
+    // `--agent` / `--mcp`: an LLM agent drives the program without a window (built with `--features agent`).
+    #[cfg(feature = "agent")]
+    if let Some(run) = uison_agent::mode(&mut std::env::args_os().collect()) {
+        run(todo::app(), "uison todo");
+    }
     #[cfg(target_vendor = "apple")]
     if native::debug_modes() {
         return;

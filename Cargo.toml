@@ -20,6 +20,7 @@ uison-macos = { path = "crates/uison-macos", version = "0.1.0" }
 uison-ios = { path = "crates/uison-ios", version = "0.1.0" }
 uison-android = { path = "crates/uison-android", version = "0.1.0" }
 uison-ui = { path = "crates/uison-ui", version = "0.1.0" }
+uison-agent = { path = "crates/uison-agent", version = "0.1.0" }
 uison-derive = { path = "crates/uison-derive", version = "0.1.0" }
 uison-web = { path = "crates/uison-web", version = "0.1.0" }
 uison-windows = { path = "crates/uison-windows", version = "0.1.0", default-features = false }

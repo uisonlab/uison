@@ -11,9 +11,9 @@ use crate::values::*;
 use crate::{Error, Json};
 
 /// Properties that can be set on any node and any component.
-pub(crate) const COMMON: [&str; 18] = [
+pub(crate) const COMMON: [&str; 19] = [
     "key", "visible", "disabled", "w", "h", "minW", "maxW", "minH", "maxH", "flex", "margin", "place", "pos",
-    "overlay", "on", "cursor", "tooltip", "contextMenu",
+    "overlay", "on", "cursor", "tooltip", "contextMenu", "alt",
 ];
 
 /// Additionally for built-in nodes: behaviors and interactivity.
@@ -193,8 +193,15 @@ fn expand_component(
     let on = parse_on(props, sc, env).map_err(ctx)?;
     let cursor = parse_cursor(props, sc, env).map_err(ctx)?;
     let (tooltip, menu) = parse_info(props, sc, env).map_err(ctx)?;
+    let alt = match props.get("alt") {
+        Some(a) => alt_text(&eval(a, sc, env).map_err(ctx)?),
+        None => None,
+    };
     for el in &mut out[start..] {
         merge_lay(&mut el.lay, &lay, props);
+        if alt.is_some() {
+            el.alt = alt.clone();
+        }
         if comp.interactive || !on.is_empty() || el.act.is_some() || tooltip.is_some() || menu.is_some() {
             let act = el.act.get_or_insert_with(Default::default);
             if tooltip.is_some() {
@@ -216,6 +223,11 @@ fn expand_component(
         }
     }
     Ok(())
+}
+
+/// `alt`: the text alternative of a node (what an icon means) for those who can't see the screen.
+fn alt_text(v: &Json) -> Option<String> {
+    Some(to_text(v)).filter(|s| !s.is_empty() && !v.is_null())
 }
 
 /// Layout properties set where the component is used replace those of the body's root.
@@ -656,6 +668,7 @@ fn build(kind: &str, props: &Json, sc: &Scope, key: String, env: &Env) -> Result
     };
 
     let mut el = El::new(key, kind);
+    el.alt = alt_text(&ev("alt")?);
     el.lay = lay;
     el.children = children;
     let is_scroll = matches!(el.kind, Kind::Scroll { .. } | Kind::List { .. });

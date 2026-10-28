@@ -208,7 +208,7 @@ impl Host for ConsoleHost<'_> {
 /// stdout belongs to the protocol: we write to a copy of descriptor 1, and descriptor 1 itself now
 /// points to stderr — a stray `println!` (or a C library's printf) lands in the log, not in the stream.
 #[cfg(unix)]
-fn protocol_stdout() -> Box<dyn Write> {
+pub fn protocol_stdout() -> Box<dyn Write> {
     use std::os::fd::FromRawFd;
     unsafe extern "C" {
         fn dup(fd: i32) -> i32;
@@ -225,7 +225,7 @@ fn protocol_stdout() -> Box<dyn Write> {
 /// Windows: the same with two owners of stdout — Rust's `print!` asks `GetStdHandle` on every write,
 /// the CRT's printf writes to its descriptor 1. Both now point to stderr; we keep a copy of the handle.
 #[cfg(windows)]
-fn protocol_stdout() -> Box<dyn Write> {
+pub fn protocol_stdout() -> Box<dyn Write> {
     use std::ffi::c_void;
     use std::os::windows::io::FromRawHandle;
     const STD_OUTPUT_HANDLE: u32 = -11i32 as u32;
@@ -256,6 +256,6 @@ fn protocol_stdout() -> Box<dyn Write> {
 }
 
 #[cfg(not(any(unix, windows)))]
-fn protocol_stdout() -> Box<dyn Write> {
+pub fn protocol_stdout() -> Box<dyn Write> {
     Box::new(std::io::stdout())
 }

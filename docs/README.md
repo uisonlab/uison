@@ -37,6 +37,7 @@ Writing in assembly? [Two lessons in x86-64 (NASM) and AArch64](asm.md) call the
 - [Phones](mobile.md) — iOS and Android.
 - [The browser](wasm.md) — WebAssembly.
 - [Console mode and the player](console.md) — a program without a window: frames out, events in, as JSON lines.
+- [Agent mode](agents.md) — an LLM agent reads the screen by meaning and acts on it, over JSON lines or MCP, without screenshots.
 
 ## Headless testing
 

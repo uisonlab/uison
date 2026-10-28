@@ -168,6 +168,9 @@ Pour démarrer votre propre projet, voir le démarrage rapide pour
   fait défiler et prend des captures d'écran d'après la `key` des éléments ; les mêmes
   scénarios tournent sur chaque plateforme, dans Chrome headless, dans le simulateur iOS et
   sur un téléphone.
+- **[Mode agent](../agents.md)** : un agent LLM utilise le programme sans captures d’écran. Il lit
+  l’écran par son sens (rôles, noms, états, clés) et clique, tape et choisit par le même chemin que
+  les saisies d’une personne, en lignes JSON (`--agent`) ou comme serveur MCP (`--mcp`).
 - **API C et C++** : `uison.h` (C99), `uison_kit.h` (utilitaires pour C), `uison.hpp` (C++17,
   facilités en C++20) et `uison_widgets.hpp` (widgets C++20 générés à partir du même schéma
   que le DSL Rust) ; bibliothèques statique et dynamique, un paquet CMake et `pkg-config`.

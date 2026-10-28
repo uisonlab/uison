@@ -306,11 +306,13 @@ pub struct El {
     pub size: Size,
     /// Position of the outer rectangle (with margin) relative to the parent's box.
     pub pos: Point,
+    /// Text alternative (`alt`): what the node means to those who can't see it (`sem.rs`).
+    pub alt: Option<String>,
 }
 
 impl El {
     pub fn new(key: String, kind: Kind) -> El {
-        El { key, kind, lay: Lay::default(), children: Vec::new(), act: None, size: Size::default(), pos: Point::default() }
+        El { key, kind, lay: Lay::default(), children: Vec::new(), act: None, size: Size::default(), pos: Point::default(), alt: None }
     }
 
     /// Number of nodes in the subtree (for statistics).

@@ -12,7 +12,7 @@ use uison_frame::Writer;
 
 use crate::data::{Data, IntoJson};
 use crate::edit::{Field, next_char, next_word, prev_char, word_at, word_left, word_right};
-use crate::el::Behavior;
+use crate::el::{Behavior, El};
 use crate::emit::{NodeInfo, Style, emit};
 use crate::expand::{expand_root, node_kind};
 use crate::gesture::{FLING_TICK, Fling, SLOP, Spring, Touch, rubber, unrubber};
@@ -80,6 +80,8 @@ pub struct Ui {
     derives: Vec<Derive>,
     size: Size,
     infos: Vec<NodeInfo>,
+    /// The laid-out tree of the last frame — kept only after the first `semantics` call.
+    laid: Option<Vec<El>>,
     /// Text wrapping method (experiment).
     pub wrap: WrapMode,
     pub stats: Stats,
@@ -396,6 +398,7 @@ impl Ui {
             derives: Vec::new(),
             size: Size::new(800.0, 600.0),
             infos: Vec::new(),
+            laid: None,
             wrap: WrapMode::WordSum,
             stats: Stats::default(),
             warned: HashSet::new(),
@@ -800,6 +803,9 @@ impl Ui {
                 }
             }
             self.infos = em.infos;
+            if let Some(laid) = &mut self.laid {
+                *laid = roots;
+            }
             let focused = self.st.focus.as_deref().and_then(|f| self.infos.iter().find(|i| i.key == f));
             self.st.input_shift = focused.and_then(|i| Some((i.key.clone(), i.input.as_ref()?.shift)));
             self.warn_duplicate_keys();
@@ -1915,6 +1921,26 @@ impl Ui {
         for d in &mut self.derives {
             d(&mut self.data);
         }
+    }
+
+    /// The meaning of the screen (`sem.rs`): nodes with a role, a name, a state, a `key` and a rectangle
+    /// on screen, as a JSON array — for agents and tests that read the screen without seeing it.
+    /// From the last frame; the first call builds one and from then on frames keep their tree.
+    pub fn semantics(&mut self, host: &dyn Host) -> Json {
+        if self.laid.is_none() {
+            self.laid = Some(Vec::new());
+            self.render(host);
+        }
+        let s = if self.safe_area { self.safe } else { Insets::default() };
+        let roots = self.laid.as_deref().unwrap_or(&[]);
+        Json::Array(crate::sem::build(roots, Point::new(s.left, s.top), &self.data, self.st.focus.as_deref()))
+    }
+
+    /// Names of the actions with handlers (`ui.on`), sorted — what the program can do by name.
+    pub fn actions(&self) -> Vec<&str> {
+        let mut v: Vec<&str> = self.handlers.keys().map(String::as_str).collect();
+        v.sort_unstable();
+        v
     }
 
     /// Current value at a path — handy in tests and debugging.

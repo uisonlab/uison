@@ -1,6 +1,11 @@
 //! uison gallery: a window on macOS, a canvas in the browser (`tools/web.sh gallery`).
 
 fn main() {
+    // `--agent` / `--mcp`: an LLM agent drives the program without a window (built with `--features agent`).
+    #[cfg(feature = "agent")]
+    if let Some(run) = uison_agent::mode(&mut std::env::args_os().collect()) {
+        run(gallery::app(), "uison gallery");
+    }
     #[cfg(any(target_vendor = "apple", windows, target_os = "linux"))]
     if native::debug_modes() {
         return;

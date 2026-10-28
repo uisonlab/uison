@@ -166,6 +166,9 @@ Untuk memulai proyek Anda sendiri, lihat panduan quick start (dalam bahasa Inggr
 - **Pengujian tanpa jendela**: sebuah skenario (`UISON_SCRIPT=scenario.json`) mengetuk,
   mengetik, menggulir, dan mengambil screenshot berdasarkan `key` elemen; skenario yang sama
   berjalan di semua platform, di Chrome headless, di simulator iOS, dan di ponsel.
+- **[Mode agen](../agents.md)**: agen LLM memakai program tanpa tangkapan layar. Ia membaca layar
+  berdasarkan makna (peran, nama, status, key) lalu mengeklik, mengetik, dan memilih lewat jalur yang
+  sama dengan masukan manusia, melalui baris JSON (`--agent`) atau sebagai server MCP (`--mcp`).
 - **API C dan C++**: `uison.h` (C99), `uison_kit.h` (helper untuk C), `uison.hpp` (C++17,
   dengan kemudahan tambahan di C++20), dan `uison_widgets.hpp` (widget C++20 yang
   di-generate dari skema yang sama dengan DSL Rust); pustaka statis dan dinamis, paket CMake,

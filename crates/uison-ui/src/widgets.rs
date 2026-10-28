@@ -335,6 +335,13 @@ impl Node {
         self.prop("contextMenu", v)
     }
 
+    /// text alternative for those who can't see the screen (agents, screen readers): what an icon button does.
+    ///
+    /// `alt` — any node.
+    pub fn alt(self, v: impl IntoJson) -> Node {
+        self.prop("alt", v)
+    }
+
     /// a press toggles the bool at the path: "@form.agree".
     ///
     /// `toggle` — Box, Row, Column, Stack, Wrap.
