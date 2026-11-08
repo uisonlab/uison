@@ -1,0 +1,10 @@
+[package]
+name = "uison-shader"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "uison's shading language: a small GLSL-like expression language for the `shader` frame item, compiled to SPIR-V. Internal part of uison: use the `uison` crate."
+
+[dependencies]

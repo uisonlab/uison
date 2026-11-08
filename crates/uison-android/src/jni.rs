@@ -77,6 +77,8 @@ const GET_STRING_LENGTH: usize = 164;
 const GET_STRING_REGION: usize = 220;
 const NEW_BYTE_ARRAY: usize = 176;
 const SET_BYTE_ARRAY_REGION: usize = 208;
+const NEW_INT_ARRAY: usize = 179;
+const SET_INT_ARRAY_REGION: usize = 211;
 const REGISTER_NATIVES: usize = 215;
 const EXCEPTION_CHECK: usize = 228;
 
@@ -270,6 +272,23 @@ impl Env {
                     0,
                     b.len() as jint,
                     b.as_ptr(),
+                );
+            }
+            a
+        }
+    }
+
+    /// `int[]` with a copy of `v` (local reference).
+    pub unsafe fn int_array(&self, v: &[i32]) -> jobject {
+        unsafe {
+            let a = self.func::<unsafe extern "C" fn(*mut JNIEnv, jint) -> jobject>(NEW_INT_ARRAY)(self.0, v.len() as jint);
+            if !a.is_null() {
+                self.func::<unsafe extern "C" fn(*mut JNIEnv, jobject, jint, jint, *const i32)>(SET_INT_ARRAY_REGION)(
+                    self.0,
+                    a,
+                    0,
+                    v.len() as jint,
+                    v.as_ptr(),
                 );
             }
             a

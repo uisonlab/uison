@@ -110,6 +110,8 @@ Everything any screen shows is built from nine kinds of items. Each item has exa
 | `clip` | `[x, y, w, h]` | `items`: nested items, cut to the rectangle | `Canvas::push_clip` / `pop_clip` |
 | `hit` | `[x, y, w, h]` | `id` (what `on_event` receives as `hit`), `cursor`: `"arrow"`, `"pointer"`, `"text"`, `"resize-x"`, `"resize-y"` | not drawn: hit testing and cursors |
 
+A tenth item, `shader`, is experimental. `{ "shader": [x, y, w, h], "src": "mix(#3b5bdb, #9c36b5, uv.x)", "time": 1.5, "radius": 12 }` paints the rectangle with a program in uison's shading language (`uison-shader`): a small GLSL-like expression language with the inputs `uv`, `pos`, `size` and `time`. An animation changes `time`, and the diff redraws the item. Every backend draws it. On Vulkan the program is compiled into SPIR-V by uison itself (no compiler from the SDK) and runs on the GPU. The other backends run it on the CPU: an interpreter computes runs of 64 pixels per instruction on a pool of threads, and the backend draws the pixels as a bitmap. The two agree to 1/255, edges and rounded corners included. See `examples/shaders`.
+
 Shapes need `fill`, `stroke` or both; colors are `"#RGB"`, `"#RRGGBB"` or `"#RRGGBBAA"`. An unknown key, a key that does not belong to the shape, or a duplicate is an error with its `line:col`. The parser rejects them rather than ignoring them, so a typo in a frame is found at once.
 
 - Coordinates are logical points with the origin at the top left. Text is one line; `at` is its top-left corner, and wrapping is done by the screen layer.
@@ -143,9 +145,19 @@ A backend is small because all of the above is shared. It provides:
 | macOS | AppKit, an `NSView` subclass registered at runtime | CoreGraphics, CoreText |
 | iOS | UIKit, `UIKeyInput`, CADisplayLink | CoreGraphics, CoreText |
 | Windows | Win32, per-monitor DPI v2, `WM_POINTER` | Direct2D, DirectWrite, WIC |
+| Windows, Vulkan | the same as Windows (a copy in `uison-vulkan-windows`) | Vulkan (`vulkan-1.dll` loaded at run time), DirectWrite, WIC |
 | Linux | Wayland (own protocol code) and X11 (libxcb), xkbcommon, a D-Bus client for the theme | Cairo, Pango, all through `dlopen` |
 | Android | a ~300-line Java activity and view, JNI | `android.graphics.Canvas` |
 | Browser | WebAssembly without wasm-bindgen | canvas 2D |
+
+On Windows a program can draw with Vulkan instead of Direct2D. The choice is made in code, once, before `run`, and needs the `uison` crate's `vulkan` feature:
+
+```rust
+uison::set_graphics(uison::Graphics::Vulkan); // the default is Graphics::Native (Direct2D)
+uison::run(app, "My app");
+```
+
+The choice is strict: without a Vulkan driver `run` prints the reason and exits with code 1, it does not fall back to Direct2D. The Vulkan backend (`uison-vulkan-windows`) does not depend on `uison-windows`: it has its own copy of the window and input code and differs only in drawing. Boxes, circles and lines are measured in a fragment shader (analytic antialiasing, no MSAA); text lines and polygons are rasterized once on the CPU into an atlas; the frame is drawn into a persistent image, so partial redraws work as with Direct2D, and the image is copied into the swapchain. Text antialiasing is grayscale rather than ClearType. Building needs no Vulkan SDK: the shaders are compiled into `.spv` files in the repository (`tools/vulkan-shaders.ps1`), and `UISON_VULKAN_VALIDATE=1` turns on the SDK's validation layer.
 
 The same environment variables work on every backend for checking a program without a person: `UISON_SCRIPT` (a scenario of taps, typing, scrolling by element `key`), `UISON_CAPTURE` (screenshots), `UISON_HITMAP` (the map of hit areas for driving a real mouse), `UISON_STATS`, `UISON_FLASH`, `UISON_RELOAD` (reload screen files on save while debugging).
 

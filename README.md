@@ -284,6 +284,8 @@ crates/
   uison-ios       UIKit backend
   uison-android   JNI backend and its Java layer (java/dev/uison)
   uison-windows   Win32 + Direct2D + DirectWrite backend
+  uison-vulkan-windows  Win32 + Vulkan + DirectWrite backend, chosen with uison::set_graphics (feature vulkan)
+  uison-shader    the shading language of the shader item: compiled to SPIR-V (Vulkan) or run on the CPU (other backends)
   uison-linux     Wayland and X11 backend, Cairo + Pango, all through dlopen
   uison-web       WebAssembly backend (crates/uison-web/uison.js)
   uison-c         the C API and C++ headers, static and dynamic library, CMake package

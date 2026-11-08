@@ -11,3 +11,5 @@ uison-agent = { workspace = true, optional = true }
 [features]
 # `--agent` (JSON lines) and `--mcp` (MCP server): an LLM agent drives the program without a window.
 agent = ["dep:uison-agent"]
+# `--vulkan` (Windows): draw with Vulkan instead of Direct2D.
+vulkan = ["uison/vulkan"]

@@ -58,7 +58,9 @@ fn hit_items(items: &[Item], p: Point) -> Option<&Item> {
 
 fn contains(shape: &Shape, p: Point) -> bool {
     match shape {
-        Shape::Rect { rect, .. } | Shape::Clip { rect, .. } | Shape::Hit { rect, .. } | Shape::Image { rect, .. } => rect.contains(p),
+        Shape::Rect { rect, .. } | Shape::Clip { rect, .. } | Shape::Hit { rect, .. } | Shape::Image { rect, .. } | Shape::Shader { rect, .. } => {
+            rect.contains(p)
+        }
         Shape::Circle { center, radius, .. } => {
             let (dx, dy) = (p.x - center.x, p.y - center.y);
             dx * dx + dy * dy <= radius * radius

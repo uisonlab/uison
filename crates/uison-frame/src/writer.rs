@@ -136,6 +136,15 @@ impl Writer {
         ItemWriter { w: self }
     }
 
+    /// A rectangle painted by a program in uison's shading language (`time` and `radius` optional).
+    pub fn shader(&mut self, r: Rect, src: &str) -> ItemWriter<'_> {
+        self.begin("shader");
+        self.nums(&[r.x, r.y, r.w, r.h]);
+        self.out.push_str(",src:");
+        uison_json::write_str(&mut self.out, src);
+        ItemWriter { w: self }
+    }
+
     /// Invisible mouse area.
     pub fn hit(&mut self, r: Rect, id: &str, cursor: Cursor) {
         self.begin("hit");
@@ -216,6 +225,15 @@ impl Writer {
                 }
                 Shape::Image { rect, src, radius, fit } => {
                     let iw = self.image(moved(*rect), src).fit(*fit);
+                    if *radius > 0.0 {
+                        iw.radius(*radius * s);
+                    }
+                }
+                Shape::Shader { rect, src, time, radius } => {
+                    let mut iw = self.shader(moved(*rect), src);
+                    if *time != 0.0 {
+                        iw = iw.time(*time);
+                    }
                     if *radius > 0.0 {
                         iw.radius(*radius * s);
                     }
@@ -322,6 +340,13 @@ impl ItemWriter<'_> {
             self.w.out.push_str(f.name());
             self.w.out.push('"');
         }
+        self
+    }
+
+    /// A shader's time, seconds.
+    pub fn time(mut self, v: f32) -> Self {
+        self.key("time");
+        self.w.num(v);
         self
     }
 

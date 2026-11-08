@@ -47,13 +47,15 @@ pub struct D2dCanvas<'a> {
     snap: bool,
     /// Current brush color: `SetColor` only on change.
     color: Option<Color>,
+    /// Clip rectangles in device pixels (x0, y0, x1, y1): a shader computes only what is visible.
+    clips: Vec<[i32; 4]>,
 }
 
 impl<'a> D2dCanvas<'a> {
     pub fn new(rt: &'a RenderTarget, factory: &'a Factory, res: &'a Resources, text: &'a Text, scale: f32) -> Self {
         // UISON_SNAP=0 — no pixel alignment (experiment 2).
         let snap = std::env::var("UISON_SNAP").as_deref() != Ok("0");
-        D2dCanvas { rt, factory, res, text, scale, snap, color: None }
+        D2dCanvas { rt, factory, res, text, scale, snap, color: None, clips: Vec::new() }
     }
 
     /// Turn alignment off (for experiments).
@@ -221,11 +223,41 @@ impl Canvas for D2dCanvas<'_> {
         self.rt.fill_rounded(&RoundedRect { rect: rf(dst), rx: rad, ry: rad }, &brush);
     }
 
+    /// No GPU program here: `uison-shader` paints the pixels on the CPU, Direct2D draws them as a bitmap.
+    fn shader(&mut self, r: Rect, src: &str, time: f32, radius: f32) {
+        use uison_shader::cpu::{Target, paint};
+        let s = self.scale;
+        let rad = radius.min(r.w / 2.0).min(r.h / 2.0).max(0.0);
+        let clip = self.clips.last().copied().unwrap_or([i32::MIN, i32::MIN, i32::MAX, i32::MAX]);
+        let t = Target { rect: [r.x * s, r.y * s, r.right() * s, r.bottom() * s], scale: s, time, radius: rad * s, clip };
+        let img = match paint(src, &t) {
+            Ok(Some(img)) => img.into_bgra(),
+            Ok(None) | Err(None) => return,
+            Err(Some(e)) => {
+                log!("uison: shader: {e}\n  {src}");
+                return;
+            }
+        };
+        let Ok(bmp) = self.rt.bitmap_from_pixels(img.w, img.h, &img.rgba) else { return };
+        // Whole device pixels, one bitmap pixel each: the edges and corners are already in the alpha.
+        let dst = RectF { left: img.x as f32 / s, top: img.y as f32 / s, right: (img.x + img.w as i32) as f32 / s, bottom: (img.y + img.h as i32) as f32 / s };
+        let src = RectF { left: 0.0, top: 0.0, right: img.w as f32, bottom: img.h as f32 };
+        self.rt.draw_bitmap(&bmp, &dst, &src);
+    }
+
     fn push_clip(&mut self, r: Rect) {
         self.rt.push_clip(&rect_f(r), D2D1_ANTIALIAS_MODE_ALIASED);
+        let s = self.scale;
+        let c = [(r.x * s).floor() as i32, (r.y * s).floor() as i32, (r.right() * s).ceil() as i32, (r.bottom() * s).ceil() as i32];
+        let c = match self.clips.last() {
+            Some(t) => [c[0].max(t[0]), c[1].max(t[1]), c[2].min(t[2]), c[3].min(t[3])],
+            None => c,
+        };
+        self.clips.push(c);
     }
 
     fn pop_clip(&mut self) {
         self.rt.pop_clip();
+        self.clips.pop();
     }
 }

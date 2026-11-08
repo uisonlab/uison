@@ -129,6 +129,10 @@ pub trait Canvas {
     /// Image `src` (see [`image`]) fitted into `r`, with rounded corners. A backend without
     /// image support draws nothing.
     fn image(&mut self, _r: Rect, _src: &str, _radius: f32, _fit: Fit) {}
+    /// `r` with rounded corners, painted by `src` in uison's shading language (the `uison-shader`
+    /// crate) at `time` seconds. Vulkan runs it on the GPU; the other backends paint it on the CPU
+    /// (`uison_shader::cpu`) and draw the pixels. The default draws nothing.
+    fn shader(&mut self, _r: Rect, _src: &str, _time: f32, _radius: f32) {}
 }
 
 pub trait TextMeasure {

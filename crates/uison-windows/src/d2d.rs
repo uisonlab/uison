@@ -328,6 +328,19 @@ impl RenderTarget {
         })
     }
 
+    /// `ID2D1Bitmap` from premultiplied BGRA rows in memory (96 dpi: pixels = DIP).
+    pub fn bitmap_from_pixels(&self, w: u32, h: u32, bgra: &[u8]) -> Result<Com, HrError> {
+        let props = BitmapProperties {
+            pixel_format: PixelFormat { format: DXGI_FORMAT_B8G8R8A8_UNORM, alpha: D2D1_ALPHA_MODE_PREMULTIPLIED },
+            dpi_x: 96.0,
+            dpi_y: 96.0,
+        };
+        create(|out| unsafe {
+            com!(self.0, 4, fn(SizeU, *const u8, u32, *const BitmapProperties, *mut *mut c_void) -> HRESULT,
+                SizeU { width: w, height: h }, bgra.as_ptr(), w * 4, &props, out)
+        })
+    }
+
     /// Part `src` (pixels) of the bitmap into `dst`, linear interpolation.
     pub fn draw_bitmap(&self, bmp: &Com, dst: &RectF, src: &RectF) {
         unsafe { com!(self.0, 26, fn(*mut c_void, *const RectF, f32, u32, *const RectF), bmp.ptr(), dst, 1.0, 1, src) }

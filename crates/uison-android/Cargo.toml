@@ -10,6 +10,7 @@ description = "Android backend of uison (hand-written JNI, android.graphics.Canv
 [dependencies]
 uison-core.workspace = true
 uison-frame.workspace = true
+uison-shader.workspace = true
 
 [package.metadata.docs.rs]
 targets = ["aarch64-linux-android"]

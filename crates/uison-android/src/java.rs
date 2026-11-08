@@ -73,6 +73,7 @@ pub struct J {
     pub view_pick_file: jmethodID,
     pub view_decode_image: jmethodID,
     pub view_draw_image: jmethodID,
+    pub view_draw_pixels: jmethodID,
 }
 
 // Only IDs and global references — they can be read from any thread.
@@ -170,6 +171,7 @@ pub unsafe fn init(env: Env) -> jclass {
                 c"drawImage",
                 c"(Landroid/graphics/Canvas;Landroid/graphics/Bitmap;IIIIFFFFF)V",
             ),
+            view_draw_pixels: env.static_method(view, c"drawPixels", c"(Landroid/graphics/Canvas;[IIIFFFF)V"),
         };
         let cls = j.view_cls;
         let _ = CELL.set(j);

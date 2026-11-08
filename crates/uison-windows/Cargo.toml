@@ -10,6 +10,7 @@ description = "Windows backend of uison (Win32, Direct2D, DirectWrite, hand-writ
 [dependencies]
 uison-core.workspace = true
 uison-frame.workspace = true
+uison-shader.workspace = true
 
 [features]
 default = ["gui-subsystem"]

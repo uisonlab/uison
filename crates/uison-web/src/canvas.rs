@@ -11,6 +11,8 @@ pub struct WebCanvas<'a> {
     dpr: f32,
     /// Don't draw text (measuring the text share of a frame).
     pub skip_text: bool,
+    /// Clip rectangles in device pixels (x0, y0, x1, y1): a shader computes only what is visible.
+    clips: Vec<[i32; 4]>,
 }
 
 fn rgba(c: Color) -> u32 {
@@ -19,7 +21,7 @@ fn rgba(c: Color) -> u32 {
 
 impl<'a> WebCanvas<'a> {
     pub fn new(text: &'a WebText, dpr: f32) -> WebCanvas<'a> {
-        WebCanvas { text, dpr, skip_text: false }
+        WebCanvas { text, dpr, skip_text: false, clips: Vec::new() }
     }
 
     /// Highlight of the redrawn region (`?flash=1`).
@@ -112,11 +114,39 @@ impl Canvas for WebCanvas<'_> {
         }
     }
 
+    /// No GPU program in canvas 2D: `uison-shader` paints the pixels (on this thread), the canvas draws them.
+    fn shader(&mut self, r: Rect, src: &str, time: f32, radius: f32) {
+        use uison_shader::cpu::{Target, paint};
+        let s = self.dpr.max(1.0);
+        let rad = radius.min(r.w / 2.0).min(r.h / 2.0).max(0.0);
+        let clip = self.clips.last().copied().unwrap_or([i32::MIN, i32::MIN, i32::MAX, i32::MAX]);
+        let t = Target { rect: [r.x * s, r.y * s, r.right() * s, r.bottom() * s], scale: s, time, radius: rad * s, clip };
+        let img = match paint(src, &t) {
+            Ok(Some(img)) => img.into_straight(),
+            Ok(None) | Err(None) => return,
+            Err(Some(e)) => {
+                let msg = format!("uison: shader: {e}\n  {src}");
+                unsafe { js::log(msg.as_ptr(), msg.len(), 2) };
+                return;
+            }
+        };
+        let (x, y) = (img.x as f32 / s, img.y as f32 / s);
+        unsafe { js::pixels(img.rgba.as_ptr(), img.w, img.h, x, y, img.w as f32 / s, img.h as f32 / s) }
+    }
+
     fn push_clip(&mut self, r: Rect) {
         unsafe { js::clip_push(r.x, r.y, r.w, r.h) }
+        let s = self.dpr.max(1.0);
+        let c = [(r.x * s).floor() as i32, (r.y * s).floor() as i32, (r.right() * s).ceil() as i32, (r.bottom() * s).ceil() as i32];
+        let c = match self.clips.last() {
+            Some(t) => [c[0].max(t[0]), c[1].max(t[1]), c[2].min(t[2]), c[3].min(t[3])],
+            None => c,
+        };
+        self.clips.push(c);
     }
 
     fn pop_clip(&mut self) {
         unsafe { js::clip_pop() }
+        self.clips.pop();
     }
 }

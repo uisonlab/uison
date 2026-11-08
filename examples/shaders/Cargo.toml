@@ -1,0 +1,12 @@
+[package]
+name = "shaders"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+uison.workspace = true
+
+[features]
+# `--vulkan` (Windows): run the programs on the GPU; without it they run on the CPU (every backend).
+vulkan = ["uison/vulkan"]

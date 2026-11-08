@@ -1,0 +1,16 @@
+[package]
+name = "uison-vulkan-windows"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Windows backend of uison drawing with Vulkan (Win32, Vulkan loaded at run time, DirectWrite, WIC, hand-written FFI). Internal part of uison: use the `uison` crate with the `vulkan` feature."
+
+[dependencies]
+uison-core.workspace = true
+uison-shader.workspace = true
+uison-frame.workspace = true
+
+[package.metadata.docs.rs]
+targets = ["x86_64-pc-windows-msvc"]

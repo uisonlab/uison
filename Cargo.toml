@@ -24,6 +24,8 @@ uison-agent = { path = "crates/uison-agent", version = "0.2.1" }
 uison-derive = { path = "crates/uison-derive", version = "0.2.1" }
 uison-web = { path = "crates/uison-web", version = "0.2.1" }
 uison-windows = { path = "crates/uison-windows", version = "0.2.1", default-features = false }
+uison-vulkan-windows = { path = "crates/uison-vulkan-windows", version = "0.2.1" }
+uison-shader = { path = "crates/uison-shader", version = "0.2.1" }
 uison-linux = { path = "crates/uison-linux", version = "0.2.1" }
 uison = { path = "crates/uison", version = "0.2.1" }
 

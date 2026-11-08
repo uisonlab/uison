@@ -1412,6 +1412,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "shaders"
+version = "0.2.1"
+dependencies = [
+ "uison",
+]
+
+[[package]]
 name = "shake"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1649,6 +1656,7 @@ dependencies = [
  "uison-linux",
  "uison-macos",
  "uison-ui",
+ "uison-vulkan-windows",
  "uison-web",
  "uison-windows",
 ]
@@ -1669,6 +1677,7 @@ version = "0.2.1"
 dependencies = [
  "uison-core",
  "uison-frame",
+ "uison-shader",
 ]
 
 [[package]]
@@ -1678,6 +1687,7 @@ dependencies = [
  "uison-core",
  "uison-frame",
  "uison-json",
+ "uison-shader",
 ]
 
 [[package]]
@@ -1731,6 +1741,7 @@ version = "0.2.1"
 dependencies = [
  "uison-core",
  "uison-frame",
+ "uison-shader",
 ]
 
 [[package]]
@@ -1748,6 +1759,10 @@ version = "0.2.1"
 dependencies = [
  "uison",
 ]
+
+[[package]]
+name = "uison-shader"
+version = "0.2.1"
 
 [[package]]
 name = "uison-ssh-player"
@@ -1768,11 +1783,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "uison-vulkan-windows"
+version = "0.2.1"
+dependencies = [
+ "uison-core",
+ "uison-frame",
+ "uison-shader",
+]
+
+[[package]]
 name = "uison-web"
 version = "0.2.1"
 dependencies = [
  "uison-core",
  "uison-frame",
+ "uison-shader",
 ]
 
 [[package]]
@@ -1781,6 +1806,7 @@ version = "0.2.1"
 dependencies = [
  "uison-core",
  "uison-frame",
+ "uison-shader",
 ]
 
 [[package]]

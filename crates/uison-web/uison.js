@@ -49,6 +49,8 @@ const roundRect = (x, y, w, h, r) => {
 
 // Images: source → { bmp } (loaded) or null (loading).
 const images = new Map();
+// Where shader pixels are put before drawing them (`pixels`).
+let scratch;
 function loadImage(src, blob) {
   images.set(src, null);
   (blob ? Promise.resolve(blob) : fetch(src).then((r) => (r.ok ? r.blob() : Promise.reject(new Error(r.status)))))
@@ -201,6 +203,18 @@ wake: () => setTimeout(() => wasm.uison_wake(), 0),
     ctx.drawImage(bmp, sx, sy, sw, sh, dx, dy, dw, dh);
     ctx.restore();
     return 1;
+  },
+  // A shader's pixels (straight RGBA, w×h device pixels) into x, y, dw, dh (CSS pixels): through a
+  // scratch canvas, since putImageData ignores the clip and the transform and drawImage does not.
+  pixels: (p, w, h, x, y, dw, dh) => {
+    scratch ??= document.createElement("canvas");
+    if (scratch.width < w || scratch.height < h) {
+      scratch.width = Math.max(scratch.width, w);
+      scratch.height = Math.max(scratch.height, h);
+    }
+    const sctx = scratch.getContext("2d");
+    sctx.putImageData(new ImageData(new Uint8ClampedArray(wasm.memory.buffer, p, w * h * 4), w, h), 0, 0);
+    ctx.drawImage(scratch, 0, 0, w, h, x, y, dw, dh);
   },
   image_data: (p, n, d, len) => {
     const src = str(p, n);

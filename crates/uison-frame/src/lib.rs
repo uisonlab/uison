@@ -48,6 +48,9 @@ pub enum Shape {
     Clip { rect: Rect, items: Vec<Item> },
     /// Image from source `src` (`mem:name` or a file), fitted into `rect`.
     Image { rect: Rect, src: Box<str>, radius: f32, fit: Fit },
+    /// `rect` painted by `src` in uison's shading language at `time` seconds (animation: the app
+    /// changes `time`, the diff redraws the item). On the GPU with Vulkan, on the CPU elsewhere.
+    Shader { rect: Rect, src: Box<str>, time: f32, radius: f32 },
     /// Invisible mouse area: only hit-test and cursor shape; not painted
     /// and doesn't affect damage. Makes the whole element (with padding) clickable.
     Hit { rect: Rect, cursor: Cursor },
@@ -88,7 +91,7 @@ impl Shape {
                 Rect::new(at.x, at.y, tm.width, tm.height()).inflate(pad)
             }
             Shape::Clip { rect, .. } | Shape::Hit { rect, .. } => *rect,
-            Shape::Image { rect, .. } => rect.inflate(AA),
+            Shape::Image { rect, .. } | Shape::Shader { rect, .. } => rect.inflate(AA),
         }
     }
 }

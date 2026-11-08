@@ -6,3 +6,7 @@ publish = false
 
 [dependencies]
 uison.workspace = true
+
+[features]
+# `--vulkan` (Windows): draw with Vulkan instead of Direct2D.
+vulkan = ["uison/vulkan"]

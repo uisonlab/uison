@@ -25,6 +25,7 @@ fn paint_items(items: &[Item], c: &mut impl Canvas, dirty: Rect) {
             Shape::Hit { .. } => {}
             Shape::Text { at, text, font, color } => c.text(*at, text, font, *color),
             Shape::Image { rect, src, radius, fit } => c.image(*rect, src, *radius, *fit),
+            Shape::Shader { rect, src, time, radius } => c.shader(*rect, src, *time, *radius),
             Shape::Clip { rect, items } => {
                 c.push_clip(*rect);
                 paint_items(items, c, dirty.intersect(rect));

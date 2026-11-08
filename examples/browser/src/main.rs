@@ -6,6 +6,11 @@ fn main() {
         return;
     }
     let start = std::env::args().nth(1).filter(|a| !a.starts_with('-')).unwrap_or_else(|| browser::HOME.to_string());
+    // `--vulkan`: windows draw with Vulkan (built with `--features vulkan`, Windows).
+    #[cfg(all(windows, feature = "vulkan"))]
+    if std::env::args().any(|a| a == "--vulkan") {
+        uison::set_graphics(uison::Graphics::Vulkan);
+    }
     uison::run(browser::app_at(&start), "uison browser");
 }
 

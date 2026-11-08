@@ -10,6 +10,7 @@ description = "Browser backend of uison: WebAssembly with canvas 2D, no wasm-bin
 [dependencies]
 uison-core.workspace = true
 uison-frame.workspace = true
+uison-shader.workspace = true
 
 [package.metadata.docs.rs]
 targets = ["wasm32-unknown-unknown"]

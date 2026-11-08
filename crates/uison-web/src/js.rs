@@ -67,6 +67,8 @@ imports! {
     fn image_data(ptr: *const u8, len: usize, data: *const u8, data_len: usize);
     /// Size of a loaded image: out[0], out[1]; 0 — not loaded yet (a file — start loading).
     fn image_size(ptr: *const u8, len: usize, out: *mut f32) -> u32;
+    /// A shader's pixels: straight RGBA, `w`×`h` device pixels, drawn into `x, y, dw, dh` (CSS pixels).
+    fn pixels(ptr: *const u8, w: u32, h: u32, x: f32, y: f32, dw: f32, dh: f32);
 
     fn clip_push(x: f32, y: f32, w: f32, h: f32);
     fn clip_pop();

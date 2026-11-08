@@ -1037,6 +1037,10 @@ pub fn run(app: impl App + 'static, title: &str) {
             st.stat(line);
         }
         UpdateWindow(hwnd);
+        // An app that animates from the start (`wants_tick` before any event) gets its first tick.
+        if let Some(st) = state() {
+            st.schedule_tick();
+        }
         if has_player {
             SetTimer(hwnd, TIMER_SCRIPT, 1000, null());
         }

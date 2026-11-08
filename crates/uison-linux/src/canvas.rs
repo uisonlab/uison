@@ -14,6 +14,8 @@ pub struct CairoCanvas<'a> {
     /// Physical pixels per point.
     scale: f32,
     snap: bool,
+    /// Clip rectangles in device pixels (x0, y0, x1, y1): a shader computes only what is visible.
+    clips: Vec<[i32; 4]>,
 }
 
 impl<'a> CairoCanvas<'a> {
@@ -37,7 +39,7 @@ impl<'a> CairoCanvas<'a> {
         }
         // UISON_SNAP=0: no pixel snapping (for comparison).
         let snap = std::env::var("UISON_SNAP").as_deref() != Ok("0");
-        CairoCanvas { cr, text, scale, snap }
+        CairoCanvas { cr, text, scale, snap, clips: Vec::new() }
     }
 
     /// Snap an axis-parallel stroke: width is a whole number of physical
@@ -193,6 +195,37 @@ impl Canvas for CairoCanvas<'_> {
         }
     }
 
+    /// No GPU program in Cairo: `uison-shader` paints the pixels on the CPU, Cairo draws them.
+    fn shader(&mut self, r: Rect, src: &str, time: f32, radius: f32) {
+        use uison_shader::cpu::{Target, paint};
+        let s = self.scale;
+        let rad = radius.min(r.w / 2.0).min(r.h / 2.0).max(0.0);
+        let clip = self.clips.last().copied().unwrap_or([i32::MIN, i32::MIN, i32::MAX, i32::MAX]);
+        let t = Target { rect: [r.x * s, r.y * s, r.right() * s, r.bottom() * s], scale: s, time, radius: rad * s, clip };
+        // Premultiplied BGRA is CAIRO_FORMAT_ARGB32 on a little-endian machine.
+        let mut img = match paint(src, &t) {
+            Ok(Some(img)) => img.into_bgra(),
+            Ok(None) | Err(None) => return,
+            Err(Some(e)) => {
+                log!("uison: shader: {e}\n  {src}");
+                return;
+            }
+        };
+        let c = &gfx().cairo;
+        let (w, h) = (img.w as i32, img.h as i32);
+        unsafe {
+            let surface = c.cairo_image_surface_create_for_data(img.rgba.as_mut_ptr(), FORMAT_ARGB32, w, h, w * 4);
+            c.cairo_save(self.cr);
+            // Device pixels, one surface pixel each: the edges and corners are already in the alpha.
+            c.cairo_scale(self.cr, 1.0 / s as f64, 1.0 / s as f64);
+            c.cairo_set_source_surface(self.cr, surface, img.x as f64, img.y as f64);
+            c.cairo_rectangle(self.cr, img.x as f64, img.y as f64, w as f64, h as f64);
+            c.cairo_fill(self.cr);
+            c.cairo_restore(self.cr);
+            c.cairo_surface_destroy(surface);
+        }
+    }
+
     fn push_clip(&mut self, r: Rect) {
         let c = &gfx().cairo;
         unsafe {
@@ -200,9 +233,17 @@ impl Canvas for CairoCanvas<'_> {
             c.cairo_rectangle(self.cr, r.x as f64, r.y as f64, r.w as f64, r.h as f64);
             c.cairo_clip(self.cr);
         }
+        let s = self.scale;
+        let p = [(r.x * s).floor() as i32, (r.y * s).floor() as i32, (r.right() * s).ceil() as i32, (r.bottom() * s).ceil() as i32];
+        let p = match self.clips.last() {
+            Some(t) => [p[0].max(t[0]), p[1].max(t[1]), p[2].min(t[2]), p[3].min(t[3])],
+            None => p,
+        };
+        self.clips.push(p);
     }
 
     fn pop_clip(&mut self) {
         unsafe { gfx().cairo.cairo_restore(self.cr) };
+        self.clips.pop();
     }
 }

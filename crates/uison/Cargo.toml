@@ -31,11 +31,15 @@ uison-web.workspace = true
 
 [target.'cfg(windows)'.dependencies]
 uison-windows.workspace = true
+uison-vulkan-windows = { workspace = true, optional = true }
 
 [features]
 default = ["gui-subsystem"]
 # Windows: a release program without a console window (see uison-windows); uison-c turns it off.
 gui-subsystem = ["uison-windows/gui-subsystem"]
+# Windows: `Graphics::Vulkan` — windows draw with Vulkan instead of Direct2D (uison-vulkan-windows).
+# The choice is made in code with `set_graphics`; the feature only makes it available.
+vulkan = ["dep:uison-vulkan-windows"]
 
 [target.'cfg(target_os = "linux")'.dependencies]
 uison-linux.workspace = true

@@ -60,8 +60,9 @@ mod k {
     pub const SRC: u32 = 1 << 13;
     pub const FIT: u32 = 1 << 14;
     pub const ITALIC: u32 = 1 << 15;
-    pub const NAMES: [&str; 16] =
-        ["fill", "stroke", "width", "radius", "color", "at", "size", "font", "bold", "items", "id", "cap", "cursor", "src", "fit", "italic"];
+    pub const TIME: u32 = 1 << 16;
+    pub const NAMES: [&str; 17] =
+        ["fill", "stroke", "width", "radius", "color", "at", "size", "font", "bold", "items", "id", "cap", "cursor", "src", "fit", "italic", "time"];
 }
 
 enum Geo<'a> {
@@ -74,6 +75,7 @@ enum Geo<'a> {
     Clip([f32; 4]),
     Hit([f32; 4]),
     Image([f32; 4]),
+    Shader([f32; 4]),
 }
 
 fn read_item(p: &mut Parser, m: &dyn TextMeasure, depth: u32) -> Result<Item, Error> {
@@ -93,11 +95,12 @@ fn read_item(p: &mut Parser, m: &dyn TextMeasure, depth: u32) -> Result<Item, Er
     let mut items = Vec::new();
     let mut src: Option<Box<str>> = None;
     let mut fit = Fit::Cover;
+    let mut time = 0.0;
 
     while let Some(key) = p.next_key()? {
         let key_at = p.key_pos();
         let bit = match &*key {
-            "rect" | "line" | "circle" | "tri" | "poly" | "text" | "clip" | "hit" | "image" => {
+            "rect" | "line" | "circle" | "tri" | "poly" | "text" | "clip" | "hit" | "image" | "shader" => {
                 if geo.is_some() {
                     return Err(p.error_at(key_at, "item has several shapes"));
                 }
@@ -110,6 +113,7 @@ fn read_item(p: &mut Parser, m: &dyn TextMeasure, depth: u32) -> Result<Item, Er
                     "text" => Geo::Text(p.string()?),
                     "hit" => Geo::Hit(nums(p)?),
                     "image" => Geo::Image(nums(p)?),
+                    "shader" => Geo::Shader(nums(p)?),
                     _ => Geo::Clip(nums(p)?),
                 });
                 0
@@ -183,6 +187,10 @@ fn read_item(p: &mut Parser, m: &dyn TextMeasure, depth: u32) -> Result<Item, Er
                 src = Some(p.string()?.into());
                 k::SRC
             }
+            "time" => {
+                time = p.number()? as f32;
+                k::TIME
+            }
             "fit" => {
                 let at = p.pos();
                 fit = Fit::parse(&p.string()?).ok_or_else(|| p.error_at(at, "fit must be 'cover', 'contain' or 'fill'"))?;
@@ -197,7 +205,7 @@ fn read_item(p: &mut Parser, m: &dyn TextMeasure, depth: u32) -> Result<Item, Er
     }
 
     let Some(geo) = geo else {
-        return Err(p.error_at(start, "item has no shape (rect, line, circle, tri, poly, text, clip, hit, image)"));
+        return Err(p.error_at(start, "item has no shape (rect, line, circle, tri, poly, text, clip, hit, image, shader)"));
     };
     let (allowed, name) = match geo {
         Geo::Rect(_) => (k::FILL | k::STROKE | k::WIDTH | k::RADIUS | k::ID, "rect"),
@@ -209,6 +217,7 @@ fn read_item(p: &mut Parser, m: &dyn TextMeasure, depth: u32) -> Result<Item, Er
         Geo::Clip(_) => (k::ITEMS | k::ID, "clip"),
         Geo::Hit(_) => (k::CURSOR | k::ID, "hit"),
         Geo::Image(_) => (k::SRC | k::FIT | k::RADIUS | k::ID, "image"),
+        Geo::Shader(_) => (k::SRC | k::TIME | k::RADIUS | k::ID, "shader"),
     };
     let extra = used & !allowed;
     if extra != 0 {
@@ -257,6 +266,10 @@ fn read_item(p: &mut Parser, m: &dyn TextMeasure, depth: u32) -> Result<Item, Er
         Geo::Image([x, y, w, h]) => {
             let src = src.ok_or_else(|| p.error_at(start, "image needs 'src'"))?;
             Shape::Image { rect: Rect::new(x, y, w, h), src, radius: radius.unwrap_or(0.0), fit }
+        }
+        Geo::Shader([x, y, w, h]) => {
+            let src = src.ok_or_else(|| p.error_at(start, "shader needs 'src'"))?;
+            Shape::Shader { rect: Rect::new(x, y, w, h), src, time, radius: radius.unwrap_or(0.0) }
         }
         Geo::Hit([x, y, w, h]) => {
             if id.is_none() {

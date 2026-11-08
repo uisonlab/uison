@@ -246,6 +246,24 @@ fn image_primitive() {
 }
 
 #[test]
+fn shader_primitive() {
+    let mut w = crate::Writer::new(Size::new(100.0, 100.0), Color::WHITE);
+    let _ = w.shader(Rect::new(10.0, 10.0, 40.0, 40.0), "mix(#000, #fff, uv.x)").time(1.5).radius(8.0);
+    let src = w.finish();
+    let f = load(&src);
+    let shape = Shape::Shader { rect: Rect::new(10.0, 10.0, 40.0, 40.0), src: "mix(#000, #fff, uv.x)".into(), time: 1.5, radius: 8.0 };
+    assert_eq!(f.items[0].shape, shape);
+    // Animation: a new time redraws the item, and only it.
+    let g = load(&src.replace("time:1.5", "time:1.6"));
+    assert_eq!(diff(&f, &g), Damage::Rects(vec![Rect::new(9.0, 9.0, 42.0, 42.0)]));
+    // `time` defaults to 0 and belongs to shaders only.
+    let h = load(r##"{ size: [1, 1], items: [{ shader: [0, 0, 1, 1], src: "#fff" }] }"##);
+    assert!(matches!(h.items[0].shape, Shape::Shader { time: 0.0, radius: 0.0, .. }));
+    assert!(err(r#"{ size: [1, 1], items: [{ shader: [0, 0, 1, 1] }] }"#).contains("shader needs 'src'"));
+    assert!(err(r##"{ size: [1, 1], items: [{ rect: [0, 0, 1, 1], fill: "#fff", time: 1 }] }"##).contains("'time' is not allowed for rect"));
+}
+
+#[test]
 fn poly_roundtrip_and_hit() {
     // L-shaped figure: the inner corner is not hit.
     let pts = [(0.0, 0.0), (40.0, 0.0), (40.0, 10.0), (10.0, 10.0), (10.0, 40.0), (0.0, 40.0)];

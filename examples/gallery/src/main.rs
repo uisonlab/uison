@@ -10,6 +10,11 @@ fn main() {
     if native::debug_modes() {
         return;
     }
+    // `--vulkan`: windows draw with Vulkan (built with `--features vulkan`, Windows).
+    #[cfg(all(windows, feature = "vulkan"))]
+    if std::env::args().any(|a| a == "--vulkan") {
+        uison::set_graphics(uison::Graphics::Vulkan);
+    }
     uison::run(gallery::app(), "uison gallery");
 }
 

@@ -31,7 +31,48 @@ pub use uison_android::run;
 pub use uison_web::{log, run};
 
 #[cfg(windows)]
-pub use uison_windows::{Headless, Text, run};
+pub use uison_windows::{Headless, Text};
+
+/// How windows draw. Chosen once with [`set_graphics`], before `run`; the default is the
+/// platform's own 2D API.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum Graphics {
+    /// Direct2D on Windows, CoreGraphics on Apple, Cairo on Linux, `android.graphics.Canvas`, canvas 2D.
+    #[default]
+    Native,
+    /// Vulkan (Windows, feature `vulkan`). Strict: without a Vulkan driver `run` exits with an
+    /// error, it does not fall back to Direct2D.
+    #[cfg(all(windows, feature = "vulkan"))]
+    Vulkan,
+}
+
+static GRAPHICS: std::sync::OnceLock<Graphics> = std::sync::OnceLock::new();
+
+/// Choose how windows draw: once, before `run`; later calls are ignored.
+///
+/// ```no_run
+/// # #[cfg(all(windows, feature = "vulkan"))]
+/// uison::set_graphics(uison::Graphics::Vulkan);
+/// ```
+pub fn set_graphics(g: Graphics) {
+    let _ = GRAPHICS.set(g);
+}
+
+/// The choice made with [`set_graphics`].
+pub fn graphics() -> Graphics {
+    GRAPHICS.get().copied().unwrap_or_default()
+}
+
+/// Open a window with the app and enter the message loop, drawing as [`set_graphics`] chose.
+#[cfg(windows)]
+pub fn run(app: impl App + 'static, title: &str) {
+    match graphics() {
+        #[cfg(feature = "vulkan")]
+        Graphics::Vulkan => uison_vulkan_windows::run(app, title),
+        Graphics::Native => uison_windows::run(app, title),
+    }
+}
 
 #[cfg(target_os = "linux")]
 pub use uison_linux::{Headless, Text, run};

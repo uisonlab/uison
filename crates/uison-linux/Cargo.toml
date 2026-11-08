@@ -10,6 +10,7 @@ description = "Linux backend of uison: Wayland and X11, Cairo and Pango, all loa
 [dependencies]
 uison-core.workspace = true
 uison-frame.workspace = true
+uison-shader.workspace = true
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

@@ -10,6 +10,7 @@ description = "Shared macOS/iOS code of uison: hand-written Objective-C, CoreGra
 [dependencies]
 uison-core.workspace = true
 uison-frame.workspace = true
+uison-shader.workspace = true
 
 [dev-dependencies]
 uison-json.workspace = true

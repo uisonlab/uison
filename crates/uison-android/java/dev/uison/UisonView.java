@@ -172,6 +172,16 @@ final class UisonView extends View implements Choreographer.FrameCallback {
         c.restore();
     }
 
+    /**
+     * A shader's pixels (ARGB colors, not premultiplied, w×h device pixels) into dx, dy, dw, dh (dp).
+     * The bitmap is not recycled: a hardware canvas draws it later, from its display list.
+     */
+    static void drawPixels(Canvas c, int[] argb, int w, int h, float dx, float dy, float dw, float dh) {
+        Bitmap b = Bitmap.createBitmap(argb, w, h, Bitmap.Config.ARGB_8888);
+        DST.set(dx, dy, dx + dw, dy + dh);
+        c.drawBitmap(b, null, DST, null);
+    }
+
     /** Put text on the clipboard. */
     void copy(String text) {
         ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
