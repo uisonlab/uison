@@ -52,6 +52,7 @@ An unknown property is an error with a location: `Button at root/0/3: unknown pa
 - Events bubble up to ancestors: `on` on a list row catches taps on all of its children.
 - The handler knows the action name, the event and the node's `key` (`cx.key`). One action shared by all rows of a list tells the rows apart by key: `"del-{@t.id}"`.
 - Keyboard shortcuts (`shortcut("cmd+n", "add")`) and timers (`timer(500, "tick")`) work by action name too.
+- The `key` action, if the program registers it, gets every key that the focused field and an open menu leave: `cx.key` is its name in the shortcut syntax (`"f5"`, `"shift+f6"`, `"ctrl+r"`, typed text as it is: `"a"`, `"*"`), `cx.keystroke` the key itself. A key the action doesn't want goes back to the runtime with `cx.pass_key()` (Tab moves focus, Enter presses the focused button). For keyboard-driven screens — a file manager, an editor, a game. `cx.scroll_into_view(list, top, bottom)` keeps a keyboard cursor visible, `cx.context_menu(key)` opens a node's menu from the keyboard. Where nothing scrolls by itself, `on: { wheel: … }` gets the mouse wheel (`cx.wheel`) — for a view that scrolls its own way.
 
 ## key
 

@@ -12,7 +12,7 @@
 //!                         (dy < 0 — up: the content scrolls down); with a mouse — the wheel
 //! ["wheel", id, dy]       wheel scroll
 //! ["type", "text"]        typing character by character
-//! ["key", "Enter", "shift+alt"]  key: Enter Backspace Delete Tab Escape Left Right Up Down Home End Menu F10;
+//! ["key", "Enter", "shift+alt"]  key: Enter Backspace Delete Tab Escape Left Right Up Down Home End Menu Insert F1…F12;
 //!                         optional modifiers: shift, alt, ctrl, cmd
 //! ["cmd", "n"]            key with the primary modifier
 //! ["paste", "text"]       paste as if from the clipboard (`Event::Paste`)
@@ -286,6 +286,18 @@ fn key_code(name: &str) -> Option<KeyCode> {
         "PageDown" => KeyCode::PageDown,
         "Menu" | "ContextMenu" => KeyCode::Menu,
         "F10" => KeyCode::F10,
+        "Insert" => KeyCode::Insert,
+        "F1" => KeyCode::F1,
+        "F2" => KeyCode::F2,
+        "F3" => KeyCode::F3,
+        "F4" => KeyCode::F4,
+        "F5" => KeyCode::F5,
+        "F6" => KeyCode::F6,
+        "F7" => KeyCode::F7,
+        "F8" => KeyCode::F8,
+        "F9" => KeyCode::F9,
+        "F11" => KeyCode::F11,
+        "F12" => KeyCode::F12,
         "Back" => KeyCode::Back,
         _ => return None,
     })

@@ -28,7 +28,7 @@
 | `place` | `place` | место в Stack: center, top, bottomRight… |
 | `pos` | `pos` | положение в Stack: [x, y] |
 | `overlay` | `overlay` | поверх соседей и не влияет на размер родителя (всплывающие панели) |
-| `on` | `on` | события → действия: { click: "add", change: …, submit: …, hover: … } |
+| `on` | `on` | события → действия: { click: "add", change: …, submit: …, hover: …, wheel: … } |
 | `cursor` | `cursor` | курсор над узлом: arrow, pointer, text, resize-x, resize-y |
 | `tooltip` | `tooltip` | подсказка при наведении (долгом нажатии) |
 | `contextMenu` | `context_menu` | меню по правой кнопке: [{ label, action }, "-", …] |

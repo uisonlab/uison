@@ -82,16 +82,18 @@ pub(crate) fn emit(roots: &[El], size: Size, origin: Point, style: &Style, m: &d
     };
     for el in roots {
         em.node(el, origin);
-    }
-    // Overlays go after the whole tree: above everything else and outside other clips.
-    let mut i = 0;
-    while i < em.overlays.len() {
-        let (el, origin, parent) = em.overlays[i];
-        let saved = std::mem::replace(&mut em.parents, parent.into_iter().collect());
-        em.view = (f32::NEG_INFINITY, f32::INFINITY);
-        em.node(el, origin);
-        em.parents = saved;
-        i += 1;
+        // A root's overlays go after its whole tree: above it and outside its clips — but under the roots
+        // that follow (a context menu, a tooltip), so a menu opened in a dialog is not covered by it.
+        let mut i = 0;
+        while i < em.overlays.len() {
+            let (el, origin, parent) = em.overlays[i];
+            let saved = std::mem::replace(&mut em.parents, parent.into_iter().collect());
+            em.view = (f32::NEG_INFINITY, f32::INFINITY);
+            em.node(el, origin);
+            em.parents = saved;
+            i += 1;
+        }
+        em.overlays.clear();
     }
     // While dragging, the pointer runs ahead of a divider stopped at its limit and off a slider:
     // the cursor stays the dragged node's, and what lies under the pointer doesn't take it.

@@ -509,11 +509,25 @@ extern "C" fn key_down(this: Id, _: Sel, e: Id) {
             121 => KeyCode::PageDown,
             109 => KeyCode::F10,
             110 => KeyCode::Menu,
+            114 => KeyCode::Insert,
+            122 => KeyCode::F1,
+            120 => KeyCode::F2,
+            99 => KeyCode::F3,
+            118 => KeyCode::F4,
+            96 => KeyCode::F5,
+            97 => KeyCode::F6,
+            98 => KeyCode::F7,
+            100 => KeyCode::F8,
+            101 => KeyCode::F9,
+            103 => KeyCode::F11,
+            111 => KeyCode::F12,
             _ => KeyCode::Char,
         };
         // Text is printable characters only: no control characters and no
-        // function keys (U+F700…U+F8FF in AppKit).
-        let s: Id = msg(e, sel!("characters"), ());
+        // function keys (U+F700…U+F8FF in AppKit). With Ctrl `characters` is a control code,
+        // so the character comes without modifiers (Ctrl+R gives "r", as on Windows).
+        let sel_chars = if mods.ctrl { sel!("charactersIgnoringModifiers") } else { sel!("characters") };
+        let s: Id = msg(e, sel_chars, ());
         let c: *const c_char = if s.is_null() { null() } else { msg(s, sel!("UTF8String"), ()) };
         let text = if c.is_null() { String::new() } else { CStr::from_ptr(c).to_string_lossy().into_owned() };
         let printable = !text.is_empty() && text.chars().all(|ch| !ch.is_control() && !('\u{F700}'..='\u{F8FF}').contains(&ch));

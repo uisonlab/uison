@@ -537,6 +537,11 @@ impl State {
             VK_NEXT => KeyCode::PageDown,
             VK_APPS => KeyCode::Menu,
             VK_F10 => KeyCode::F10,
+            VK_INSERT => KeyCode::Insert,
+            VK_F1..=VK_F12 => [
+                KeyCode::F1, KeyCode::F2, KeyCode::F3, KeyCode::F4, KeyCode::F5, KeyCode::F6, KeyCode::F7, KeyCode::F8,
+                KeyCode::F9, KeyCode::F10, KeyCode::F11, KeyCode::F12,
+            ][(vk - VK_F1) as usize],
             // Ctrl+char: WM_CHAR gives a control code, so the char comes from the key,
             // not the layout (Ctrl+N works in Cyrillic layouts too). Ctrl+Alt is AltGr, which types text.
             _ if ctrl && !alt => {
@@ -821,8 +826,9 @@ unsafe fn handle(st: &mut State, hwnd: HWND, msg: u32, w: WPARAM, l: LPARAM) -> 
                 return unsafe { DefWindowProcW(hwnd, msg, w, l) };
             }
         }
-        // F10 arrives as a system key (window menu bar) — Shift+F10 is needed for the context menu.
-        WM_SYSKEYDOWN if w as u32 == VK_F10 => {
+        // F10 and Alt+F-keys arrive as system keys (window menu bar) — Shift+F10 is needed for the context menu,
+        // Alt+F1 and the like for apps. Alt+F4 stays with the system: it closes the window.
+        WM_SYSKEYDOWN if (VK_F1..=VK_F12).contains(&(w as u32)) && w as u32 != VK_F4 => {
             if !st.key_down(w as u32) {
                 return unsafe { DefWindowProcW(hwnd, msg, w, l) };
             }

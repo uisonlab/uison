@@ -23,7 +23,7 @@ What the platform reports: the mouse, a finger, keys, the window. A C program on
 ```
 
 - Coordinates are in points from the top left of the window, written to 1/1000 of a point.
-- `code`: `char` (the typed text is in `text`), `enter`, `backspace`, `delete`, `tab`, `escape`, `left`, `right`, `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `back` (Android), `menu`, `f10`. For other keys `text` is `null`.
+- `code`: `char` (the typed text is in `text`), `enter`, `backspace`, `delete`, `tab`, `escape`, `left`, `right`, `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `back` (Android), `menu`, `insert`, `f1`…`f12`. For other keys `text` is `null`.
 - `cmd` is the primary modifier: ⌘ on Apple, Ctrl elsewhere.
 - Readers skip unknown keys, and a missing modifier counts as `false`.
 

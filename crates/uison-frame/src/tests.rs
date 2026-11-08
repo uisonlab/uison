@@ -288,7 +288,7 @@ fn event_json_round_trip() {
     for code in [
         KeyCode::Char, KeyCode::Backspace, KeyCode::Delete, KeyCode::Enter, KeyCode::Tab, KeyCode::Escape, KeyCode::Left,
         KeyCode::Right, KeyCode::Up, KeyCode::Down, KeyCode::Home, KeyCode::End, KeyCode::PageUp, KeyCode::PageDown,
-        KeyCode::Back, KeyCode::Menu, KeyCode::F10,
+        KeyCode::Back, KeyCode::Menu, KeyCode::F10, KeyCode::Insert, KeyCode::F1, KeyCode::F5, KeyCode::F12,
     ] {
         let mods = Mods { shift: true, ctrl: false, alt: true, cmd: false };
         all.push(Event::Key(Key { code, text: (code == KeyCode::Char).then(|| "ж".into()), mods }));

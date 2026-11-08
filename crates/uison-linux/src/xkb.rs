@@ -197,6 +197,13 @@ impl Keyboard {
             0xff57 | 0xff9c => Some(KeyCode::End),
             0xff67 => Some(KeyCode::Menu),
             0xffc7 => Some(KeyCode::F10),
+            0xff63 | 0xff9e => Some(KeyCode::Insert),
+            0xffbe..=0xffc9 => Some(
+                [
+                    KeyCode::F1, KeyCode::F2, KeyCode::F3, KeyCode::F4, KeyCode::F5, KeyCode::F6, KeyCode::F7, KeyCode::F8,
+                    KeyCode::F9, KeyCode::F10, KeyCode::F11, KeyCode::F12,
+                ][(sym - 0xffbe) as usize],
+            ),
             _ => None,
         };
         if let Some(code) = special {

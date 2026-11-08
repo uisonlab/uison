@@ -28,7 +28,7 @@ Available on every node and component.
 | `place` | `place` | position in Stack: center, top, bottomRight… |
 | `pos` | `pos` | position in Stack: [x, y] |
 | `overlay` | `overlay` | drawn above siblings, does not affect the parent's size (popups) |
-| `on` | `on` | events → actions: { click: "add", change: …, submit: …, hover: … } |
+| `on` | `on` | events → actions: { click: "add", change: …, submit: …, hover: …, wheel: … } |
 | `cursor` | `cursor` | cursor over the node: arrow, pointer, text, resize-x, resize-y |
 | `tooltip` | `tooltip` | tooltip on hover (long press) |
 | `contextMenu` | `context_menu` | right-click menu: [{ label, action }, "-", …] |

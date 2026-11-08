@@ -985,6 +985,33 @@ fn context_menu_right_click_keys_and_release() {
     assert_eq!(log.borrow().len(), 3, "save not pressed — the click closed the menu");
 }
 
+/// A menu opened in an overlay (a dialog over a dimmed screen) is above the overlay, and its items take clicks.
+#[test]
+fn context_menu_above_an_overlay() {
+    let mut ui = Ui::new(
+        r##"{ size: [400, 300], root: { Stack: { w: "fill", h: "fill", children: [
+            { Box: { w: "fill", h: "fill", fill: "#FFF" } },
+            { Box: { overlay: true, w: "fill", h: "fill", fill: "#00000059", interactive: true, align: "center", child:
+                { Box: { key: "row", w: 200, h: 30, fill: "#EEE",
+                         contextMenu: [{ label: "Open", action: "open" }, { label: "Delete", action: "del" }] } } } },
+        ] } } }"##,
+    )
+    .unwrap();
+    let log = Rc::new(RefCell::new(Vec::new()));
+    for a in ["open", "del"] {
+        let l = log.clone();
+        ui.on(a, move |cx| l.borrow_mut().push(format!("{} {}", cx.action, cx.key)));
+    }
+    let p = center(hit_rect(&frame(&mut ui), "row"));
+    ui.on_event(&Event::MouseDown(p, MouseButton::Right), Some("row"), &Fake);
+    ui.on_event(&Event::MouseUp(p, MouseButton::Right), Some("row"), &Fake);
+    let f = frame(&mut ui);
+    let q = center(hit_rect(&f, "~menu/1"));
+    assert_eq!(uison_frame::hit_test(&f, q), Some("~menu/1"), "the menu is on top");
+    click(&mut ui, "~menu/1");
+    assert_eq!(*log.borrow(), ["del row"]);
+}
+
 #[test]
 fn field_menu_and_link() {
     let (mut ui, _) = popup_ui();
@@ -1256,4 +1283,142 @@ fn canvas_draws_and_reports_pointer() {
         *log.borrow(),
         ["hover Some((10.0, 30.0))", "click Some((10.0, 30.0)) x1", "click Some((10.0, 30.0)) x2", "hover None"]
     );
+}
+
+#[test]
+fn function_keys_in_shortcuts() {
+    let mut ui = Ui::from_node(column().children([text("{@n}")]));
+    ui.data.set("n", "");
+    ui.on("f5", |cx| cx.data.set("n", "f5"));
+    ui.on("sel", |cx| cx.data.set("n", "space"));
+    ui.on("end", |cx| cx.data.set("n", "end"));
+    ui.shortcut("shift+f5", "f5").shortcut("space", "sel").shortcut("ctrl+pagedown", "end");
+    frame(&mut ui);
+    let mut k = Key::new(KeyCode::F5);
+    ui.on_event(&Event::Key(k.clone()), None, &Fake);
+    assert_eq!(ui.data.str("n"), "", "F5 without Shift is not Shift+F5");
+    k.mods.shift = true;
+    ui.on_event(&Event::Key(k), None, &Fake);
+    assert_eq!(ui.data.str("n"), "f5");
+    ui.on_event(&Event::Key(Key::char(" ")), None, &Fake);
+    assert_eq!(ui.data.str("n"), "space");
+    let mut k = Key::new(KeyCode::PageDown);
+    k.mods.ctrl = true;
+    ui.on_event(&Event::Key(k), None, &Fake);
+    assert_eq!(ui.data.str("n"), "end");
+}
+
+#[test]
+fn key_combo_names() {
+    let k = |code, text: Option<&str>, f: fn(&mut uison_core::Mods)| {
+        let mut k = Key { code, text: text.map(Into::into), mods: Default::default() };
+        f(&mut k.mods);
+        key_combo(&k)
+    };
+    assert_eq!(k(KeyCode::F5, None, |_| {}), "f5");
+    assert_eq!(k(KeyCode::F6, None, |m| m.shift = true), "shift+f6");
+    assert_eq!(k(KeyCode::Char, Some("r"), |m| m.ctrl = true), "ctrl+r");
+    assert_eq!(k(KeyCode::Char, Some("Z"), |m| (m.cmd, m.shift) = (true, true)), "cmd+shift+z");
+    // Typed text carries Shift itself.
+    assert_eq!(k(KeyCode::Char, Some("*"), |m| m.shift = true), "*");
+    assert_eq!(k(KeyCode::Char, Some(" "), |_| {}), "space");
+    assert_eq!(k(KeyCode::Insert, None, |_| {}), "insert");
+}
+
+#[test]
+fn key_action_gets_what_the_field_leaves() {
+    let ok = container().key("ok").focusable(true).w(10).h(10).on("click", "ok");
+    let mut ui = Ui::from_node(column().children([text_field().key("f").bind("q"), ok]));
+    ui.data.set("q", "");
+    ui.data.set("keys", Vec::<String>::new());
+    ui.data.set("ok", 0);
+    ui.on("ok", |cx| cx.data.update("ok", |v| v.as_f64().unwrap_or(0.0) + 1.0));
+    ui.on("key", |cx| {
+        let typed = cx.keystroke.and_then(|k| k.text.clone()).map(String::from).unwrap_or_default();
+        let entry = format!("{}|{typed}", cx.key);
+        cx.data.push("keys", entry);
+        if cx.key == "tab" || cx.key == "enter" {
+            cx.pass_key();
+        }
+    });
+    frame(&mut ui);
+    let keys = |ui: &Ui| ui.data.get("keys").unwrap().as_array().unwrap().iter().map(|j| j.as_str().unwrap().to_string()).collect::<Vec<_>>();
+    // Nothing focused: every key goes to the action.
+    ui.on_event(&Event::Key(Key::char("a")), None, &Fake);
+    ui.on_event(&Event::Key(Key::new(KeyCode::F3)), None, &Fake);
+    assert_eq!(keys(&ui), ["a|a", "f3|"]);
+    // In the field typing is the field's; Escape and F-keys reach the action.
+    ui.on_event(&Event::Key(Key::new(KeyCode::Tab)), None, &Fake); // passed: focus to the field
+    frame(&mut ui);
+    ui.on_event(&Event::Key(Key::char("x")), None, &Fake);
+    ui.on_event(&Event::Key(Key::new(KeyCode::F7)), None, &Fake);
+    assert_eq!(ui.data.str("q"), "x");
+    assert_eq!(keys(&ui), ["a|a", "f3|", "tab|", "f7|"]);
+    // Passed Tab moves focus to the button; passed Enter presses it.
+    ui.on_event(&Event::Key(Key::new(KeyCode::Tab)), None, &Fake);
+    frame(&mut ui);
+    ui.on_event(&Event::Key(Key::new(KeyCode::Enter)), None, &Fake);
+    assert_eq!(ui.data.num("ok"), 1.0);
+}
+
+#[test]
+fn scroll_into_view_shows_a_list_row() {
+    let rows: Vec<String> = (0..100).map(|i| format!("r{i}")).collect();
+    let mut ui = Ui::from_node(column().children([list("rows", "r", 20.0, text("@r")).key("l").flex(1)])).with_size(200.0, 100.0);
+    ui.data.set("rows", rows);
+    ui.on("go", |cx| {
+        let i = cx.data.num("to") as f32;
+        cx.scroll_into_view("l", i * 20.0, (i + 1.0) * 20.0);
+    });
+    let has = |ui: &mut Ui, s: &str| texts(&frame(ui)).iter().any(|t| t == s);
+    assert!(!has(&mut ui, "r50"));
+    ui.data.set("to", 50);
+    ui.run_action("go");
+    assert!(has(&mut ui, "r50"));
+    assert!(!has(&mut ui, "r40"), "the least scroll: row 50 at the bottom edge");
+    // Back up: the row lands at the top edge.
+    ui.data.set("to", 10);
+    ui.run_action("go");
+    let t = texts(&frame(&mut ui));
+    assert_eq!(t.first().map(String::as_str), Some("r10"), "{t:?}");
+}
+
+#[test]
+fn wheel_action_where_nothing_scrolls() {
+    let rows: Vec<String> = (0..100).map(|i| format!("r{i}")).collect();
+    let view = container().key("view").w(100).h(50).child(container().key("inner").w(10).h(10).on("click", "x"));
+    let screen = column().children([view.on("wheel", "wheel"), list("rows", "r", 20.0, text("@r")).key("l").h(50)]);
+    let mut ui = Ui::from_node(screen).with_size(200.0, 100.0);
+    ui.data.set("rows", rows);
+    ui.data.set("dy", 0);
+    ui.on("wheel", |cx| {
+        let (k, dy) = (cx.key.to_string(), cx.wheel.map_or(0.0, |w| w.1));
+        cx.data.set("dy", dy as f64);
+        cx.data.set("on", k);
+    });
+    frame(&mut ui);
+    // Bubbles from a child up to the node with `on.wheel`; `cx.key` is where it happened.
+    ui.on_event(&Event::Scroll(Point::new(5.0, 5.0), 0.0, -40.0), Some("inner"), &Fake);
+    assert_eq!((ui.data.num("dy"), ui.data.str("on")), (-40.0, "inner"));
+    // Over the list the list scrolls itself.
+    ui.data.set("dy", 0);
+    ui.on_event(&Event::Scroll(Point::new(10.0, 70.0), 0.0, -40.0), Some("l"), &Fake);
+    assert_eq!(ui.data.num("dy"), 0.0);
+}
+
+#[test]
+fn focus_by_the_text_field_key() {
+    let mut ui = Ui::from_node(column().children([text_field().key("name").bind("name").visible("@open")]));
+    ui.data.set("name", "");
+    ui.data.set("open", false);
+    ui.on("open", |cx| {
+        cx.data.set("open", true);
+        cx.focus("name");
+    });
+    frame(&mut ui);
+    // The field appears with the focus request: typing goes into it.
+    ui.run_action("open");
+    frame(&mut ui);
+    ui.on_event(&Event::Key(Key::char("a")), None, &Fake);
+    assert_eq!(ui.data.str("name"), "a");
 }

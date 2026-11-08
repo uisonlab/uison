@@ -223,6 +223,19 @@ pub enum KeyCode {
     Menu,
     /// F10: Shift+F10 opens the context menu.
     F10,
+    /// Insert (PC keyboards; Help on old Apple keyboards).
+    Insert,
+    F1,
+    F2,
+    F3,
+    F4,
+    F5,
+    F6,
+    F7,
+    F8,
+    F9,
+    F11,
+    F12,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]

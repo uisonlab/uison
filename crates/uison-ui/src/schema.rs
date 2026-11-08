@@ -68,7 +68,7 @@ pub fn doc(kind: &str, prop: &str) -> Option<&'static str> {
         "place" => "position in Stack: center, top, bottomRight…",
         "pos" => "position in Stack: [x, y]",
         "overlay" => "drawn above siblings, does not affect the parent's size (popups)",
-        "on" => "events → actions: { click: \"add\", change: …, submit: …, hover: … }",
+        "on" => "events → actions: { click: \"add\", change: …, submit: …, hover: …, wheel: … }",
         "cursor" => "cursor over the node: arrow, pointer, text, resize-x, resize-y",
         "tooltip" => "tooltip on hover (long press)",
         "contextMenu" => "right-click menu: [{ label, action }, \"-\", …]",

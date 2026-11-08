@@ -192,7 +192,11 @@ pub const VK_RIGHT: u32 = 0x27;
 pub const VK_DOWN: u32 = 0x28;
 pub const VK_DELETE: u32 = 0x2E;
 pub const VK_APPS: u32 = 0x5D;
+pub const VK_INSERT: u32 = 0x2D;
+pub const VK_F1: u32 = 0x70;
+pub const VK_F4: u32 = 0x73;
 pub const VK_F10: u32 = 0x79;
+pub const VK_F12: u32 = 0x7B;
 pub const MAPVK_VK_TO_CHAR: u32 = 2;
 
 pub const HKEY_CURRENT_USER: HKEY = 0x8000_0001_u32 as i32 as isize;

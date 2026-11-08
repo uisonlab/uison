@@ -14,7 +14,7 @@ use uison_json::Value;
 
 use crate::Error;
 
-const KEYS: [(KeyCode, &str); 17] = [
+const KEYS: [(KeyCode, &str); 29] = [
     (KeyCode::Char, "char"),
     (KeyCode::Backspace, "backspace"),
     (KeyCode::Delete, "delete"),
@@ -32,6 +32,18 @@ const KEYS: [(KeyCode, &str); 17] = [
     (KeyCode::Back, "back"),
     (KeyCode::Menu, "menu"),
     (KeyCode::F10, "f10"),
+    (KeyCode::Insert, "insert"),
+    (KeyCode::F1, "f1"),
+    (KeyCode::F2, "f2"),
+    (KeyCode::F3, "f3"),
+    (KeyCode::F4, "f4"),
+    (KeyCode::F5, "f5"),
+    (KeyCode::F6, "f6"),
+    (KeyCode::F7, "f7"),
+    (KeyCode::F8, "f8"),
+    (KeyCode::F9, "f9"),
+    (KeyCode::F11, "f11"),
+    (KeyCode::F12, "f12"),
 ];
 
 const BUTTONS: [(MouseButton, &str); 4] =

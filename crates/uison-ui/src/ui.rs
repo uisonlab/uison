@@ -118,6 +118,13 @@ pub struct Ui {
     hovering: Option<String>,
     tip: Option<Tip>,
     menu: Option<Menu>,
+    /// The key being handled by the `key` action (`cx.keystroke`) and whether the action passed it on.
+    keystroke: Option<uison_core::Key>,
+    key_passed: bool,
+    /// The wheel being handled by a `wheel` event (`cx.wheel`).
+    wheel: Option<(f32, f32)>,
+    /// Content bands to scroll into view on the next frame build (`cx.scroll_into_view`).
+    reveals: Vec<(String, f32, f32)>,
     /// Queue from other threads (`Handle::post`) and the event loop wake-up.
     shared: Arc<Shared>,
     /// Live reload (debug only): files, when they were checked, the error of the last attempt.
@@ -223,6 +230,11 @@ pub struct Cx<'a> {
     pub pos: Option<Point>,
     /// Click number in the series: 2 — double, 3 — triple.
     pub clicks: u32,
+    /// The key of the `key` action (`ui.on("key", …)`); `cx.key` is its name ([`key_combo`]).
+    pub keystroke: Option<&'a uison_core::Key>,
+    /// The wheel of a `wheel` event (`on: { wheel: … }`, where nothing scrolls by itself): (dx, dy) in points,
+    /// dy > 0 — the content should move down (towards the start).
+    pub wheel: Option<(f32, f32)>,
     req: &'a mut Requests,
 }
 
@@ -234,6 +246,12 @@ struct Requests {
     tokens: Vec<(String, Json)>,
     timers: Vec<(Duration, String)>,
     asks: Vec<Ask>,
+    /// Scroll key, content band to show.
+    reveal: Vec<(String, f32, f32)>,
+    /// Open the context menu of this node.
+    menu: Option<String>,
+    /// The `key` action didn't take the key.
+    pass: bool,
 }
 
 /// Shortcut: modifiers + key.
@@ -261,20 +279,18 @@ impl Shortcut {
             }
         }
         sc.code = match key.as_str() {
-            "enter" => KeyCode::Enter,
-            "escape" | "esc" => KeyCode::Escape,
-            "tab" => KeyCode::Tab,
-            "backspace" => KeyCode::Backspace,
-            "delete" => KeyCode::Delete,
-            "left" => KeyCode::Left,
-            "right" => KeyCode::Right,
-            "up" => KeyCode::Up,
-            "down" => KeyCode::Down,
+            "esc" => KeyCode::Escape,
+            "space" => {
+                sc.ch = Some(" ".into());
+                KeyCode::Char
+            }
             k if k.chars().count() == 1 => {
                 sc.ch = Some(k.to_string());
                 KeyCode::Char
             }
-            _ => return None,
+            "char" => return None,
+            // The names of the JSON events: enter, tab, home, pagedown, insert, f1…f12.
+            k => uison_frame::event::key_code(k)?,
         };
         Some(sc)
     }
@@ -291,7 +307,45 @@ impl Shortcut {
     }
 }
 
+/// A key as a shortcut name — `cx.key` of the `key` action: `"f5"`, `"shift+f6"`, `"ctrl+r"`, `"cmd+shift+z"`,
+/// `"space"`. Typed text without Ctrl, ⌘ or Alt is the text itself (`"a"`, `"A"`, `"*"`): Shift is already in it.
+pub fn key_combo(k: &uison_core::Key) -> String {
+    let m = k.mods;
+    let chord = m.cmd || m.ctrl || m.alt;
+    let name = match (k.code, k.text.as_deref()) {
+        (KeyCode::Char, Some(" ")) => "space".to_string(),
+        (KeyCode::Char, Some(t)) if !chord => return t.to_string(),
+        (KeyCode::Char, Some(t)) => t.to_lowercase(),
+        (code, _) => uison_frame::event::key_name(code).to_string(),
+    };
+    let mut out = String::new();
+    for (on, s) in [(m.cmd, "cmd+"), (m.ctrl, "ctrl+"), (m.alt, "alt+"), (m.shift, "shift+")] {
+        if on {
+            out.push_str(s);
+        }
+    }
+    out + &name
+}
+
 impl Cx<'_> {
+    /// In the `key` action: let the runtime handle this key as it would without the action
+    /// (Tab moves focus, Escape drops it, Enter and Space press the focused button).
+    pub fn pass_key(&mut self) {
+        self.req.pass = true;
+    }
+
+    /// Scroll `Scroll` or `List` `key` the least so that the content band `top..bottom` (pt from the start of
+    /// the content) is visible: the row under the keyboard cursor (`i * itemHeight .. (i + 1) * itemHeight`).
+    pub fn scroll_into_view(&mut self, key: &str, top: f32, bottom: f32) {
+        self.req.reveal.push((key.to_string(), top, bottom));
+    }
+
+    /// Open the context menu of node `key` (its `contextMenu`, or the nearest ancestor's) under the node — what
+    /// Shift+F10 does for the focused node, for nodes that don't take focus (a row under a keyboard cursor).
+    pub fn context_menu(&mut self, key: &str) {
+        self.req.menu = Some(key.to_string());
+    }
+
     /// Move focus to a node (input field) by `key`.
     pub fn focus(&mut self, key: &str) {
         self.req.focus = Some(Some(key.to_string()));
@@ -420,6 +474,10 @@ impl Ui {
             hovering: None,
             tip: None,
             menu: None,
+            keystroke: None,
+            key_passed: false,
+            wheel: None,
+            reveals: Vec::new(),
             shared: Arc::default(),
             #[cfg(all(any(debug_assertions, feature = "reload"), not(target_arch = "wasm32")))]
             watched: Vec::new(),
@@ -804,13 +862,14 @@ impl Ui {
                 }
             }
             self.infos = em.infos;
+            self.focus_inside();
             if let Some(laid) = &mut self.laid {
                 *laid = roots;
             }
             let focused = self.st.focus.as_deref().and_then(|f| self.infos.iter().find(|i| i.key == f));
             self.st.input_shift = focused.and_then(|i| Some((i.key.clone(), i.input.as_ref()?.shift)));
             self.warn_duplicate_keys();
-            let revealed = std::mem::take(&mut self.reveal) && self.reveal_focused();
+            let revealed = (std::mem::take(&mut self.reveal) && self.reveal_focused()) | self.reveal_bands();
             if !(viewport_changed || revealed) || pass == 2 {
                 return em.src;
             }
@@ -887,6 +946,42 @@ impl Ui {
         };
         let key = self.infos[s].key.clone();
         self.scroll_by(&key, -dy)
+    }
+
+    /// Focus on a node that doesn't take it (`cx.focus("name")` on a `TextField`, whose input is
+    /// `name/1/0`) goes to its first focusable descendant, once the node is in the frame.
+    fn focus_inside(&mut self) {
+        let Some(f) = self.st.focus.as_deref() else { return };
+        if self.infos.iter().any(|i| i.key == f && i.act.focusable) {
+            return;
+        }
+        let inner = self.infos.iter().find(|i| i.act.focusable && i.key.len() > f.len() && i.key.starts_with(f) && i.key.as_bytes()[f.len()] == b'/');
+        if let Some(i) = inner {
+            self.st.focus = Some(i.key.clone());
+        }
+    }
+
+    /// Requests of `cx.scroll_into_view`: the least scroll that shows each band. Applied when the frame is built —
+    /// then the viewport is known even on the first frame. `true` — scrolling changed.
+    fn reveal_bands(&mut self) -> bool {
+        let mut changed = false;
+        for (key, top, bottom) in std::mem::take(&mut self.reveals) {
+            let Some(s) = self.scroll_info(&key) else { continue };
+            let cur = self.st.scroll.get(&key).copied().unwrap_or(0.0);
+            let new = if top < cur {
+                top
+            } else if bottom > cur + s.viewport {
+                bottom - s.viewport
+            } else {
+                continue;
+            };
+            let new = new.clamp(0.0, (s.content - s.viewport).max(0.0));
+            if new != cur {
+                self.st.scroll.insert(key, new);
+                changed = true;
+            }
+        }
+        changed
     }
 
     // ---------------------------------------------------------------- events
@@ -973,7 +1068,8 @@ impl Ui {
     #[allow(clippy::too_many_arguments)]
     fn with_cx(&mut self, action: &str, event: &str, key: &str, pos: Option<Point>, clicks: u32, f: impl FnOnce(&mut Cx)) {
         let mut req = Requests::default();
-        let mut cx = Cx { data: &mut self.data, tree: Tree(&mut self.root), action, event, key, pos, clicks, req: &mut req };
+        let (keystroke, wheel) = (self.keystroke.as_ref(), self.wheel);
+        let mut cx = Cx { data: &mut self.data, tree: Tree(&mut self.root), action, event, key, pos, clicks, keystroke, wheel, req: &mut req };
         f(&mut cx);
         if let Some(t) = req.theme {
             self.set_theme(&t);
@@ -990,6 +1086,11 @@ impl Ui {
             self.timers.push((t + d, a));
         }
         self.asks.extend(req.asks);
+        self.reveals.extend(req.reveal);
+        self.key_passed = req.pass;
+        if let Some(k) = req.menu {
+            self.menu_for(&k);
+        }
         if let Some(f) = req.focus {
             self.st.focus = f;
             self.reset_caret();
@@ -1377,7 +1478,13 @@ impl Ui {
 
     /// From the keyboard (Menu, Shift+F10): the focused node's menu — at its bottom-left corner.
     fn menu_for_focus(&mut self) -> bool {
-        let Some(i) = self.st.focus.as_deref().and_then(|f| self.index(f)) else { return false };
+        let Some(f) = self.st.focus.clone() else { return false };
+        self.menu_for(&f)
+    }
+
+    /// The menu of node `key` (or of its nearest ancestor with one) — at the bottom-left corner of the node.
+    fn menu_for(&mut self, key: &str) -> bool {
+        let Some(i) = self.index(key) else { return false };
         let r = self.infos[i].rect;
         let at = Point::new(r.x, r.bottom() + 2.0);
         let target = self.chain(Some(i)).into_iter().find(|&j| self.infos[j].act.menu.is_some() || self.infos[j].input.is_some());
@@ -1470,8 +1577,16 @@ impl Ui {
                 return false;
             }
             Event::Paste(t) => return self.paste(t),
-            Event::Scroll(_, _, dy) => {
-                let Some(i) = self.chain(hit).into_iter().find(|&i| self.infos[i].scroll.is_some()) else { return false };
+            Event::Scroll(_, dx, dy) => {
+                let Some(i) = self.chain(hit).into_iter().find(|&i| self.infos[i].scroll.is_some()) else {
+                    // Nothing scrolls here: a node with `on.wheel` (its own scrolling, zoom) gets the wheel.
+                    let has = |i: &NodeInfo| i.act.on.iter().any(|(e, _)| e == "wheel");
+                    let Some(h) = hit.filter(|_| self.chain(hit).into_iter().any(|i| has(&self.infos[i]))) else { return false };
+                    self.wheel = Some((*dx, *dy));
+                    self.fire(h, "wheel");
+                    self.wheel = None;
+                    return true;
+                };
                 let key = self.infos[i].key.clone();
                 return self.scroll_by(&key, *dy);
             }
@@ -1479,8 +1594,8 @@ impl Ui {
                 if self.menu.is_some() {
                     return self.menu_key(k);
                 }
-                if k.code == KeyCode::Menu || (k.code == KeyCode::F10 && k.mods.shift) {
-                    return self.menu_for_focus();
+                if (k.code == KeyCode::Menu || (k.code == KeyCode::F10 && k.mods.shift)) && self.menu_for_focus() {
+                    return true;
                 }
                 if let Some((_, action)) = self.shortcuts.iter().find(|(sc, _)| sc.matches(k)) {
                     let action = action.clone();
@@ -1488,6 +1603,21 @@ impl Ui {
                     return true;
                 }
                 let focused = self.st.focus.as_deref().and_then(|f| self.index(f));
+                // The focused field takes typing and its own keys first.
+                if let Some(i) = focused.filter(|&i| self.infos[i].input.is_some())
+                    && self.edit(i, k)
+                {
+                    return true;
+                }
+                // Then the app's `key` action: every key the field and menu left (file managers, games, editors).
+                if self.handlers.contains_key("key") {
+                    self.keystroke = Some(k.clone());
+                    self.call("key", "key", &key_combo(k));
+                    self.keystroke = None;
+                    if !std::mem::take(&mut self.key_passed) {
+                        return true;
+                    }
+                }
                 match k.code {
                     // System "Back" (Android): close the popup, drop focus,
                     // otherwise — the app's `back` action (nothing changed — the system decides to exit).
@@ -1506,7 +1636,8 @@ impl Ui {
                     }
                     KeyCode::Escape if self.st.focus.is_some() => self.st.focus = None,
                     _ => match focused {
-                        Some(i) if self.infos[i].input.is_some() => return self.edit(i, k),
+                        // The field has seen the key above and didn't take it.
+                        Some(i) if self.infos[i].input.is_some() => return false,
                         Some(i) if k.code == KeyCode::Enter || k.text.as_deref() == Some(" ") => self.click(i),
                         _ => return false,
                     },

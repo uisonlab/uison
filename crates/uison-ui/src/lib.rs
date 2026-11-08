@@ -31,7 +31,7 @@ use std::fmt;
 pub use data::{Data, FromJson, IntoJson, obj};
 pub use library::{Component, Library};
 pub use text::WrapMode;
-pub use ui::{Cx, Draw, Handle, NodeMut, Stats, Tree, Ui};
+pub use ui::{Cx, Draw, Handle, NodeMut, Stats, Tree, Ui, key_combo};
 pub use values::literal;
 
 /// A UI description file: the embedded text and the name `UISON_RELOAD` uses to find the file on disk.

@@ -246,6 +246,7 @@ const pos = (e) => {
 const KEYS = {
   Backspace: 1, Delete: 2, Enter: 3, Tab: 4, Escape: 5, ArrowLeft: 6, ArrowRight: 7,
   ArrowUp: 8, ArrowDown: 9, Home: 10, End: 11, PageUp: 12, PageDown: 13, ContextMenu: 14, F10: 15,
+  Insert: 16, F1: 17, F2: 18, F3: 19, F4: 20, F5: 21, F6: 22, F7: 23, F8: 24, F9: 25, F11: 26, F12: 27,
 };
 
 // Modifiers of the last input event (Shift+click): bits shift 1, ctrl 2, alt 4, cmd 8.

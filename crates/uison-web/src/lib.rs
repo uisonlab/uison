@@ -309,6 +309,18 @@ pub extern "C" fn uison_key(code: u32, mods: u32, len: usize) -> u32 {
         13 => KeyCode::PageDown,
         14 => KeyCode::Menu,
         15 => KeyCode::F10,
+        16 => KeyCode::Insert,
+        17 => KeyCode::F1,
+        18 => KeyCode::F2,
+        19 => KeyCode::F3,
+        20 => KeyCode::F4,
+        21 => KeyCode::F5,
+        22 => KeyCode::F6,
+        23 => KeyCode::F7,
+        24 => KeyCode::F8,
+        25 => KeyCode::F9,
+        26 => KeyCode::F11,
+        27 => KeyCode::F12,
         _ => KeyCode::Char,
     };
     let text = INPUT.with(|b| {

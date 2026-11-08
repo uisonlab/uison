@@ -23,7 +23,7 @@
 ```
 
 - Координаты — в точках от левого верхнего угла окна, с точностью до 1/1000 точки.
-- `code`: `char` (набранный текст — в `text`), `enter`, `backspace`, `delete`, `tab`, `escape`, `left`, `right`, `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `back` (Android), `menu`, `f10`. У остальных клавиш `text` — `null`.
+- `code`: `char` (набранный текст — в `text`), `enter`, `backspace`, `delete`, `tab`, `escape`, `left`, `right`, `up`, `down`, `home`, `end`, `pageup`, `pagedown`, `back` (Android), `menu`, `insert`, `f1`…`f12`. У остальных клавиш `text` — `null`.
 - `cmd` — главный модификатор: ⌘ на Apple, Ctrl на остальных системах.
 - Незнакомые ключи при чтении пропускаются, отсутствующий модификатор считается `false`.
 
